@@ -1,6 +1,6 @@
 [project]
-name = "path_manager"
-version = "1.0.0"
+name = "pathmanager"
+version = "0.0.1"
 authors = [
     {name = "Chung-Yi Lin", email = "philip928lin@gmail.com"}
 ]
