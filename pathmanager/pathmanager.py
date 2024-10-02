@@ -2,6 +2,7 @@ import os
 from dataclasses import dataclass, field
 from typing import Dict
 import warnings
+import pprint
 
 @dataclass
 class PathManager:
@@ -252,3 +253,15 @@ class PathManager:
         Returns the dictionary of file paths.
         """
         return self.otherpaths
+
+    def list(self):
+        """Print the attributes in a pretty format."""
+        pp = pprint.PrettyPrinter(indent=4)
+        print("Working Directory (wd):")
+        pp.pprint(self.wd)
+        print("\nSubfolders:")
+        pp.pprint(self.subfolders)
+        print("\nFiles:")
+        pp.pprint(self.files)
+        print("\nOther Paths:")
+        pp.pprint(self.otherpaths)
