@@ -1,267 +1,267 @@
 import os
+import shutil
 from dataclasses import dataclass, field
-from typing import Dict
-import warnings
-import pprint
+from typing import Dict, Any
 
 @dataclass
-class PathManager:
-    wd: str
-    subfolders: Dict[str, str] = field(default_factory=dict)
-    files: Dict[str, str] = field(default_factory=dict)
-    otherpaths: Dict[str, str] = field(default_factory=dict)
+class Folder:
+    """
+    A class to represent a folder in the filesystem and manage subfolders and files.
 
-    def __post_init__(self):
-        # Change to working directory
-        # os.chdir(self.wd)
+    Attributes
+    ----------
+    name : str
+        The name of the folder.
+    parent_path : str
+        The path of the parent folder.
+    subfolders : dict
+        A dictionary of subfolder names (keys) and Folder objects (values).
+    files : dict
+        A dictionary of file names (keys) and their paths (values).
 
-        # Search for subfolders in the working directory and add them
-        for subfolder in os.listdir(self.wd):
-            subfolder_path = os.path.join(self.wd, subfolder)
-            if os.path.isdir(subfolder_path):
-                self.add_subfolder(subfolder)
-
-        # Prepopulate with default files
-
-    def _check_name_eligibility(self, name: str) -> bool:
-        """
-        Checks if the name is eligible to be used as an attribute name.
-        """
-        is_eligible = name.isidentifier() and not hasattr(self, name)
-        if is_eligible is False:
-            raise ValueError(f"{name} has been used/is not a valid attribute name.")
-
-    def _check_path_existence_and_create(self, path: str) -> None:
-        """
-        Checks if the directory exists and creates it if not.
-        """
-        if not os.path.exists(path):
-            os.makedirs(path)
-            print(f"New directory created at: {path}")
-
-    def chdir(self):
-        """Change to the working directory."""
-        os.chdir(self.wd)
+    Methods
+    -------
+    __getattr__(item)
+        Allows access to subfolders and files as attributes. Replaces '_' with spaces.
+    dir()
+        Returns the full path to this folder.
+    ls()
+        Prints the contents (subfolders and files) of the folder.
+    remove(name)
+        Removes a file or subfolder from the folder and deletes it from the filesystem.
+    mkdir(*args)
+        Creates a subdirectory in the current folder and updates the internal structure.
+    """
     
-    def initiate_project(self, proj_subfolders = [
-        "code", "data", "figures", "inputs", "outputs", "models"
-        ]):
+    name: str
+    parent_path: str = ""  # Track the parent folder path for constructing full paths
+    subfolders: Dict[str, Any] = field(default_factory=dict)
+    files: Dict[str, str] = field(default_factory=dict)
+
+    def __getattr__(self, item):
         """
-        Initiates a project by creating the subfolders in the working directory.
+        Access subfolders and files as attributes.
 
         Parameters
         ----------
-        proj_subfolders : list
-            A list of subfolders to create in the working directory (if not exist).
-        """
-        # Prepopulate with proj_subfolders
-        for subfolder in proj_subfolders:
-            self.add_subfolder(subfolder)
+        item : str
+            The name of the folder or file, replacing spaces with underscores.
 
-    def add_subfolder(self, subfolder: str) -> None:
-        """
-        Adds a subfolder path to the list of subfolders and sets it as an attribute.
-        Ensures the subfolder path is relative to the working directory.
+        Returns
+        -------
+        Folder or str
+            Returns the Folder object or file path.
 
-        Parameters
-        ----------
-        subfolder : str
-            The name of the subfolder to add.
+        Raises
+        ------
+        AttributeError
+            If the folder or file does not exist.
+        
+        Examples
+        --------
+        >>> folder = Folder(name="root")
+        >>> folder.subfolders['sub1'] = Folder("sub1")
+        >>> folder.files['file1'] = "/path/to/file1"
+        >>> folder.sub1
+        Folder(name='sub1', parent_path='', subfolders={}, files={})
+        >>> folder.file1
+        '/path/to/file1'
         """
-        self._check_name_eligibility(subfolder)
+        folder_name = item.replace('_', ' ')
+        if folder_name in self.subfolders:
+            return self.subfolders[folder_name]
+        elif item in self.subfolders:
+            return self.subfolders[item]
+        if item in self.files:
+            return self.files[item]
+        raise AttributeError(f"'{item}' not found in folder '{self.name}'")
 
-        full_path = os.path.join(self.wd, subfolder)
-        self._check_path_existence_and_create(full_path)
-        self.subfolders[subfolder] = full_path
-        setattr(self, subfolder, full_path)
-
-    def remove_subfolder(self, subfolder: str) -> None:
+    def dir(self):
         """
-        Removes a subfolder path from the list of subfolders and deletes the attribute.
+        Get the full path of this folder.
 
-        Parameters
-        ----------
-        subfolder : str
-            The name of the subfolder to remove.
+        Returns
+        -------
+        str
+            The full path to the folder.
+
+        Examples
+        --------
+        >>> folder = Folder(name="root", parent_path="/home/user")
+        >>> folder.dir()
+        '/home/user/root'
         """
-        if subfolder in self.subfolders:
-            del self.subfolders[subfolder]
-            if hasattr(self, subfolder):
-                delattr(self, subfolder)
+        return os.path.join(self.parent_path, self.name)
+
+    def ls(self):
+        """
+        Print the contents of the folder, including subfolders and files.
+
+        Prints subfolders first, followed by files.
+
+        Examples
+        --------
+        >>> folder = Folder(name="root")
+        >>> folder.subfolders['sub1'] = Folder("sub1")
+        >>> folder.files['file1'] = "/path/to/file1"
+        >>> folder.ls()
+        Contents of '/root':
+        Subfolders:
+          [Dir] sub1
+        Files:
+          [File] file1
+        """
+        print(f"Contents of '{self.dir()}':")
+        if self.subfolders:
+            print("Subfolders:")
+            for subfolder in self.subfolders:
+                print(f"  [Dir] {subfolder}")
         else:
-            warnings.warn(f"{subfolder} is not a tracked subfolder.", UserWarning)
-
-    def add_nested_folder(self, parent_subfolder: str, nested_folder: str) -> None:
-        """
-        Adds a nested folder within a subfolder.
-
-        Parameters
-        ----------
-        parent_subfolder : str
-            The name of the parent subfolder.
-        nested_folder : str
-            The name of the nested folder to add.
-        """
-        self._check_name_eligibility(f"{parent_subfolder}_{nested_folder}")
-
-        if parent_subfolder in self.subfolders:
-            full_path = os.path.join(self.subfolders[parent_subfolder], nested_folder)
-            self._check_path_existence_and_create(full_path)
-            setattr(self, f"{parent_subfolder}_{nested_folder}", full_path)
+            print("No subfolders.")
+        
+        if self.files:
+            print("Files:")
+            for file in self.files:
+                print(f"  [File] {file}")
         else:
-            raise ValueError(f"{parent_subfolder} is not a tracked subfolder.")
-
-    def remove_nested_folder(self, parent_subfolder: str, nested_folder: str) -> None:
+            print("No files.")
+    
+    def remove(self, name: str):
         """
-        Removes a nested folder within a subfolder.
-
-        Parameters
-        ----------
-        parent_subfolder : str
-            The name of the parent subfolder.
-        nested_folder : str
-            The name of the nested folder to remove.
-        """
-        nested_attr_name = f"{parent_subfolder}_{nested_folder}"
-        if hasattr(self, nested_attr_name):
-            full_path = getattr(self, nested_attr_name)
-            if os.path.exists(full_path):
-                os.rmdir(full_path)  # This only works if the directory is empty
-            delattr(self, nested_attr_name)
-        else:
-            warnings.warn(
-                f"{nested_attr_name} is not a tracked nested folder.", UserWarning
-            )
-
-    def add_file(self, file_name: str, subfolder: str = None, name: str = None) -> None:
-        """
-        Adds a file path to the list of files. If subfolder is specified, the file path is relative to that subfolder.
-        Raises an error if the file does not exist.
-
-        Parameters
-        ----------
-        file_name : str
-            The name of the file to add.
-        subfolder : str, optional
-            The name of the subfolder to add the file to.
-        """
-        if subfolder:
-            if subfolder in self.subfolders:
-                full_path = os.path.join(self.subfolders[subfolder], file_name)
-            else:
-                raise ValueError(f"{subfolder} is not a tracked subfolder.")
-        else:
-            full_path = os.path.join(self.wd, file_name)
-
-        if os.path.isfile(full_path):
-            if name:
-                self._check_name_eligibility(name)
-                self.files[name] = full_path
-                setattr(self, name, full_path)
-            else:
-                file_name_without_extension = os.path.splitext(file_name)[0]
-                self._check_name_eligibility(file_name_without_extension)
-                self.files[file_name_without_extension] = full_path
-                setattr(self, file_name_without_extension, full_path)
-        else:
-            raise FileNotFoundError(f"{full_path} does not exist.")
-
-    def remove_file(self, file_name: str) -> None:
-        """
-        Removes a file path from the list of files and deletes the attribute.
-
-        Parameters
-        ----------
-        file_name : str
-            The name of the file to remove.
-        """
-        if file_name in self.files:
-            del self.files[file_name]
-            if hasattr(self, file_name):
-                delattr(self, file_name)
-        else:
-            warnings.warn(f"{file_name} is not a tracked file.", UserWarning)
-
-    def add_other_path(self, name: str, path: str) -> None:
-        """
-        Adds a folder or file path to the dictionary of otherpaths and sets it as an
-        attribute.
+        Remove a file or subfolder from the folder and delete it from the filesystem.
 
         Parameters
         ----------
         name : str
-            The name of the attribute to add.
-        path : str
-            The path to add.
-        """
-        self._check_name_eligibility(name)
-        is_dir = os.path.isdir(path)
-        is_file = os.path.isfile(path)
+            The name of the file or folder to remove, replacing underscores with spaces if needed.
 
-        if is_dir:
-            self.otherpaths[name] = path
-            setattr(self, name, path)
-        elif is_file:
-            self.otherpaths[name] = path
-            setattr(self, name, path)
-        elif not is_dir and not is_file:
-            if "." in path:  # Assume . means files
-                raise FileNotFoundError(f"{path} does not exist.")
-            else:
-                try:
-                    self._check_path_existence_and_create(path)
-                    self.otherpaths[name] = path
-                    setattr(self, name, path)
-                except:
-                    raise FileNotFoundError(f"{path} does not exist.")
+        Examples
+        --------
+        >>> folder = Folder(name="root")
+        >>> folder.subfolders['sub1'] = Folder("sub1")
+        >>> folder.files['file1'] = "/path/to/file1"
+        >>> folder.remove('sub1')
+        Subfolder 'sub1' has been removed from '/root'
+        >>> folder.remove('file1')
+        File 'file1' has been removed from '/root'
+        """
+        clean_name_with_spaces = name.replace('_', ' ')
+        clean_name_with_underscores = name.replace(' ', '_')
+        
+        if clean_name_with_underscores in self.subfolders:
+            full_path = os.path.join(self.dir(), self.subfolders[clean_name_with_underscores].name)
+            shutil.rmtree(full_path)
+            del self.subfolders[clean_name_with_underscores]
+            print(f"Subfolder '{clean_name_with_spaces}' has been removed from '{self.dir()}'")
+        elif clean_name_with_underscores in self.files:
+            full_path = self.files[clean_name_with_underscores]
+            os.remove(full_path)
+            del self.files[clean_name_with_underscores]
+            print(f"File '{clean_name_with_spaces}' has been removed from '{self.dir()}'")
         else:
-            raise FileNotFoundError(f"{path} does not exist.")
+            print(f"'{clean_name_with_spaces}' not found in '{self.dir()}'")
 
-    def remove_other_path(self, name: str) -> None:
+    def mkdir(self, *args):
         """
-        Removes a folder or file path from the dictionary of otherpaths and deletes the
-        attribute.
+        Create a directory inside the current folder and update the internal structure.
 
         Parameters
         ----------
-        name : str
-            The name of the attribute to remove.
-        path : str
-            The path to remove.
-        """
-        if name in self.otherpaths:
-            del self.otherpaths[name]
-            if hasattr(self, name):
-                delattr(self, name)
-        else:
-            warnings.warn(f"{name} is not a tracked name of otherpaths.", UserWarning)
+        args : str
+            Path components for the new directory relative to the current folder.
 
-    def get_subfolders(self) -> Dict[str, str]:
+        Examples
+        --------
+        >>> folder = Folder(name="root")
+        >>> folder.mkdir("new_subfolder")
+        >>> folder.subfolders['new_subfolder']
+        Folder(name='new_subfolder', parent_path='/root', subfolders={}, files={})
         """
-        Returns the dictionary of subfolder paths.
-        """
-        return self.subfolders
+        full_path = os.path.join(self.dir(), *args)
+        os.makedirs(full_path, exist_ok=True)
 
-    def get_files(self) -> Dict[str, str]:
-        """
-        Returns the dictionary of file paths.
-        """
-        return self.files
+        relative_path = os.path.relpath(full_path, self.dir())
+        path_parts = relative_path.split(os.sep)
 
-    def get_otherpaths(self) -> Dict[str, str]:
-        """
-        Returns the dictionary of file paths.
-        """
-        return self.otherpaths
+        current_folder = self
+        for part in path_parts:
+            clean_part = part.replace(' ', '_')
+            if clean_part not in current_folder.subfolders:
+                new_folder = Folder(part, parent_path=current_folder.dir())
+                current_folder.subfolders[clean_part] = new_folder
+            current_folder = current_folder.subfolders[clean_part]
 
-    def list(self):
-        """Print the attributes in a pretty format."""
-        pp = pprint.PrettyPrinter(indent=4)
-        print("Working Directory (wd):")
-        pp.pprint(self.wd)
-        print("\nSubfolders:")
-        pp.pprint(self.subfolders)
-        print("\nFiles:")
-        pp.pprint(self.files)
-        print("\nOther Paths:")
-        pp.pprint(self.otherpaths)
+class PathManager(Folder):
+    """
+    A class to manage the root folder and recursively load its nested structure (subfolders and files).
+    
+    
+    dir()
+        Returns the full path to this folder.
+    ls()
+        Prints the contents (subfolders and files) of the folder.
+    remove(name)
+        Removes a file or subfolder from the folder and deletes it from the filesystem.
+    mkdir(*args)
+        Creates a subdirectory in the current folder and updates the internal structure.
+
+    Methods
+    -------
+    reload()
+        Reloads the entire folder structure from the filesystem.
+        
+    Examples
+    --------
+    >>> pm = PathManager('/path/to/root')
+    >>> pm.mkdir('folder1', 'folder2')     # make a subfolder under the root
+    >>> pm.folder1.dir()        # returns the full path to folder1.
+    >>> pm.folder1.ls()         # prints the contents (subfolders and files) of folder1.
+    >>> pm.folder1.file1        # returns the full path to file1.
+    >>> pm.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
+    """
+    
+    def __init__(self, root_dir: str):
+        """
+        Initialize the PathManager with the root directory.
+
+        Parameters
+        ----------
+        root_dir : str
+            The root directory to manage.
+        """
+        self.root = root_dir
+        super().__init__(name=os.path.basename(self.root), parent_path=os.path.dirname(self.root))
+        self._load_nested_directories(self.root, self)
+
+    def _load_nested_directories(self, current_path: str, current_folder: Folder):
+        """
+        Recursively load subfolders and files from the filesystem into the internal structure.
+
+        Parameters
+        ----------
+        current_path : str
+            The current path to load.
+        current_folder : Folder
+            The Folder object representing the current directory.
+        """
+        for entry in os.scandir(current_path):
+            if entry.is_dir():
+                folder_name = entry.name
+                clean_name = folder_name.replace(' ', '_')
+                new_subfolder = Folder(folder_name, parent_path=current_path)
+                current_folder.subfolders[clean_name] = new_subfolder
+                self._load_nested_directories(entry.path, new_subfolder)
+            elif entry.is_file():
+                file_name = entry.name.replace('.', '_').replace(" ", "_")
+                current_folder.files[file_name] = entry.path
+    
+    def reload(self):
+        """
+        Reload the entire folder structure from the root directory.
+
+        Examples
+        --------
+        >>> pm = PathManager('/path/to/root')
+        >>> pm.reload()
+        """
+        self._load_nested_directories(self.root, self)
