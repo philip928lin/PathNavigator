@@ -24,7 +24,8 @@ path_to_your_file = pm.your_subfolder.your_file_txt # "." will be replaced by "_
 ## Other features
 ```python
 pm = PathManager('/path/to/root')
-pm.mkdir('folder1', 'folder2')     # make a subfolder under the root
+pm.mkdir('folder1', 'folder2')  # make a subfolder under the root
+pm.forlder1.add_to_sys_path()   # add dir to folder1 to sys path.
 pm.folder1.dir()        # returns the full path to folder1.
 pm.folder1.ls()         # prints the contents (subfolders and files) of folder1.
 pm.folder1.file1        # returns the full path to file1.

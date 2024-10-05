@@ -1,4 +1,5 @@
 import os
+import sys
 import shutil
 from dataclasses import dataclass, field
 from typing import Dict, Any
@@ -190,6 +191,48 @@ class Folder:
                 new_folder = Folder(part, parent_path=current_folder.dir())
                 current_folder.subfolders[clean_part] = new_folder
             current_folder = current_folder.subfolders[clean_part]
+    
+    def add_to_sys_path(self, method='insert', index=1):
+        """
+        Adds the directory to the system path.
+
+        Parameters
+        ----------
+        method : str, optional
+            The method to use for adding the path to the system path. 
+            Options are 'insert' (default) or 'append'.
+        index : int, optional
+            The index at which to insert the path if method is 'insert'. 
+            Default is 1.
+
+        Raises
+        ------
+        ValueError
+            If the method is not 'insert' or 'append'.
+
+        Examples
+        --------
+        >>> folder = Folder('/path/to/folder')
+        >>> folder.add_to_sys_path()
+        Inserted /path/to/folder at index 1 in system path.
+
+        >>> folder.add_to_sys_path(method='append')
+        Appended /path/to/folder to system path.
+
+        >>> folder.add_to_sys_path(method='invalid')
+        Invalid method: invalid. Use 'insert' or 'append'.
+        """
+        if self.dir() not in sys.path:
+            if method == 'insert':
+                sys.path.insert(index, self.dir())
+                print(f"Inserted {self.dir()} at index {index} in system path.")
+            elif method == 'append':
+                sys.path.append(self.dir())
+                print(f"Appended {self.dir()} to system path.")
+            else:
+                print(f"Invalid method: {method}. Use 'insert' or 'append'.")
+        else:
+            print(f"{self.dir()} is already in the system path.")
 
 class PathManager(Folder):
     """
