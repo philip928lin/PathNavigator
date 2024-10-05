@@ -32,6 +32,8 @@ class Folder:
         Removes a file or subfolder from the folder and deletes it from the filesystem.
     mkdir(*args)
         Creates a subdirectory in the current folder and updates the internal structure.
+    add_to_sys_path(method='insert', index=1)
+        Adds the directory to the system path.
     """
     
     name: str
