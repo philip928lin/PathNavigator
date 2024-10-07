@@ -24,12 +24,13 @@ path_to_your_file = pm.your_subfolder.your_file_txt # "." will be replaced by "_
 ## Other features
 ```python
 pm = PathManager('/path/to/root')
-pm.mkdir('folder1', 'folder2')  # make a subfolder under the root
+pm.mkdir('folder1')     # make a subfolder under the root.
+pm.folder1.mkdir('folder2')     # make a subfolder under folder1.
 pm.forlder1.add_to_sys_path()   # add dir to folder1 to sys path.
 pm.folder1.dir()        # returns the full path to folder1.
 pm.folder1.ls()         # prints the contents (subfolders and files) of folder1.
 pm.folder1.file1        # returns the full path to file1.
-pm.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
+pm.folder1.remove('folder2')    # removes a file or subfolder from the folder and deletes it from the filesystem.
 
 pm.shortcuts.add('config', pm.folder1.file)    # add shortcut to, e.g., config file.
 pm.config               # retrieve the path of a specific shortcut
@@ -38,5 +39,5 @@ pm.shortcuts.remove('config')   # remove a shortcut
 pm.shortcuts.to_dict()  # return a dictionary of shortcuts
 pm.shortcuts.to_json(filename)  # output of shortcuts json file
 pm.shortcuts.load_dict()  # load shortcuts from a dictionary
-pm.shortcuts.laod_json(filename)  # load shortcuts from a json file
+pm.shortcuts.load_json(filename)  # load shortcuts from a json file
 ```
