@@ -1,6 +1,6 @@
 import os
 import shutil
-from pathmanager.pathmanager import Folder, PathManager  # Replace with your actual module name
+from pathnavigator.pathnavigator import Folder, PathNavigator  # Replace with your actual module name
 
 def test_folder_class():
     print("Testing Folder class...")
@@ -57,8 +57,8 @@ def test_folder_class():
     print("Folder tests completed successfully.\n")
 
 
-def test_path_manager():
-    print("Testing PathManager class...")
+def test_path_navigator():
+    print("Testing PathNavigator class...")
 
     # Create a temporary root directory with some structure
     temp_root = "temp_root"
@@ -71,8 +71,8 @@ def test_path_manager():
     with open(test_file_path, "w") as f:
         f.write("Test file content.")
 
-    # Initialize PathManager
-    manager = PathManager(temp_root)
+    # Initialize PathNavigator
+    manager = PathNavigator(temp_root)
 
     # Test if root was loaded correctly
     assert "subfolder1" in manager.subfolders, "Root directory load failed."
@@ -93,12 +93,12 @@ def test_path_manager():
 
     # Cleanup
     shutil.rmtree(temp_root)
-    print("PathManager tests completed successfully.\n")
+    print("PathNavigator tests completed successfully.\n")
 
 
 if __name__ == "__main__":
     # Test Folder class functionalities
     test_folder_class()
 
-    # Test PathManager class functionalities
-    test_path_manager()
+    # Test PathNavigator class functionalities
+    test_path_navigator()

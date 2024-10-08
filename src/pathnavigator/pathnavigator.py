@@ -471,7 +471,7 @@ class Shortcut:
             data = json.load(f)  # Load the JSON data into a dictionary
             self.load_dict(data)  # Load the shortcuts using the load_dict method
 
-class PathManager(Folder):
+class PathNavigator(Folder):
     """
     A class to manage the root folder and recursively load its nested structure (subfolders and files).
     
@@ -492,7 +492,7 @@ class PathManager(Folder):
         
     Examples
     --------
-    >>> pm = PathManager('/path/to/root')
+    >>> pm = PathNavigator('/path/to/root')
     >>> pm.mkdir('folder1', 'folder2')     # make a subfolder under the root
     >>> pm.folder1.dir()        # returns the full path to folder1.
     >>> pm.folder1.ls()         # prints the contents (subfolders and files) of folder1.
@@ -502,7 +502,7 @@ class PathManager(Folder):
     
     def __init__(self, root_dir: str, load_nested_directories=True):
         """
-        Initialize the PathManager with the root directory and create a Shortcut manager.
+        Initialize the PathNavigator with the root directory and create a Shortcut manager.
 
         Parameters
         ----------
@@ -545,7 +545,7 @@ class PathManager(Folder):
 
         Examples
         --------
-        >>> pm = PathManager('/path/to/root')
+        >>> pm = PathNavigator('/path/to/root')
         >>> pm.reload()
         """
         self._load_nested_directories(self.root, self)
