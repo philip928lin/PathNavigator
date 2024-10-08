@@ -27,6 +27,7 @@ pm = PathManager('/path/to/root')
 pm.mkdir('folder1')     # make a subfolder under the root.
 pm.folder1.mkdir('folder2')     # make a subfolder under folder1.
 pm.forlder1.add_to_sys_path()   # add dir to folder1 to sys path.
+pm.forlder1.forlder2.chdir()    # change the working directory to folder2.
 pm.folder1.dir()        # returns the full path to folder1.
 pm.folder1.ls()         # prints the contents (subfolders and files) of folder1.
 pm.folder1.file1        # returns the full path to file1.
