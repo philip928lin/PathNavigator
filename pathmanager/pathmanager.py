@@ -194,7 +194,19 @@ class Folder:
                 new_folder = Folder(part, parent_path=current_folder.dir())
                 current_folder.subfolders[clean_part] = new_folder
             current_folder = current_folder.subfolders[clean_part]
+        print(f"Created directory '{full_path}'")
     
+    def chdir(self):
+        """
+        Set this directory as working directory.
+
+        Examples
+        --------
+        >>> folder.chdir()
+        """
+        os.chdir(self.dir())
+        print(f"Changed working directory to '{self.dir()}'")
+
     def add_to_sys_path(self, method='insert', index=1):
         """
         Adds the directory to the system path.
@@ -458,7 +470,7 @@ class Shortcut:
         with open(filename, 'r') as f:
             data = json.load(f)  # Load the JSON data into a dictionary
             self.load_dict(data)  # Load the shortcuts using the load_dict method
-            
+
 class PathManager(Folder):
     """
     A class to manage the root folder and recursively load its nested structure (subfolders and files).
@@ -488,7 +500,7 @@ class PathManager(Folder):
     >>> pm.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
     """
     
-    def __init__(self, root_dir: str):
+    def __init__(self, root_dir: str, load_nested_directories=True):
         """
         Initialize the PathManager with the root directory and create a Shortcut manager.
 
@@ -496,11 +508,14 @@ class PathManager(Folder):
         ----------
         root_dir : str
             The root directory to manage.
+        load_nested_directories : bool, optional
+            Whether to load nested directories and files from the filesystem. Default is True.
         """
         self.root = root_dir
         self.shortcuts = Shortcut()  # Initialize Shortcut manager as an attribute
         super().__init__(name=os.path.basename(self.root), parent_path=os.path.dirname(self.root))
-        self._load_nested_directories(self.root, self)
+        if load_nested_directories:
+            self._load_nested_directories(self.root, self)
 
     def _load_nested_directories(self, current_path: str, current_folder: Folder):
         """
