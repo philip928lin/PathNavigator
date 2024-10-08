@@ -17,7 +17,7 @@ pip install git+https://github.com/philip928lin/path_manager.git
 ## Get start
 
 ```python
-from pathmanager import PathNavigator
+from pathnavigator import PathNavigator
 
 pn = PathNavigator("root_dir")
 
