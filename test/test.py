@@ -1,6 +1,5 @@
 import os
 import shutil
-from pathlib import Path
 from pathmanager.pathmanager import Folder, PathManager  # Replace with your actual module name
 
 def test_folder_class():
