@@ -2,9 +2,68 @@ import os
 import sys
 import json
 import shutil
+import re
+import keyword
 from dataclasses import dataclass, field
 from typing import Dict, Any
 
+@dataclass
+class AttributeNameConverter:
+    __name_mapping: dict = field(default_factory=dict)
+
+    def to_valid_name(self, name: str) -> str:
+        """Convert the original name to a valid attribute name."""
+        if self.__is_valid_attribute_name(name) is False:
+            valid_name = self.__convert_to_valid_attribute_name(name)
+            print(f"Converting '{name}' to a valid attribute name, '{valid_name}'.")
+            return valid_name
+        else:
+            return name
+
+    def get(self, name: str) -> str:
+        """Get the valid attribute name for the given original name."""
+        if self.__needs_name_mapping(name):
+            return self.__name_mapping[name]
+        else:
+            return name
+        
+    def __is_valid_attribute_name(
+            self, name: str, 
+            invalid_list=["sc", "reload", "dir", "ls", "remove", "join",
+                          "mkdir", "set_shortcut", "chdir", "add_to_sys_path", 
+                          "name", "parent_path", "subfolders", "files"]
+            ) -> bool:
+        """Check if a given attribute name is valid."""
+        if name.startswith('__'):
+            raise ValueError(f"Strings starting with '__' are reserved in PathNavigator. Please modify '{name}' to eligible naming.")
+        return name.isidentifier() and not keyword.iskeyword(name) and not name in invalid_list
+
+    def __convert_to_valid_attribute_name(self, name: str) -> str:
+        """Convert ineligible attribute name to a valid one."""
+        # Replace invalid characters (anything not a letter, digit, or underscore) with underscores
+        valid_name = re.sub(r'\W|^(?=\d)', '_', name)  # \W matches non-word characters, ^(?=\d) ensures no starting digit
+        
+        # Ensure the name starts with an underscore
+        if not valid_name.startswith('_'):
+            valid_name = '_' + valid_name
+        
+        # Check if the converted name is a Python keyword and append an underscore if necessary
+        if keyword.iskeyword(valid_name):
+            valid_name += '_'
+        
+        # Store the mapping of ineligible to eligible names
+        self.__name_mapping[name] = valid_name
+        
+        return valid_name
+
+    def __get_name_mapping(self):
+        """Return the dictionary that maps ineligible names to eligible names."""
+        return self.__name_mapping
+
+    def __needs_name_mapping(self, name: str) -> bool:
+        """Check if the original name needs to use the name mapping."""
+        return name in self.__name_mapping
+    
 @dataclass
 class Folder:
     """
@@ -29,6 +88,10 @@ class Folder:
         Returns the full path to this folder.
     ls()
         Prints the contents (subfolders and files) of the folder.
+    join(*args)
+        Joins the current folder path with additional path components.
+    set_shortcut(name, filename=None)
+        Adds a shortcut to this folder (or file) using the Shortcut manager.
     remove(name)
         Removes a file or subfolder from the folder and deletes it from the filesystem.
     mkdir(*args)
@@ -41,6 +104,8 @@ class Folder:
     parent_path: str = ""  # Track the parent folder path for constructing full paths
     subfolders: Dict[str, Any] = field(default_factory=dict)
     files: Dict[str, str] = field(default_factory=dict)
+    __np_object: object = None
+    __converter = object = AttributeNameConverter()
 
     def __getattr__(self, item):
         """
@@ -71,10 +136,13 @@ class Folder:
         >>> folder.file1
         '/path/to/file1'
         """
-        folder_name = item.replace('_', ' ')
-        if folder_name in self.subfolders:
-            return self.subfolders[folder_name]
-        elif item in self.subfolders:
+        #folder_name = item.replace('_', ' ')
+        #if folder_name in self.subfolders:
+        #    return self.subfolders[folder_name]
+        #elif item in self.subfolders:
+        #    return self.subfolders[item]
+        
+        if item in self.subfolders:
             return self.subfolders[item]
         if item in self.files:
             return self.files[item]
@@ -119,14 +187,22 @@ class Folder:
         if self.subfolders:
             print("Subfolders:")
             for subfolder in self.subfolders:
-                print(f"  [Dir] {subfolder}")
+                org_name = self.__converter.get(subfolder)
+                if self.__converter.__is_valid_attribute_name(org_name) is False:
+                    print(f"  [Dir] {subfolder} (-> {org_name})")
+                else:
+                    print(f"  [Dir] {subfolder}")
         else:
             print("No subfolders.")
         
         if self.files:
             print("Files:")
             for file in self.files:
-                print(f"  [File] {file}")
+                org_name = self.__converter.get(file)
+                if self.__converter.__is_valid_attribute_name(org_name) is False:
+                    print(f"  [File] {file} (-> {org_name})")
+                else:
+                    print(f"  [File] {file}")
         else:
             print("No files.")
     
@@ -149,6 +225,22 @@ class Folder:
         >>> folder.remove('file1')
         File 'file1' has been removed from '/root'
         """
+        valid_name = self.__converter.to_valid_name(name)
+        org_name = self.__converter.get(valid_name)
+        if valid_name in self.subfolders:
+            full_path = self.join(org_name)
+            shutil.rmtree(full_path)
+            del self.subfolders[valid_name]
+            print(f"Subfolder '{org_name}' has been removed from '{self.dir()}'")
+        elif valid_name in self.files:
+            full_path = self.files[valid_name]
+            os.remove(full_path)
+            del self.files[valid_name]
+            print(f"File '{org_name}' has been removed from '{self.dir()}'")
+        else:
+            print(f"'{name}' not found in '{self.dir()}'")
+
+        """
         clean_name_with_spaces = name.replace('_', ' ')
         clean_name_with_underscores = name.replace(' ', '_')
         
@@ -164,6 +256,7 @@ class Folder:
             print(f"File '{clean_name_with_spaces}' has been removed from '{self.dir()}'")
         else:
             print(f"'{clean_name_with_spaces}' not found in '{self.dir()}'")
+        """
 
     def join(self, *args) -> str:
         """
@@ -203,7 +296,7 @@ class Folder:
         >>> folder.subfolders['new_subfolder']
         Folder(name='new_subfolder', parent_path='/root', subfolders={}, files={})
         """
-        full_path = os.path.join(self.dir(), *args)
+        full_path = self.join(*args) #os.path.join(self.dir(), *args)
         os.makedirs(full_path, exist_ok=True)
 
         relative_path = os.path.relpath(full_path, self.dir())
@@ -211,13 +304,34 @@ class Folder:
 
         current_folder = self
         for part in path_parts:
-            clean_part = part.replace(' ', '_')
-            if clean_part not in current_folder.subfolders:
+            #clean_part = part.replace(' ', '_')
+            valid_name = self.__converter.to_valid_name(part)
+            if valid_name not in current_folder.subfolders:
                 new_folder = Folder(part, parent_path=current_folder.dir())
-                current_folder.subfolders[clean_part] = new_folder
-            current_folder = current_folder.subfolders[clean_part]
+                current_folder.subfolders[valid_name] = new_folder
+            current_folder = current_folder.subfolders[valid_name]
         print(f"Created directory '{full_path}'")
     
+    def set_shortcut(self, name: str, filename: str = None):
+        """
+        Add a shortcut to this folder using the Shortcut manager.
+
+        Parameters
+        ----------
+        name : str
+            The name of the shortcut to add.
+
+        Examples
+        --------
+        >>> folder = Folder(name="root")
+        >>> folder.set_shortcut("my_folder")
+        Shortcut 'my_folder' added for path '/root'
+        """
+        if filename is None:
+            self.__np_object.sc.add(name, self.dir())
+        else:
+            self.__np_object.sc.add(name, self.join(filename))
+
     def chdir(self):
         """
         Set this directory as working directory.
@@ -533,13 +647,13 @@ class PathNavigator(Folder):
         load_nested_directories : bool, optional
             Whether to load nested directories and files from the filesystem. Default is True.
         """
-        self.root = root_dir
-        self.shortcuts = Shortcut()  # Initialize Shortcut manager as an attribute
-        super().__init__(name=os.path.basename(self.root), parent_path=os.path.dirname(self.root))
+        self.__root = root_dir
+        self.sc = Shortcut()  # Initialize Shortcut manager as an attribute
+        super().__init__(name=os.path.basename(self.__root), parent_path=os.path.dirname(self.__root), __np_object=self)
         if load_nested_directories:
-            self._load_nested_directories(self.root, self)
+            self._load_nested_directories(self.__root, self)
 
-    def _load_nested_directories(self, current_path: str, current_folder: Folder):
+    def __load_nested_directories(self, current_path: str, current_folder: Folder):
         """
         Recursively load subfolders and files from the filesystem into the internal structure.
 
@@ -553,13 +667,14 @@ class PathNavigator(Folder):
         for entry in os.scandir(current_path):
             if entry.is_dir():
                 folder_name = entry.name
-                clean_name = folder_name.replace(' ', '_')
-                new_subfolder = Folder(folder_name, parent_path=current_path)
-                current_folder.subfolders[clean_name] = new_subfolder
-                self._load_nested_directories(entry.path, new_subfolder)
+                valid_folder_name = self.__converter.to_valid_name(folder_name)
+                new_subfolder = Folder(folder_name, parent_path=current_path, __np_object=self)
+                current_folder.subfolders[valid_folder_name] = new_subfolder
+                self.__load_nested_directories(entry.path, new_subfolder)
             elif entry.is_file():
-                file_name = entry.name.replace('.', '_').replace(" ", "_")
-                current_folder.files[file_name] = entry.path
+                file_name = entry.name #.replace('.', '_').replace(" ", "_")
+                valid_filename = self.__converter.to_valid_name(file_name)
+                current_folder.files[valid_filename] = entry.path
     
     def reload(self):
         """
@@ -570,4 +685,8 @@ class PathNavigator(Folder):
         >>> pm = PathNavigator('/path/to/root')
         >>> pm.reload()
         """
-        self._load_nested_directories(self.root, self)
+        self.__load_nested_directories(self.__root, self)
+
+
+    
+    
