@@ -165,6 +165,28 @@ class Folder:
         else:
             print(f"'{clean_name_with_spaces}' not found in '{self.dir()}'")
 
+    def join(self, *args) -> str:
+        """
+        Join the current folder path with additional path components.
+
+        Parameters
+        ----------
+        args : str
+            Path components to join with the current folder path.
+
+        Returns
+        -------
+        str
+            The full path after joining the current folder path with the provided components.
+
+        Examples
+        --------
+        >>> folder = Folder(name="root")
+        >>> folder.join("subfolder", "file.txt")
+        '/home/user/root/subfolder/file.txt'
+        """
+        return os.path.join(self.dir(), *args)
+
     def mkdir(self, *args):
         """
         Create a directory inside the current folder and update the internal structure.
