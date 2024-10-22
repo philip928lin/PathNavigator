@@ -1,1 +1,1 @@
-from .pathnavigator import PathNavigator, Shortcut
+from .pathnavigator import PathNavigator
