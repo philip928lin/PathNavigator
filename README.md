@@ -34,16 +34,21 @@ pn.folder1.mkdir('folder2')     # make a subfolder under folder1.
 pn.forlder1.add_to_sys_path()   # add dir to folder1 to sys path.
 pn.forlder1.forlder2.chdir()    # change the working directory to folder2.
 pn.folder1.dir()        # returns the full path to folder1.
+pn.folder1.get("file.csv")  # return the full path to file1.
+pn.folder1.file1        # returns the full path to file1 (if file1 is a valid attribute name).
 pn.folder1.ls()         # prints the contents (subfolders and files) of folder1.
-pn.folder1.file1        # returns the full path to file1.
 pn.folder1.remove('folder2')    # removes a file or subfolder from the folder and deletes it from the filesystem.
+pn.folder1.join("subfolder1", "fileX.txt") # combine folder1 directory with "subfolder1/fileX.txt" and return it.
+pn.folder1.set_shortcuts("f1")  # set a shortcut named "f1" to folder1.
+pn.sc.f1    # retrieve the path of "f1" shortcut
 
-pn.shortcuts.add('config', pn.folder1.file)    # add shortcut to, e.g., config file.
-pn.config               # retrieve the path of a specific shortcut
-pn.shortcuts.ls()       # print all shortcuts
-pn.shortcuts.remove('config')   # remove a shortcut
-pn.shortcuts.to_dict()  # return a dictionary of shortcuts
-pn.shortcuts.to_json(filename)  # output of shortcuts json file
-pn.shortcuts.load_dict()  # load shortcuts from a dictionary
-pn.shortcuts.load_json(filename)  # load shortcuts from a json file
+
+pn.sc.add('f', pn.folder1.file)    # add shortcut, "f", to the file.
+pn.f               # retrieve the path of a specific shortcut (i.e., "f")
+pn.sc.ls()       # print all shortcuts
+pn.sc.remove('f')   # remove a shortcut
+pn.sc.to_dict()  # return a dictionary of shortcuts
+pn.sc.to_json(filename)  # output of shortcuts json file
+pn.sc.load_dict()  # load shortcuts from a dictionary
+pn.sc.load_json(filename)  # load shortcuts from a json file
 ```

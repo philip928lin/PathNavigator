@@ -12,8 +12,6 @@ class Shortcut:
         Adds a new shortcut as an attribute.
     remove(name)
         Removes an existing shortcut by name and deletes the attribute.
-    get(name)
-        Retrieves the path associated with a shortcut.
     ls()
         Lists all shortcuts (attributes).
     to_json(filename)
