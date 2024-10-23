@@ -24,7 +24,7 @@ jobs:
 
     - name: Generate API documentation
       run: |
-        sphinx-apidoc -o docs/source/ .\src\pathnavigator
+        sphinx-apidoc -o docs/source/ src/pathnavigator
 
     - name: Build documentation
       run: |
