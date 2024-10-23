@@ -21,19 +21,16 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install Hatch
+    - name: Install Just
       run: |
-        pip install hatch  # Install hatch
-
-    - name: Install just
-      run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash
-        echo "${HOME}/bin" >> $GITHUB_PATH
+        # Manually download and install a specific version of Just
+        curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /usr/local/bin
+        echo "/usr/local/bin" >> $GITHUB_PATH  # Add the path to the installed 'just'
 
     - name: Install dependencies using just
       run: |
-        just install  # This will run `hatch env create` to set up environment
+        just install  # This will run the 'install' task from justfile
 
     - name: Run tests using just
       run: |
-        just test  # This will run `hatch run pytest` to run tests
+        just test  # This will run the 'test' task from justfile
