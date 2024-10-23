@@ -24,7 +24,7 @@ class Shortcut:
         Loads shortcuts from a JSON file.
     """
 
-    def __setattr__(self, name: str, value: str):
+    def __setattr__(self, name: str, value: str, overwrite: bool = False):
         """
         Dynamically add shortcut as an attribute.
 
@@ -34,8 +34,10 @@ class Shortcut:
             The name of the shortcut.
         value : str
             The path that the shortcut refers to.
+        overwrite : bool, optional
+            Whether to overwrite an existing shortcut. Default is False.
         """
-        if name in self.__dict__:
+        if name in self.__dict__ and not overwrite:
             raise AttributeError(f"Cannot add shortcut '{name}' as it conflicts with an existing attribute.")
         super().__setattr__(name, value)
         print(f"Shortcut '{name}' added for path '{value}'")
@@ -82,7 +84,7 @@ class Shortcut:
         super().__delattr__(name)
         print(f"Shortcut '{name}' removed")
 
-    def add(self, name: str, path: str):
+    def add(self, name: str, path: str, overwrite: bool = False):
         """
         Add a new shortcut as an attribute.
 
@@ -92,6 +94,8 @@ class Shortcut:
             The name of the shortcut.
         path : str
             The path that the shortcut refers to.
+        overwrite : bool, optional
+            Whether to overwrite an existing shortcut. Default is False.
 
         Examples
         --------
@@ -100,7 +104,7 @@ class Shortcut:
         >>> shortcut.my_folder
         '/path/to/folder'
         """
-        self.__setattr__(name, path)
+        self.__setattr__(name, path, overwrite=overwrite)
 
     def remove(self, name: str):
         """
@@ -186,7 +190,7 @@ class Shortcut:
         """
         return self.__dict__.copy()
 
-    def load_dict(self, data: dict):
+    def load_dict(self, data: dict, overwrite: bool = False):
         """
         Load shortcuts from a dictionary.
 
@@ -194,6 +198,8 @@ class Shortcut:
         ----------
         data : dict
             A dictionary where keys are shortcut names and values are paths.
+        overwrite : bool, optional
+            Whether to overwrite existing shortcuts. Default is False.
 
         Examples
         --------
@@ -201,9 +207,9 @@ class Shortcut:
         >>> shortcut.load_dict({"project": "/path/to/project", "data": "/path/to/data"})
         """
         for name, path in data.items():
-            self.add(name, path)
+            self.add(name, path, overwrite=overwrite)
 
-    def load_json(self, filename: str):
+    def load_json(self, filename: str, overwrite: bool = False):
         """
         Load shortcuts from a JSON file.
 
@@ -211,6 +217,8 @@ class Shortcut:
         ----------
         filename : str
             The name of the file containing the shortcuts in JSON format.
+        overwrite : bool, optional
+            Whether to overwrite existing shortcuts. Default is False.
 
         Examples
         --------
@@ -219,4 +227,4 @@ class Shortcut:
         """
         with open(filename, 'r') as f:
             data = json.load(f)  # Load the JSON data into a dictionary
-            self.load_dict(data)  # Load the shortcuts using the load_dict method
+            self.load_dict(data, overwrite=overwrite)  # Load the shortcuts using the load_dict method
