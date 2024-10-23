@@ -1,0 +1,40 @@
+# .github/workflows/python-app.yml
+name: Python Package
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]  # Test on Ubuntu, macOS, and Windows
+        python-version: ['3.12', '3.13']  # Test on Python 3.12 and above (add more versions as needed)
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}  # Use the current matrix Python version
+
+    - name: Install Poetry (if using Poetry)
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+
+    - name: Install just
+      run: |
+        # Install just
+        curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash
+        echo "::add-path::${HOME}/.just"
+
+    - name: Install dependencies using just
+      run: |
+        just install  # This will run the 'install' task from justfile
+
+    - name: Run tests using just
+      run: |
+        just test  # This will run the 'test' task from justfile
