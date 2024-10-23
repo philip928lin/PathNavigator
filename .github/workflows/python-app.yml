@@ -25,36 +25,22 @@ jobs:
       run: |
         pip install hatch  # Install hatch for dependency management
       shell: bash
-
-    - name: Install Just on Linux and macOS
-      if: runner.os != 'Windows'
+    
+    - name: Install environment using Hatch
       run: |
-        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-          curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /usr/local/bin;
-        elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-          curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-apple-darwin.tar.gz | tar -xz -C /usr/local/bin;
-        fi
+        hatch env create  # Create a new environment
       shell: bash
 
-    - name: Install Just on Windows
-      if: runner.os == 'Windows'
+    - name: run tests
       run: |
-        mkdir -p C:\just
-        Invoke-WebRequest -Uri "https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-pc-windows-msvc.zip" -OutFile just.zip
-        Expand-Archive -Path just.zip -DestinationPath C:\just
-        $env:Path = "C:\just;" + $env:Path
-        [System.Environment]::SetEnvironmentVariable('PATH', $env:Path, [System.EnvironmentVariableTarget]::Process)
-        Write-Host "Updated PATH: $env:Path"
-
-    - name: Verify Just Installation on Windows
-      if: runner.os == 'Windows'
-      run: |
-        just --version
-
-    - name: Install dependencies using Just
-      run: just install  # This will run `hatch env create` via the justfile
+        hatch run pytest test/  # Run tests using pytest
       shell: bash
 
-    - name: Run tests using Just
-      run: just test  # This will run the 'test' task from justfile
-      shell: bash
+    # Many issue installing just and calling it in windows (using hatch directly instead of justfile)
+    #- name: Install dependencies using Just
+    #  run: just install  # This will run `hatch env create` via the justfile
+    #  shell: bash
+
+    #- name: Run tests using Just
+    #  run: just test  # This will run the 'test' task from justfile
+    #  shell: bash
