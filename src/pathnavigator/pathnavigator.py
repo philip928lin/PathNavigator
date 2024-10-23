@@ -24,12 +24,12 @@ class PathNavigator(Folder):
         
     Examples
     --------
-    >>> pm = PathNavigator('/path/to/root')
-    >>> pm.mkdir('folder1', 'folder2')     # make a subfolder under the root
-    >>> pm.folder1.dir()        # returns the full path to folder1.
-    >>> pm.folder1.ls()         # prints the contents (subfolders and files) of folder1.
-    >>> pm.folder1.file1        # returns the full path to file1.
-    >>> pm.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
+    >>> pn = PathNavigator('/path/to/root')
+    >>> pn.mkdir('folder1', 'folder2')     # make a subfolder under the root
+    >>> pn.folder1.dir()        # returns the full path to folder1.
+    >>> pn.folder1.ls()         # prints the contents (subfolders and files) of folder1.
+    >>> pn.folder1.file1        # returns the full path to file1.
+    >>> pn.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
     """
     
     def __init__(self, root_dir: str, load_nested_directories=True):
@@ -78,8 +78,8 @@ class PathNavigator(Folder):
 
         Examples
         --------
-        >>> pm = PathNavigator('/path/to/root')
-        >>> pm.reload()
+        >>> pn = PathNavigator('/path/to/root')
+        >>> pn.reload()
         """
         self._pn_load_nested_directories(self._pn_root, self)
 

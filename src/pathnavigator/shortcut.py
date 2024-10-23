@@ -8,8 +8,8 @@ class Shortcut:
 
     Methods
     -------
-    add(name, path)
-        Adds a new shortcut as an attribute.
+    add(name, path, overwrite=False)
+        Adds a new shortcut as an attribute. 
     remove(name)
         Removes an existing shortcut by name and deletes the attribute.
     ls()
@@ -18,9 +18,9 @@ class Shortcut:
         Returns all shortcuts as a JSON string and saves it to a file.
     to_dict()
         Returns all shortcuts as a dictionary.
-    load_dict(data)
+    load_dict(data, overwrite=False)
         Loads shortcuts from a dictionary.
-    load_json(filename)
+    load_json(filename, overwrite=False)
         Loads shortcuts from a JSON file.
     """
 
