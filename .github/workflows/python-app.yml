@@ -39,22 +39,17 @@ jobs:
     - name: Install Just on Windows
       if: runner.os == 'Windows'
       run: |
-        # Create directory for just
-        New-Item -Path C:\just -ItemType Directory -Force
-        # Download and extract just to C:\just
+        mkdir -p C:\just
         Invoke-WebRequest -Uri "https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-pc-windows-msvc.zip" -OutFile just.zip
         Expand-Archive -Path just.zip -DestinationPath C:\just
-        # Add C:\just to the PATH environment variable
         $env:Path = "C:\just;" + $env:Path
         [System.Environment]::SetEnvironmentVariable('PATH', $env:Path, [System.EnvironmentVariableTarget]::Process)
         Write-Host "Updated PATH: $env:Path"
-      shell: powershell
 
     - name: Verify Just Installation on Windows
       if: runner.os == 'Windows'
       run: |
-        C:\just\just.exe --version
-      shell: powershell
+        just --version
 
     - name: Install dependencies using Just
       run: just install  # This will run `hatch env create` via the justfile
