@@ -26,7 +26,8 @@ jobs:
         pip install hatch  # Install hatch for dependency management
       shell: bash
 
-    - name: Install Just
+    - name: Install Just on Linux and macOS
+      if: runner.os != 'Windows'
       run: |
         if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
           curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /usr/local/bin;
@@ -39,8 +40,14 @@ jobs:
       if: runner.os == 'Windows'
       run: |
         Invoke-WebRequest -Uri "https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-pc-windows-msvc.zip" -OutFile just.zip
-        Expand-Archive -Path just.zip -DestinationPath $Env:ProgramFiles
+        Expand-Archive -Path just.zip -DestinationPath $Env:ProgramFiles\just
         $env:Path += ";$Env:ProgramFiles\just"
+        Write-Host "Updated PATH: $env:Path"
+      shell: powershell
+
+    - name: Verify Just Installation on Windows
+      if: runner.os == 'Windows'
+      run: just --version
       shell: powershell
 
     - name: Install dependencies using Just
