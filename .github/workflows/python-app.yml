@@ -21,6 +21,10 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Install Hatch
+      run: |
+        pip install hatch  # Install the hatch tool
+
     - name: Install Just
       run: |
         case ${{ matrix.os }} in
@@ -39,7 +43,7 @@ jobs:
 
     - name: Install dependencies using just
       run: |
-        just install  # This will run the 'install' task from justfile
+        just install  # This will run `hatch env create` via the justfile
 
     - name: Run tests using just
       run: |
