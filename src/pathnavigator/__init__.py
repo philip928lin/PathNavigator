@@ -1,1 +1,0 @@
-from .pathnavigator import PathNavigator
