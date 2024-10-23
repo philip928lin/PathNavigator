@@ -9,8 +9,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]  # Test on Ubuntu, macOS, and Windows
-        python-version: ['3.12', '3.13']  # Test on Python 3.12 and above (add more versions as needed)
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.12', '3.13']
 
     steps:
     - name: Checkout repository
@@ -19,7 +19,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}  # Use the current matrix Python version
+        python-version: ${{ matrix.python-version }}
 
     - name: Install Poetry (if using Poetry)
       run: |
@@ -29,7 +29,7 @@ jobs:
       run: |
         # Install just
         curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash
-        echo "::add-path::${HOME}/.just"
+        echo "${HOME}/bin" >> $GITHUB_PATH  # Add `just` to PATH using environment files
 
     - name: Install dependencies using just
       run: |
