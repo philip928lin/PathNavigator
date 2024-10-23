@@ -1,4 +1,4 @@
-![Test Workflow](https://github.com/yourusername/your-repo-name/actions/workflows/python-app.yml/badge.svg)
+![Test](https://github.com/philip928lin/PathNavigator/actions/workflows/test.yml/badge.svg)
 
 # PathNavigator
 
