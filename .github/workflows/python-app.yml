@@ -23,8 +23,18 @@ jobs:
 
     - name: Install Just
       run: |
-        # Manually download and install a specific version of Just
-        curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /usr/local/bin
+        case ${{ matrix.os }} in
+          ubuntu-latest)
+            curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /usr/local/bin
+            ;;
+          macos-latest)
+            curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-apple-darwin.tar.gz | tar -xz -C /usr/local/bin
+            ;;
+          windows-latest)
+            curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-pc-windows-msvc.zip -o just.zip
+            tar -xf just.zip -C /usr/local/bin
+            ;;
+        esac
         echo "/usr/local/bin" >> $GITHUB_PATH  # Add the path to the installed 'just'
 
     - name: Install dependencies using just
