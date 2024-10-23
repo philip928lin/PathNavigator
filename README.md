@@ -22,8 +22,8 @@ from pathnavigator import PathNavigator
 pn = PathNavigator("root_dir")
 
 # Now you are able to access all subfolders and files under `root_dir`
-dir_to_your_subfolder = pn.your_subfolder.dir()  
-path_to_your_file = pn.your_subfolder.your_file_txt # "." will be replaced by "_"
+dir_to_your_subfolder = pn.your_subfolder.dir()
+path_to_your_file = pn.your_subfolder.get("your_file.csv")  # return the full path to your_file.csv.
 ```
 
 ## Other features
