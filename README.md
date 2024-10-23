@@ -1,3 +1,5 @@
+![Test Workflow](https://github.com/yourusername/your-repo-name/actions/workflows/python-app.yml/badge.svg)
+
 # PathNavigator
 
 `PathNavigator` is a Python package designed to navigate directories and files efficiently. It provides tools to interact with the filesystem, allowing users to create, delete, and navigate folders and files, while also maintaining an internal representation of the directory structure. Customized shortcuts can be added.
