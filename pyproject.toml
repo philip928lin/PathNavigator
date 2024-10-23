@@ -28,5 +28,5 @@ target-version = ["py310", "py311", "py312"]
 [tool.hatch.envs.default]
 dependencies = [
     "pytest",
-    "numpy",
+    "hatch",
 ]
