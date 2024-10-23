@@ -23,28 +23,30 @@ jobs:
 
     - name: Install Hatch
       run: |
-        pip install hatch  # Install the hatch tool
+        pip install hatch  # Install hatch for dependency management
+      shell: bash
 
     - name: Install Just
       run: |
-        case ${{ matrix.os }} in
-          ubuntu-latest)
-            curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /usr/local/bin
-            ;;
-          macos-latest)
-            curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-apple-darwin.tar.gz | tar -xz -C /usr/local/bin
-            ;;
-          windows-latest)
-            curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-pc-windows-msvc.zip -o just.zip
-            tar -xf just.zip -C /usr/local/bin
-            ;;
-        esac
-        echo "/usr/local/bin" >> $GITHUB_PATH  # Add the path to the installed 'just'
+        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+          curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /usr/local/bin;
+        elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+          curl --proto '=https' --tlsv1.2 -sSfL https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-apple-darwin.tar.gz | tar -xz -C /usr/local/bin;
+        fi
+      shell: bash
 
-    - name: Install dependencies using just
+    - name: Install Just on Windows
+      if: runner.os == 'Windows'
       run: |
-        just install  # This will run `hatch env create` via the justfile
+        Invoke-WebRequest -Uri "https://github.com/casey/just/releases/download/1.14.0/just-1.14.0-x86_64-pc-windows-msvc.zip" -OutFile just.zip
+        Expand-Archive -Path just.zip -DestinationPath $Env:ProgramFiles
+        $env:Path += ";$Env:ProgramFiles\just"
+      shell: powershell
 
-    - name: Run tests using just
-      run: |
-        just test  # This will run the 'test' task from justfile
+    - name: Install dependencies using Just
+      run: just install  # This will run `hatch env create` via the justfile
+      shell: bash
+
+    - name: Run tests using Just
+      run: just test  # This will run the 'test' task from justfile
+      shell: bash
