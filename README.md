@@ -1,3 +1,4 @@
+![Docs](https://github.com/philip928lin/PathNavigator/actions/workflows/docs.yml/badge.svg)
 ![Test](https://github.com/philip928lin/PathNavigator/actions/workflows/test.yml/badge.svg)
 
 # PathNavigator
