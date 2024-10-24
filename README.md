@@ -62,9 +62,11 @@ pn.folder1.join("subfolder1", "fileX.txt") # combine folder1 directory with "sub
 ```python
 pn.folder1.set_shortcuts("f1")  # set a shortcut named "f1" to folder1.
 pn.sc.f1    # retrieve the path of "f1" shortcut
+pn.sc.get("f1")  # retrieve the path of "f1" shortcut
 
 pn.sc.add('f', pn.folder1.file)    # add shortcut, "f", to the file.
 pn.f               # retrieve the path of a specific shortcut (i.e., "f")
+pn.sc.get("f")  # retrieve the path of "f" shortcut
 pn.sc.ls()       # print all shortcuts
 pn.sc.remove('f')   # remove a shortcut
 pn.sc.to_dict()  # return a dictionary of shortcuts
