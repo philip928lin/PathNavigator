@@ -76,4 +76,4 @@ pn.sc.load_json(filename)  # load shortcuts from a json file
 ```
 
 ## API reference
-![Docs](https://github.com/philip928lin/PathNavigator/actions/workflows/docs.yml/badge.svg)
+[philip928lin.github.io/PathNavigator/](https://philip928lin.github.io/PathNavigator/)
