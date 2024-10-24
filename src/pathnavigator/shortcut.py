@@ -106,6 +106,29 @@ class Shortcut:
         """
         self.__setattr__(name, path, overwrite=overwrite)
 
+    def get(self, name: str) -> str:
+        """
+        Retrieve the path of a shortcut.
+
+        Parameters
+        ----------
+        name : str
+            The name of the shortcut.
+
+        Returns
+        -------
+        str
+            The path associated with the shortcut.
+
+        Examples
+        --------
+        >>> shortcut = Shortcut()
+        >>> shortcut.add("my_folder", "/path/to/folder")
+        >>> shortcut.get("my_folder")
+        '/path/to/folder'
+        """
+        return self.__getattr__(name)
+    
     def remove(self, name: str):
         """
         Remove a shortcut by name and delete its attribute.
