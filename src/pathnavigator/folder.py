@@ -1,9 +1,10 @@
 import os
 import sys
 import shutil
+from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Dict, Any
-
+from itertools import islice
 from .att_name_convertor import AttributeNameConverter
 
 @dataclass
@@ -45,7 +46,7 @@ class Folder:
     """
     
     name: str
-    parent_path: str = ""  # Track the parent folder path for constructing full paths
+    parent_path: Path  # Track the parent folder path for constructing full paths
     _pn_object: object = field(default=None)
     subfolders: Dict[str, Any] = field(default_factory=dict)
     files: Dict[str, str] = field(default_factory=dict)
@@ -92,6 +93,7 @@ class Folder:
             return self.files[item]
         raise AttributeError(f"'{item}' not found in folder '{self.name}'")
 
+    # Intergrate into get method (disprected)
     def dir(self):
         """
         Get the full path of this folder.
@@ -107,7 +109,7 @@ class Folder:
         >>> folder.dir()
         '/home/user/root'
         """
-        return os.path.join(self.parent_path, self.name)
+        return Path(self.parent_path) / self.name
 
     def ls(self):
         """
@@ -127,7 +129,7 @@ class Folder:
         Files:
           [File] file1
         """
-        print(f"Contents of '{self.dir()}':")
+        print(f"Contents of '{self.get()}':")
         if self.subfolders:
             print("Subfolders:")
             for subfolder in self.subfolders:
@@ -175,31 +177,31 @@ class Folder:
             full_path = self.join(org_name)
             shutil.rmtree(full_path)
             del self.subfolders[valid_name]
-            print(f"Subfolder '{org_name}' has been removed from '{self.dir()}'")
+            print(f"Subfolder '{org_name}' has been removed from '{self.get()}'")
         elif valid_name in self.files:
             full_path = self.files[valid_name]
             os.remove(full_path)
             del self.files[valid_name]
-            print(f"File '{org_name}' has been removed from '{self.dir()}'")
+            print(f"File '{org_name}' has been removed from '{self.get()}'")
         else:
-            print(f"'{name}' not found in '{self.dir()}'")
+            print(f"'{name}' not found in '{self.get()}'")
 
         """
         clean_name_with_spaces = name.replace('_', ' ')
         clean_name_with_underscores = name.replace(' ', '_')
         
         if clean_name_with_underscores in self.subfolders:
-            full_path = os.path.join(self.dir(), self.subfolders[clean_name_with_underscores].name)
+            full_path = os.path.join(self.get(), self.subfolders[clean_name_with_underscores].name)
             shutil.rmtree(full_path)
             del self.subfolders[clean_name_with_underscores]
-            print(f"Subfolder '{clean_name_with_spaces}' has been removed from '{self.dir()}'")
+            print(f"Subfolder '{clean_name_with_spaces}' has been removed from '{self.get()}'")
         elif clean_name_with_underscores in self.files:
             full_path = self.files[clean_name_with_underscores]
             os.remove(full_path)
             del self.files[clean_name_with_underscores]
-            print(f"File '{clean_name_with_spaces}' has been removed from '{self.dir()}'")
+            print(f"File '{clean_name_with_spaces}' has been removed from '{self.get()}'")
         else:
-            print(f"'{clean_name_with_spaces}' not found in '{self.dir()}'")
+            print(f"'{clean_name_with_spaces}' not found in '{self.get()}'")
         """
 
     def join(self, *args) -> str:
@@ -222,7 +224,7 @@ class Folder:
         >>> folder.join("subfolder", "file.txt")
         '/home/user/root/subfolder/file.txt'
         """
-        return os.path.join(self.dir(), *args)
+        return self.get().joinpath(*args)
 
     def mkdir(self, *args):
         """
@@ -240,11 +242,14 @@ class Folder:
         >>> folder.subfolders['new_subfolder']
         Folder(name='new_subfolder', parent_path='/root', subfolders={}, files={})
         """
-        full_path = self.join(*args) #os.path.join(self.dir(), *args)
-        os.makedirs(full_path, exist_ok=True)
+        full_path = self.join(*args) #os.path.join(self.get(), *args)
+        full_path.mkdir(parents=True, exist_ok=True)
+        #os.makedirs(full_path, exist_ok=True)
 
-        relative_path = os.path.relpath(full_path, self.dir())
-        path_parts = relative_path.split(os.sep)
+        relative_path = full_path.relative_to(self.get())
+        path_parts = relative_path.parts
+        #relative_path = os.path.relpath(full_path, self.get())
+        #path_parts = relative_path.split(os.sep)
 
         current_folder = self
         for part in path_parts:
@@ -272,11 +277,11 @@ class Folder:
         Shortcut 'my_folder' added for path '/root'
         """
         if filename is None:
-            self._pn_object.sc.add(name, self.dir())
+            self._pn_object.sc.add(name, self.get())
         else:
             self._pn_object.sc.add(name, self.join(filename))
 
-    def get(self, filename: str):
+    def get(self, filename: str = None):
         """
         Get the full path of a file in the current folder.
 
@@ -296,11 +301,14 @@ class Folder:
         >>> folder.get("file1")
         '/home/user/root/file1'
         """
-        valid_name = self._pn_converter.to_valid_name(filename)
-        if valid_name not in self.files:
-            print(f"'{filename}' not found in '{self.dir()}'")
-            return None
-        return self.files[valid_name]
+        if filename is None:
+            return Path(self.parent_path) / self.name
+        else:
+            valid_name = self._pn_converter.to_valid_name(filename)
+            if valid_name not in self.files:
+                print(f"'{filename}' not found in '{self.get()}'")
+                return None
+            return self.files[valid_name]
         
     def chdir(self):
         """
@@ -310,8 +318,9 @@ class Folder:
         --------
         >>> folder.chdir()
         """
-        os.chdir(self.dir())
-        print(f"Changed working directory to '{self.dir()}'")
+        self.get().chdir()
+        #os.chdir(self.get())
+        print(f"Changed working directory to '{self.get()}'")
 
     def add_to_sys_path(self, method='insert', index=1):
         """
@@ -343,63 +352,60 @@ class Folder:
         >>> folder.add_to_sys_path(method='invalid')
         Invalid method: invalid. Use 'insert' or 'append'.
         """
-        if self.dir() not in sys.path:
+        if self.get() not in sys.path:
             if method == 'insert':
-                sys.path.insert(index, self.dir())
-                print(f"Inserted {self.dir()} at index {index} in system path.")
+                sys.path.insert(index, self.get())
+                print(f"Inserted {self.get()} at index {index} in system path.")
             elif method == 'append':
-                sys.path.append(self.dir())
-                print(f"Appended {self.dir()} to system path.")
+                sys.path.append(self.get())
+                print(f"Appended {self.get()} to system path.")
             else:
                 print(f"Invalid method: {method}. Use 'insert' or 'append'.")
         else:
-            print(f"{self.dir()} is already in the system path.")
+            print(f"{self.get()} is already in the system path.")
+    
+    def tree(self, level: int=-1, limit_to_directories: bool=False,
+            length_limit: int=1000, level_length_limit: int=1000):
+        """Given a directory Path object print a visual tree structure"""
+        space =  '    '
+        branch = '│   '
+        tee =    '├── '
+        last =   '└── '
 
-    def display(self, show_files=True, show_attrs=False, _indent=0, _prefix=""):
-        """
-        Prints the folder structure with indentation.
+        dir_path = self.get()
+        files = 0
+        directories = 0
+        def inner(folder: Folder, prefix: str='', level=-1):
+            nonlocal files, directories
+            if not level: 
+                return # 0, stop iterating
+            
+            pointers = [tee] * (len(folder.subfolders) - 1) + [last]
+            for i, (pointer, subfolder) in enumerate(zip(pointers, folder.subfolders.values())):
+                if i == level_length_limit:
+                    yield prefix + pointer + f"...limit reached (total: {len(folder.subfolders)} subfolders)"
+                elif i > level_length_limit:
+                    pass
+                else:
+                    yield prefix + pointer + subfolder.get().name
+                    directories += 1
+                    extension = branch if pointer == tee else space 
+                    yield from inner(subfolder, prefix=prefix+extension, level=level-1)
 
-        Parameters
-        ----------
-        show_files : bool, optional
-            Whether to display files (default is True).
-        show_attrs : bool, optional
-            If True, display the converted valid folder and file names used as Folder 
-            class's attribute name (default is False).
-        _indent : int, optional
-            The indentation level (default is 0).
-        _prefix : str, optional
-            The prefix for the current level (default is "").
-        """
-        
-        
-        unit = 2
-        if show_attrs:
-            folder = self._pn_converter.to_valid_name(self.name)
-        else:
-            folder = self.name
-        print(f"{" "*_indent}{_prefix}{folder}/")
-        if show_files:
-            for i, file_ in enumerate(self.files.keys()):
-                if show_attrs:
-                    file = file_
-                else:
-                    file = self._pn_converter.get(file_)
-                if _prefix == "├── ":
-                    f_f = "│"
-                else:
-                    f_f = " "
-                if i == len(self.files) - 1:
-                    if not self.subfolders:
-                        print(f"{" "*(_indent)}{f_f}{" "*(unit-1)}└── {file}")
+            if not limit_to_directories: 
+                pointers = [tee] * (len(folder.files) - 1) + [last]
+                for i, (pointer, filepath) in enumerate(zip(pointers, folder.files.values())):
+                    if i == level_length_limit:
+                        yield prefix + pointer + "...limit reached (total: {len(folder.files)} files)"
+                    elif i > level_length_limit:
+                        pass
                     else:
-                        print(f"{" "*(_indent)}{f_f}{" "*(unit-1)}├── {file}")
-                else:
-                    print(f"{" "*(_indent)}{f_f}{" "*(unit-1)}├── {file}")
-        
-        for i, (_, subfolder) in enumerate(self.subfolders.items()):
-            if i == len(self.subfolders) - 1:# and not self.files:
-                subfolder.display( show_files, show_attrs, _indent + unit, "└── ")
-            else:
-                subfolder.display( show_files, show_attrs, _indent + unit, "├── ")
-        
+                        yield prefix + pointer + filepath.name
+                        files += 1
+        print(dir_path.name)
+        iterator = inner(self, level=level)
+        for line in islice(iterator, length_limit):
+            print(line)
+        if next(iterator, None):
+            print(f'... length_limit, {length_limit}, reached, counted:')
+        print(f'\n{directories} directories' + (f', {files} files' if files else ''))

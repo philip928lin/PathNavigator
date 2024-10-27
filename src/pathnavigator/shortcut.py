@@ -1,5 +1,6 @@
 import json
 from dataclasses import dataclass
+from pathlib import Path
 
 @dataclass
 class Shortcut:
@@ -24,7 +25,7 @@ class Shortcut:
         Loads shortcuts from a JSON file.
     """
 
-    def __setattr__(self, name: str, value: str, overwrite: bool = False):
+    def __setattr__(self, name: str, value: str|Path, overwrite: bool = False):
         """
         Dynamically add shortcut as an attribute.
 
@@ -32,14 +33,14 @@ class Shortcut:
         ----------
         name : str
             The name of the shortcut.
-        value : str
+        value : str or Path
             The path that the shortcut refers to.
         overwrite : bool, optional
             Whether to overwrite an existing shortcut. Default is False.
         """
         if name in self.__dict__ and not overwrite:
             raise AttributeError(f"Cannot add shortcut '{name}' as it conflicts with an existing attribute.")
-        super().__setattr__(name, value)
+        super().__setattr__(name, Path(value))
         print(f"Shortcut '{name}' added for path '{value}'")
 
     def __getattr__(self, name: str) -> str:

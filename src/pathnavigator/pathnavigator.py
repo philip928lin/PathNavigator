@@ -1,5 +1,5 @@
 import os
-
+from pathlib import Path
 from .folder import Folder
 from .shortcut import Shortcut
 
@@ -43,23 +43,45 @@ class PathNavigator(Folder):
         load_nested_directories : bool, optional
             Whether to load nested directories and files from the filesystem. Default is True.
         """
-        self._pn_root = root_dir
+        self._pn_root = Path(root_dir)
         self.sc = Shortcut()  # Initialize Shortcut manager as an attribute
-        super().__init__(name=os.path.basename(self._pn_root), parent_path=os.path.dirname(self._pn_root), _pn_object=self)
+        super().__init__(name=self._pn_root.name, parent_path=self._pn_root.parent, _pn_object=self)
         if load_nested_directories:
             self._pn_load_nested_directories(self._pn_root, self)
-        self.display(show_files=False)
+        self.tree(limit_to_directories=True, level_length_limit=10)
 
-    def _pn_load_nested_directories(self, current_path: str, current_folder: Folder):
+    def __str__(self):
+        return str(self._pn_root)
+
+    def __repr__(self):
+        return f"PathNavigator({self._pn_root})"
+    
+    def __call__(self):
+        return self._pn_root
+    
+    def _pn_load_nested_directories(self, current_path: Path, current_folder: Folder):
         """
         Recursively load subfolders and files from the filesystem into the internal structure.
 
         Parameters
         ----------
-        current_path : str
+        current_path : Path
             The current path to load.
         current_folder : Folder
             The Folder object representing the current directory.
+        """
+        for entry in current_path.iterdir():
+            if entry.is_dir():
+                folder_name = entry.name
+                valid_folder_name = current_folder._pn_converter.to_valid_name(folder_name)
+                new_subfolder = Folder(folder_name, parent_path=current_path, _pn_object=self)
+                current_folder.subfolders[valid_folder_name] = new_subfolder
+                self._pn_load_nested_directories(entry, new_subfolder)
+            elif entry.is_file():
+                file_name = entry.name
+                valid_filename = current_folder._pn_converter.to_valid_name(file_name)
+                current_folder.files[valid_filename] = entry
+
         """
         for entry in os.scandir(current_path):
             if entry.is_dir():
@@ -72,6 +94,7 @@ class PathNavigator(Folder):
                 file_name = entry.name
                 valid_filename = current_folder._pn_converter.to_valid_name(file_name)
                 current_folder.files[valid_filename] = entry.path
+        """
     
     def reload(self):
         """
