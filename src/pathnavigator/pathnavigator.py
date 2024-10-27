@@ -48,6 +48,7 @@ class PathNavigator(Folder):
         super().__init__(name=os.path.basename(self._pn_root), parent_path=os.path.dirname(self._pn_root), _pn_object=self)
         if load_nested_directories:
             self._pn_load_nested_directories(self._pn_root, self)
+        self.display(show_files=False)
 
     def _pn_load_nested_directories(self, current_path: str, current_folder: Folder):
         """
@@ -63,13 +64,13 @@ class PathNavigator(Folder):
         for entry in os.scandir(current_path):
             if entry.is_dir():
                 folder_name = entry.name
-                valid_folder_name = self._pn_converter.to_valid_name(folder_name)
+                valid_folder_name = current_folder._pn_converter.to_valid_name(folder_name)
                 new_subfolder = Folder(folder_name, parent_path=current_path, _pn_object=self)
                 current_folder.subfolders[valid_folder_name] = new_subfolder
                 self._pn_load_nested_directories(entry.path, new_subfolder)
             elif entry.is_file():
-                file_name = entry.name #.replace('.', '_').replace(" ", "_")
-                valid_filename = self._pn_converter.to_valid_name(file_name)
+                file_name = entry.name
+                valid_filename = current_folder._pn_converter.to_valid_name(file_name)
                 current_folder.files[valid_filename] = entry.path
     
     def reload(self):

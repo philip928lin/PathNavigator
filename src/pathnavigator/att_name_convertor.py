@@ -21,7 +21,7 @@ class AttributeNameConverter:
         """Convert the original name to a valid attribute name."""
         if self._pn_is_valid_attribute_name(name) is False:
             valid_name = self._pn_convert_to_valid_attribute_name(name)
-            print(f"Convert '{name}' to a valid attribute name, '{valid_name}'.")
+            #print(f"Convert '{name}' to a valid attribute name, '{valid_name}'.")
             return valid_name
         else:
             return name

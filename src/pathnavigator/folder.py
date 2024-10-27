@@ -40,6 +40,8 @@ class Folder:
         Creates a subdirectory in the current folder and updates the internal structure.
     add_to_sys_path(method='insert', index=1)
         Adds the directory to the system path.
+    display(indent=0, show_files=True)
+        Prints the folder structure with indentation.
     """
     
     name: str
@@ -300,7 +302,6 @@ class Folder:
             return None
         return self.files[valid_name]
         
-
     def chdir(self):
         """
         Set this directory as working directory.
@@ -353,3 +354,52 @@ class Folder:
                 print(f"Invalid method: {method}. Use 'insert' or 'append'.")
         else:
             print(f"{self.dir()} is already in the system path.")
+
+    def display(self, show_files=True, show_attrs=False, _indent=0, _prefix=""):
+        """
+        Prints the folder structure with indentation.
+
+        Parameters
+        ----------
+        show_files : bool, optional
+            Whether to display files (default is True).
+        show_attrs : bool, optional
+            If True, display the converted valid folder and file names used as Folder 
+            class's attribute name (default is False).
+        _indent : int, optional
+            The indentation level (default is 0).
+        _prefix : str, optional
+            The prefix for the current level (default is "").
+        """
+        
+        
+        unit = 2
+        if show_attrs:
+            folder = self._pn_converter.to_valid_name(self.name)
+        else:
+            folder = self.name
+        print(f"{" "*_indent}{_prefix}{folder}/")
+        if show_files:
+            for i, file_ in enumerate(self.files.keys()):
+                if show_attrs:
+                    file = file_
+                else:
+                    file = self._pn_converter.get(file_)
+                if _prefix == "├── ":
+                    f_f = "│"
+                else:
+                    f_f = " "
+                if i == len(self.files) - 1:
+                    if not self.subfolders:
+                        print(f"{" "*(_indent)}{f_f}{" "*(unit-1)}└── {file}")
+                    else:
+                        print(f"{" "*(_indent)}{f_f}{" "*(unit-1)}├── {file}")
+                else:
+                    print(f"{" "*(_indent)}{f_f}{" "*(unit-1)}├── {file}")
+        
+        for i, (_, subfolder) in enumerate(self.subfolders.items()):
+            if i == len(self.subfolders) - 1:# and not self.files:
+                subfolder.display( show_files, show_attrs, _indent + unit, "└── ")
+            else:
+                subfolder.display( show_files, show_attrs, _indent + unit, "├── ")
+        
