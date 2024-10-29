@@ -25,9 +25,12 @@ from pathnavigator import PathNavigator
 pn = PathNavigator("root_dir")
 
 # Now you are able to access all subfolders and files under `root_dir`
-dir_to_your_subfolder = pn.your_subfolder.dir()
+dir_to_your_subfolder = pn.your_subfolder.get()
 path_to_your_file = pn.your_subfolder.get("your_file.csv")  # return the full path to your_file.csv.
+pn.tree() # print out folder structure.
 ```
+
+Note that all the paths stored/retured are represented as `Path` object from [`pathlib`](https://docs.python.org/3/library/pathlib.html).
 
 ## Features
 
@@ -50,7 +53,7 @@ pn.forlder1.forlder2.chdir()    # change the working directory to folder2.
 
 ### Directory and File Operations
 ```python
-pn.folder1.dir()        # returns the full path to folder1.
+pn.folder1.get()        # returns the full path to folder1.
 pn.folder1.get("file.csv")  # return the full path to file1.
 pn.folder1.file1        # returns the full path to file1 (if file1 is a valid attribute name).
 pn.folder1.ls()         # prints the contents (subfolders and files) of folder1.
