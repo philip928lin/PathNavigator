@@ -1,8 +1,8 @@
 import pytest
 import os
 import sys
-import json
 from pathnavigator import PathNavigator
+from pathlib import Path
 
 @pytest.fixture
 def setup_pathnavigator(tmp_path):
@@ -43,7 +43,7 @@ def setup_pathnavigator(tmp_path):
 def test_initialization(setup_pathnavigator):
     pn = setup_pathnavigator
     assert pn.name == "root"
-    assert pn.parent_path == str(pn._pn_object.parent_path)
+    assert pn.parent_path == pn._pn_object.parent_path
 
 def test_mkdir(setup_pathnavigator):
     pn = setup_pathnavigator
@@ -53,28 +53,28 @@ def test_mkdir(setup_pathnavigator):
     assert 'newfolder' in pn.subfolders
 
     # Check if the 'newfolder' actually exists in the filesystem
-    newfolder_path = os.path.join(pn.dir(), 'newfolder')
+    newfolder_path = os.path.join(pn.get(), 'newfolder')
     assert os.path.isdir(newfolder_path)
 
 def test_add_to_sys_path(setup_pathnavigator):
     pn = setup_pathnavigator
     pn.folder1.add_to_sys_path()
-    assert str(pn.folder1.dir()) in sys.path
+    assert pn.folder1.get() in sys.path
 
 def test_chdir(setup_pathnavigator):
     pn = setup_pathnavigator
     pn.folder2.subfolder1.chdir()
-    assert os.getcwd() == pn.folder2.subfolder1.dir()
+    assert Path(os.getcwd()) == pn.folder2.subfolder1.get()
 
-def test_dir(setup_pathnavigator):
+def test_get(setup_pathnavigator):
     pn = setup_pathnavigator
-    assert pn.folder1.dir() == os.path.join(pn.dir(), 'folder1')
+    assert pn.folder1.get() == pn.get() / 'folder1'
 
 def test_get_file_path(setup_pathnavigator):
     pn = setup_pathnavigator
     file_path = pn.folder1.get("file1.txt")
     # Check if the file path is correct
-    assert file_path == os.path.join(pn.folder1.dir(), "file1.txt")
+    assert file_path == pn.folder1.get() / "file1.txt"
 
     # Check if the file actually exists in the filesystem
     assert os.path.isfile(file_path)
@@ -113,7 +113,7 @@ def test_remove(setup_pathnavigator):
     pn.mkdir('newfolder')
     
     # Ensure the folder was created
-    newfolder_path = os.path.join(pn.dir(), 'newfolder')
+    newfolder_path = os.path.join(pn.get(), 'newfolder')
     assert os.path.isdir(newfolder_path)
     
     # Remove the folder
@@ -128,12 +128,12 @@ def test_remove(setup_pathnavigator):
 def test_join(setup_pathnavigator):
     pn = setup_pathnavigator
     joined_path = pn.folder1.join("subfolder1", "fileX.txt")
-    assert joined_path == os.path.join(pn.folder1.dir(), "subfolder1", "fileX.txt")
+    assert joined_path == pn.folder1.get() / "subfolder1" / "fileX.txt"
 
 def test_set_shortcuts(setup_pathnavigator):
     pn = setup_pathnavigator
     pn.folder2.subfolder1.set_shortcut("sb1")
-    assert pn.sc.sb1 == pn.folder2.subfolder1.dir()
+    assert pn.sc.sb1 == pn.folder2.subfolder1.get()
 
 def test_shortcut_manager(setup_pathnavigator):
     pn = setup_pathnavigator
@@ -142,7 +142,7 @@ def test_shortcut_manager(setup_pathnavigator):
     assert pn.sc.f == pn.folder1.get("file1.txt")
     shortcuts = pn.sc.to_dict()
     assert 'f' in shortcuts
-    json_file = os.path.join(pn.dir(), "shortcuts.json")
+    json_file = os.path.join(pn.get(), "shortcuts.json")
     pn.sc.to_json(json_file)
     assert os.path.exists(json_file)
     pn.sc.remove('f')

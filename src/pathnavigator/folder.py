@@ -318,8 +318,7 @@ class Folder:
         --------
         >>> folder.chdir()
         """
-        self.get().chdir()
-        #os.chdir(self.get())
+        os.chdir(self.get())
         print(f"Changed working directory to '{self.get()}'")
 
     def add_to_sys_path(self, method='insert', index=1):

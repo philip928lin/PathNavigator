@@ -190,15 +190,22 @@ class Shortcut:
         >>> shortcut.to_json("shortcuts.json")
         '{"my_folder": "/path/to/folder"}'
         """
-        json_data = json.dumps(self.__dict__, indent=4)  # Converting the dictionary to a pretty-printed JSON string
+        # Converting the dictionary to a pretty-printed JSON string
+        # Converting all Path objects to strings before writing to JSON
+        json_data = json.dumps({k: str(v) for k, v in self.__dict__.items()}, indent=4)  
         with open(filename, 'w') as f:
             f.write(json_data)  # Writing the JSON data to the file
     
         return json_data  # Returning the JSON string as well
 
-    def to_dict(self) -> dict:
+    def to_dict(self, to_str=False) -> dict:
         """
-        Return all shortcuts as a dictionary.
+        Return all shortcuts as a dictionary. 
+
+        Parameters
+        ----------
+        to_str : bool, optional
+            Whether to convert all Path objects to strings. Default is False.
 
         Returns
         -------
@@ -212,7 +219,10 @@ class Shortcut:
         >>> shortcut.to_dict()
         {'my_folder': '/path/to/folder'}
         """
-        return self.__dict__.copy()
+        if to_str:
+            return {k: str(v) for k, v in self.__dict__.items()}
+        else:
+            return self.__dict__.copy()
 
     def load_dict(self, data: dict, overwrite: bool = False):
         """
@@ -231,7 +241,7 @@ class Shortcut:
         >>> shortcut.load_dict({"project": "/path/to/project", "data": "/path/to/data"})
         """
         for name, path in data.items():
-            self.add(name, path, overwrite=overwrite)
+            self.add(name, Path(path), overwrite=overwrite)
 
     def load_json(self, filename: str, overwrite: bool = False):
         """
