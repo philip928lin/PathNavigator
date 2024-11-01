@@ -292,7 +292,30 @@ class Folder:
                 print(f"'{filename}' not found in '{self.get()}'")
                 return None
             return self.files[valid_name]
-        
+
+    def get_path_str(self, filename: str = None) -> str:
+        """
+        Get the full path of a file in the current folder as a string.
+
+        Parameters
+        ----------
+        filename : str
+            The name of the file to get. If None, returns the full path of the folder. 
+            Default is None. If the file does not exist, returns None.
+
+        Returns
+        -------
+        str
+            The full path to the file as a string.
+
+        Examples
+        --------
+        >>> folder = Folder(name="root")
+        >>> folder.get_path_str("file1")
+        '/home/user/root/file1'
+        """
+        return str(self.get(filename))
+      
     def chdir(self):
         """
         Set this directory as working directory.
