@@ -93,24 +93,6 @@ class Folder:
             return self.files[item]
         raise AttributeError(f"'{item}' not found in folder '{self.name}'")
 
-    # Intergrate into get method (disprected)
-    def dir(self):
-        """
-        Get the full path of this folder.
-
-        Returns
-        -------
-        str
-            The full path to the folder.
-
-        Examples
-        --------
-        >>> folder = Folder(name="root", parent_path="/home/user")
-        >>> folder.dir()
-        '/home/user/root'
-        """
-        return Path(self.parent_path) / self.name
-
     def ls(self):
         """
         Print the contents of the folder, including subfolders and files.
@@ -281,14 +263,15 @@ class Folder:
         else:
             self._pn_object.sc.add(name, self.join(filename))
 
-    def get(self, filename: str = None):
+    def get(self, filename: str = None) -> str:
         """
         Get the full path of a file in the current folder.
 
         Parameters
         ----------
         filename : str
-            The name of the file to get.
+            The name of the file to get. If None, returns the full path of the folder. 
+            Default is None. If the file does not exist, returns None.
 
         Returns
         -------
