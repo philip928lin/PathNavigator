@@ -27,8 +27,6 @@ class Folder:
     -------
     __getattr__(item)
         Allows access to subfolders and files as attributes. Replaces '_' with spaces.
-    dir()
-        Returns the full path to this folder.
     ls()
         Prints the contents (subfolders and files) of the folder.
     join(*args)
@@ -92,24 +90,6 @@ class Folder:
         if item in self.files:
             return self.files[item]
         raise AttributeError(f"'{item}' not found in folder '{self.name}'")
-
-    # Intergrate into get method (disprected)
-    def dir(self):
-        """
-        Get the full path of this folder.
-
-        Returns
-        -------
-        str
-            The full path to the folder.
-
-        Examples
-        --------
-        >>> folder = Folder(name="root", parent_path="/home/user")
-        >>> folder.dir()
-        '/home/user/root'
-        """
-        return Path(self.parent_path) / self.name
 
     def ls(self):
         """
@@ -256,7 +236,7 @@ class Folder:
             #clean_part = part.replace(' ', '_')
             valid_name = self._pn_converter.to_valid_name(part)
             if valid_name not in current_folder.subfolders:
-                new_folder = Folder(part, parent_path=current_folder.dir())
+                new_folder = Folder(part, parent_path=current_folder.get())
                 current_folder.subfolders[valid_name] = new_folder
             current_folder = current_folder.subfolders[valid_name]
         print(f"Created directory '{full_path}'")
