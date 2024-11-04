@@ -6,11 +6,15 @@
 PathNavigator documentation
 ===========================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+``PathNavigator`` is a Python package designed to navigate directories and files efficiently. 
+It provides tools to interact with the filesystem, allowing users to create, delete, and 
+navigate folders and files, while also maintaining an internal representation of the 
+directory structure. Customized shortcuts can be added. The paths are stored as ``Path`` 
+objects from `pathlib <https://docs.python.org/3/library/pathlib.html>`_, which adapt automatically across platforms.
 
+For quick start, see the `Readme <https://github.com/philip928lin/PathNavigator>`_ page.
 
+Contents:
 .. toctree::
    :maxdepth: 4
    :caption: Contents:
