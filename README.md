@@ -15,7 +15,7 @@ pip install PathNavigator
 
 Install the latest version from GitHub repo:
 ```bash
-pip install git+https://github.com/philip928lin/path_manager.git
+pip install git+https://github.com/philip928lin/PathNavigator.git
 ```
 
 ## Get start
