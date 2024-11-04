@@ -39,8 +39,8 @@ class Folder:
         Creates a subdirectory in the current folder and updates the internal structure.
     add_to_sys_path(method='insert', index=1)
         Adds the directory to the system path.
-    display(indent=0, show_files=True)
-        Prints the folder structure with indentation.
+    tree(level=-1, limit_to_directories=False, length_limit=1000, level_length_limit=1000)
+        Prints a visual tree structure of the folder and its contents.
     """
     
     name: str
