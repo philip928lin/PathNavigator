@@ -14,7 +14,10 @@ objects from `pathlib <https://docs.python.org/3/library/pathlib.html>`_, which 
 
 For quick start, see the `Readme <https://github.com/philip928lin/PathNavigator>`_ page.
 
+
 Contents:
+==========
+
 .. toctree::
    :maxdepth: 4
    :caption: Contents:
