@@ -32,7 +32,7 @@ class PathNavigator(Folder):
     >>> pn.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
     """
     
-    def __init__(self, root_dir: str, load_nested_directories=True, show_tree=True):
+    def __init__(self, root_dir: str, load_nested_directories=True):
         """
         Initialize the PathNavigator with the root directory and create a Shortcut manager.
 
@@ -48,8 +48,8 @@ class PathNavigator(Folder):
         super().__init__(name=self._pn_root.name, parent_path=self._pn_root.parent, _pn_object=self)
         if load_nested_directories:
             self._pn_load_nested_directories(self._pn_root, self)
-        if show_tree:
-            self.tree(limit_to_directories=True, level_length_limit=10)
+        #if show_tree:
+        #    self.tree(limit_to_directories=True, level_length_limit=10)
 
     def __str__(self):
         return str(self._pn_root)
