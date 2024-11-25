@@ -241,7 +241,7 @@ class Folder:
             current_folder = current_folder.subfolders[valid_name]
         print(f"Created directory '{full_path}'")
     
-    def set_shortcut(self, name: str, filename: str = None):
+    def set_sc(self, name: str, filename: str = None):
         """
         Add a shortcut to this folder using the Shortcut manager.
 
@@ -261,7 +261,7 @@ class Folder:
         else:
             self._pn_object.sc.add(name, self.join(filename))
 
-    def get(self, filename: str = None) -> str:
+    def get(self, filename: str = None) -> Path:
         """
         Get the full path of a file in the current folder.
 
@@ -273,7 +273,7 @@ class Folder:
 
         Returns
         -------
-        str
+        Path
             The full path to the file.
 
         Examples
@@ -291,9 +291,9 @@ class Folder:
                 return None
             return self.files[valid_name]
 
-    def get_path_str(self, filename: str = None) -> str:
+    def get_str(self, filename: str = None) -> str:
         """
-        Get the full path of a file in the current folder as a string.
+        Get the full path str of a file in the current folder.
 
         Parameters
         ----------
@@ -304,15 +304,24 @@ class Folder:
         Returns
         -------
         str
-            The full path to the file as a string.
+            The full path to the file.
 
         Examples
         --------
         >>> folder = Folder(name="root")
-        >>> folder.get_path_str("file1")
+        >>> folder.get_str("file1")
         '/home/user/root/file1'
         """
-        return str(self.get(filename))
+        if filename is None:
+            return str(Path(self.parent_path) / self.name)
+        else:
+            valid_name = self._pn_converter.to_valid_name(filename)
+            if valid_name not in self.files:
+                ValueError(
+                    f"'{filename}' not found in '{self.get()}'." +
+                    " Try to reload the pn object by pn.reload() if the file exist in the file system."
+                    )
+            return str(self.files[valid_name])
       
     def chdir(self):
         """
@@ -365,7 +374,7 @@ class Folder:
             else:
                 print(f"Invalid method: {method}. Use 'insert' or 'append'.")
         else:
-            print(f"{self.get()} is already in the system path.")
+            print(f"{self.get()} is already in the system path.\n Current system paths:\n{sys.path}")
     
     def tree(self, level: int=-1, limit_to_directories: bool=False,
             length_limit: int=1000, level_length_limit: int=1000):

@@ -31,6 +31,8 @@ path_to_your_file = pn.your_subfolder.get("your_file.csv")  # return the full pa
 
 # Convert a Path object to a string
 path_string = str(dir_to_your_subfolder)
+# Or 
+path_string = pn.your_subfolder.get_str()
 
 # Prints a visual tree structure of the folder and its contents.
 pn.tree() 
@@ -86,17 +88,16 @@ pn.folder1.join("subfolder1", "fileX.txt")
 
 # Or, you can utilize Path feature to join the paths.
 pn.folder1.get() / "subfolder1/fileX.txt"
-
 ```
 
 ### Shortcuts Management
 #### Add shortcuts
 ```python
 # Set a shortcut named "f1" to folder1.
-pn.folder1.set_shortcuts("f1")
+pn.folder1.set_sc("f1")
 
 # Set a shortcut named "x" to the file "x.txt" in folder1.
-pn.folder1.set_shortcuts("x", "x.txt")
+pn.folder1.set_sc("x", "x.txt")
 
 # Directly add shortcuts in pn.sc
 pn.sc.add('f', pn.folder1.get("file"))  
