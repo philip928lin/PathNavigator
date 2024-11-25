@@ -58,6 +58,8 @@ class AttributeNameConverter:
         """
         if name.startswith('_pn_'):
             raise ValueError(f"Strings starting with '_pn_' are reserved in PathNavigator. Please modify '{name}' to eligible naming.")
+        if name in invalid_list:
+            raise ValueError(f"Please avoid using reserved names and follow the naming conventions. Reserved names {invalid_list}")
         return name.isidentifier() and not keyword.iskeyword(name) and not name in invalid_list
 
     def _pn_convert_to_valid_attribute_name(self, name: str) -> str:
