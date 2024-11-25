@@ -130,14 +130,14 @@ def test_join(setup_pathnavigator):
     joined_path = pn.folder1.join("subfolder1", "fileX.txt")
     assert joined_path == pn.folder1.get() / "subfolder1" / "fileX.txt"
 
-def test_set_shortcuts(setup_pathnavigator):
+def test_set_sc(setup_pathnavigator):
     pn = setup_pathnavigator
-    pn.folder2.subfolder1.set_shortcut("sb1")
+    pn.folder2.subfolder1.set_sc("sb1")
     assert pn.sc.sb1 == pn.folder2.subfolder1.get()
 
 def test_shortcut_manager(setup_pathnavigator):
     pn = setup_pathnavigator
-    pn.folder1.set_shortcut("f1")
+    pn.folder1.set_sc("f1")
     pn.sc.add('f', pn.folder1.get("file1.txt"))
     assert pn.sc.f == pn.folder1.get("file1.txt")
     shortcuts = pn.sc.to_dict()
