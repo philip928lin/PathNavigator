@@ -18,30 +18,32 @@ Install the latest version from GitHub repo:
 pip install git+https://github.com/philip928lin/PathNavigator.git
 ```
 
-## Get start
+## Getting Started
 
 ```python
 from pathnavigator import PathNavigator
 
 pn = PathNavigator("root_dir")
 
-pn.folder1.get()        # returns the full path to folder1 as a Path object.
+# Retrieve the full path of folder1
+pn.folder1.get()        # returns the full path to folder1 as a Path object
 pn.folder1.get_str()    # returns the full path to folder1 as a string. Same as str(pn.folder1.get()).
-pn.folder1.get("file.txt")        # returns the full path to file.txt as a Path object.
+pn.folder1.get("file.txt")        # returns the full path to file.txt as a Path object
 pn.folder1.get_str("file.txt")    # returns the full path to file.txt as a string. Same as str(pn.folder1.get("file.txt")).
 
-pn.folder1.set_sc('my_folder')  # set the shortcut to folder1 which can be accessed by pn.sc.my_folder or pn.sc.get("my_folder") or pn.sc.get_str("my_folder").
-pn.folder1.set_sc('my_file', 'file.txt')  # set the shortcut to file.txt which can be accessed by pn.sc.my_file or pn.sc.get("my_file") or pn.sc.get_str("my_file").
-pn.sc.add('shortcut_name', 'shortcut_path')    # add a customized shortcut independent to pn internal folder structure.
+# Set shortcuts
+pn.folder1.set_sc('my_folder')  # set the shortcut for folder1 (accessed by pn.sc.my_folder or pn.sc.get("my_folder") or pn.sc.get_str)
+pn.folder1.set_sc('my_file', 'file.txt')  # set the shortcut for file.txt (accessed by pn.sc.my_file or pn.sc.get("my_file") or pn.sc.get_str("my_file"))
 
-pn.folder1.ls()         # prints the contents (subfolders and files) of folder1.
-pn.tree()               # prints the entire nested folder structure.
+# List directory contents
+pn.folder1.ls()         # prints the contents (subfolders and files) of folder1
 
-pn.folder1.chdir()      # change the current directory to folder1.
-pn.folder1.add_to_sys_path()    # add folder1 to the system path.
+# Print the nested folder structure
+pn.tree()
 
-pn.mkdir('folder1', 'folder2')  # make a subfolder under the root. In this case, 'root/folder1/folder2' will be created.
-pn.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
+# Directory management
+pn.mkdir('folder1', 'folder2')  # create a subfolder structure
+pn.remove('folder1')    # remove a file or subfolder and delete it
 ```
 
 ## Features
