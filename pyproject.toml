@@ -5,7 +5,8 @@ authors = [
     {name = "Chung-Yi Lin", email = "philip928lin@gmail.com"}
 ]
 license = { file = "LICENSE" }
-description = "file: README.md"
+description = "A Python library for efficient directory and file navigation"
+readme = { file = "README.md", content-type = "text/markdown" }  # Specify README with content type
 dependencies = []
 
 [project.optional-dependencies]
