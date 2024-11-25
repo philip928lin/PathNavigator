@@ -25,27 +25,53 @@ from pathnavigator import PathNavigator
 
 pn = PathNavigator("root_dir")
 
-# Now you are able to access all subfolders and files under `root_dir`
-dir_to_your_subfolder = pn.your_subfolder.get()
-path_to_your_file = pn.your_subfolder.get("your_file.csv")  # return the full path to your_file.csv.
+pn.folder1.get()        # returns the full path to folder1 as a Path object.
+pn.folder1.get_str()    # returns the full path to folder1 as a string. Same as str(pn.folder1.get()).
+pn.folder1.get("file.txt")        # returns the full path to file.txt as a Path object.
+pn.folder1.get_str("file.txt")    # returns the full path to file.txt as a string. Same as str(pn.folder1.get("file.txt")).
 
-# Convert a Path object to a string
-path_string = str(dir_to_your_subfolder)
-# Or 
-path_string = pn.your_subfolder.get_str()
+pn.folder1.set_sc('my_folder')  # set the shortcut to folder1 which can be accessed by pn.sc.my_folder or pn.sc.get("my_folder") or pn.sc.get_str("my_folder").
+pn.folder1.set_sc('my_file', 'file.txt')  # set the shortcut to file.txt which can be accessed by pn.sc.my_file or pn.sc.get("my_file") or pn.sc.get_str("my_file").
+pn.sc.add('shortcut_name', 'shortcut_path')    # add a customized shortcut independent to pn internal folder structure.
 
-# Prints a visual tree structure of the folder and its contents.
-pn.tree() 
-pn.your_subfolder.tree()
+pn.folder1.ls()         # prints the contents (subfolders and files) of folder1.
+pn.tree()               # prints the entire nested folder structure.
+
+pn.folder1.chdir()      # change the current directory to folder1.
+pn.folder1.add_to_sys_path()    # add folder1 to the system path.
+
+pn.mkdir('folder1', 'folder2')  # make a subfolder under the root. In this case, 'root/folder1/folder2' will be created.
+pn.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
 ```
 
 ## Features
 
-### Creating Directories
+### Directory and File Operations
 ```python
-pn = PathNavigator('/path/to/root')
-pn.mkdir('folder1')     # make a subfolder under the root.
-pn.folder1.mkdir('folder2')     # make a subfolder under folder1.
+# Returns the full path to folder1.
+pn.folder1.get()        # Return a Path object
+pn.folder1.get_str()    # Return a string
+
+# Return the full path to file1.
+pn.folder1.get("file.csv")      # Return a Path object
+pn.folder1.get_str("file.csv")  # Return a string
+
+# Rrints the contents (subfolders and files) of folder1.
+pn.folder1.ls()         
+
+# Make the nested directories.
+# Directory root/folder1/subfolder1/subsubfolder2 will be created
+pn.folder1.mkdir("subfolder1", "subsubfolder2")
+
+# Removes a file or a folder and deletes it from the filesystem including all nested items.
+# The following code will delete the directory of root/folder1/folder2
+pn.folder1.remove('folder2')    
+
+# Combine folder1 directory with "subfolder1/fileX.txt" and return it.
+pn.folder1.join("subfolder1", "fileX.txt") 
+
+# Or, you can utilize Path feature to join the paths.
+pn.folder1.get() / "subfolder1/fileX.txt"
 ```
 
 ### Reloading folder structure
@@ -66,37 +92,15 @@ pn.forlder1.add_to_sys_path()
 pn.forlder1.forlder2.chdir()    
 ```
 
-### Directory and File Operations
-```python
-# Returns the full path to folder1.
-pn.folder1.get()       
-
-# Return the full path to file1.
-pn.folder1.get("file.csv")  
-
-# Rrints the contents (subfolders and files) of folder1.
-pn.folder1.ls()         
-
-# Make the nested directories.
-pn.folder1.mkdir("subfolder1", "subsubfolder2")
-
-# Removes a file or subfolder from the folder and deletes it from the filesystem.
-pn.folder1.remove('folder2')    
-
-# Combine folder1 directory with "subfolder1/fileX.txt" and return it.
-pn.folder1.join("subfolder1", "fileX.txt") 
-
-# Or, you can utilize Path feature to join the paths.
-pn.folder1.get() / "subfolder1/fileX.txt"
-```
-
 ### Shortcuts Management
 #### Add shortcuts
 ```python
 # Set a shortcut named "f1" to folder1.
+# Can be accessed by pn.sc.f1 or pn.sc.get("f1") or pn.sc.get_str("f1").
 pn.folder1.set_sc("f1")
 
 # Set a shortcut named "x" to the file "x.txt" in folder1.
+# Can be accessed by pn.sc.x or pn.sc.get("x") or pn.sc.get_str("x").
 pn.folder1.set_sc("x", "x.txt")
 
 # Directly add shortcuts in pn.sc
@@ -107,9 +111,9 @@ pn.sc.add('f', r"new/path")
 #### Retrieve shortcuts
 ```python
 # Retrieve the path of "f1" shortcut
+pn.sc.f1
 pn.sc.get("f1")  
-# Or, access it using "valid" attribute names.
-pn.sc.f1    
+pn.sc.get_str("f1") 
 ```
 
 #### Other shortcut operations
