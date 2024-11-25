@@ -1,12 +1,9 @@
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from .att_name_convertor import AttributeNameConverter
 
-@dataclass
-class Shortcut:
-    """
-    A class to manage shortcuts to specific paths and access them as attributes.
-
+"""
     Methods
     -------
     add(name, path, overwrite=False)
@@ -23,7 +20,14 @@ class Shortcut:
         Loads shortcuts from a dictionary.
     load_json(filename, overwrite=False)
         Loads shortcuts from a JSON file.
+"""
+
+@dataclass
+class Shortcut:
     """
+    A class to manage shortcuts to specific paths and access them as attributes.
+    """
+    _pn_converter: object = field(default_factory=lambda: AttributeNameConverter())
 
     def __setattr__(self, name: str, value: str|Path, overwrite: bool = False):
         """
@@ -105,7 +109,13 @@ class Shortcut:
         >>> shortcut.my_folder
         '/path/to/folder'
         """
-        self.__setattr__(name, path, overwrite=overwrite)
+        if not self._pn_converter._pn_is_valid_attribute_name(
+            name, 
+            invalid_list=["add", "remove", "ls", "get", "get_str", "to_json", "to_dict",
+                          "load_dict", "load_json"]):
+            raise ValueError(f"Invalid attribute name '{name}'.")
+        else:
+            self.__setattr__(name, path, overwrite=overwrite)
 
     def get(self, name: str) -> str:
         """
@@ -129,6 +139,29 @@ class Shortcut:
         '/path/to/folder'
         """
         return self.__getattr__(name)
+    
+    def get_str(self, name: str) -> str:
+        """
+        Retrieve the path of a shortcut.
+
+        Parameters
+        ----------
+        name : str
+            The name of the shortcut.
+
+        Returns
+        -------
+        str
+            The path associated with the shortcut.
+
+        Examples
+        --------
+        >>> shortcut = Shortcut()
+        >>> shortcut.add("my_folder", "/path/to/folder")
+        >>> shortcut.get("my_folder")
+        '/path/to/folder'
+        """
+        return str(self.__getattr__(name))
     
     def remove(self, name: str):
         """

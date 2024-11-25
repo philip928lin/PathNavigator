@@ -42,8 +42,8 @@ class AttributeNameConverter:
         
     def _pn_is_valid_attribute_name(
             self, name: str, 
-            invalid_list=["sc", "reload", "dir", "ls", "remove", "join", "get", "tree",
-                          "mkdir", "set_shortcut", "chdir", "add_to_sys_path", 
+            invalid_list=["sc", "reload", "dir", "ls", "remove", "join", "get", "get_str",
+                          "tree", "mkdir", "set_sc", "chdir", "add_to_sys_path", 
                           "name", "parent_path", "subfolders", "files"]
             ) -> bool:
         """

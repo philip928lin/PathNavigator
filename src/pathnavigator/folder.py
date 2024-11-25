@@ -7,6 +7,33 @@ from typing import Dict, Any
 from itertools import islice
 from .att_name_convertor import AttributeNameConverter
 
+"""
+    Methods
+    -------
+    __getattr__(item)
+        Allows access to subfolders and files as attributes. Replaces '_' with spaces.
+    ls()
+        Prints the contents (subfolders and files) of the folder.
+    get(filename=None)
+        Get the full path of a file in the current folder.
+    get_str(filename=None)
+        Get the full path str of a file in the current folder.
+    join(*args)
+        Joins the current folder path with additional path components.
+    set_sc(name, filename=None)
+        Adds a shortcut to this folder (or file) using the Shortcut manager.
+    remove(name)
+        Removes a file or subfolder from the folder and deletes it from the filesystem.
+    mkdir(*args)
+        Creates a subdirectory in the current folder and updates the internal structure.
+    add_to_sys_path(method='insert', index=1)
+        Adds the directory to the system path.
+    chdir()
+        Sets this directory as the working directory.
+    tree(level=-1, limit_to_directories=False, length_limit=1000, level_length_limit=1000)
+        Prints a visual tree structure of the folder and its contents.
+"""
+
 @dataclass
 class Folder:
     """
@@ -22,25 +49,6 @@ class Folder:
         A dictionary of subfolder names (keys) and Folder objects (values).
     files : dict
         A dictionary of file names (keys) and their paths (values).
-
-    Methods
-    -------
-    __getattr__(item)
-        Allows access to subfolders and files as attributes. Replaces '_' with spaces.
-    ls()
-        Prints the contents (subfolders and files) of the folder.
-    join(*args)
-        Joins the current folder path with additional path components.
-    set_shortcut(name, filename=None)
-        Adds a shortcut to this folder (or file) using the Shortcut manager.
-    remove(name)
-        Removes a file or subfolder from the folder and deletes it from the filesystem.
-    mkdir(*args)
-        Creates a subdirectory in the current folder and updates the internal structure.
-    add_to_sys_path(method='insert', index=1)
-        Adds the directory to the system path.
-    tree(level=-1, limit_to_directories=False, length_limit=1000, level_length_limit=1000)
-        Prints a visual tree structure of the folder and its contents.
     """
     
     name: str
@@ -253,13 +261,19 @@ class Folder:
         Examples
         --------
         >>> folder = Folder(name="root")
-        >>> folder.set_shortcut("my_folder")
+        >>> folder.set_sc("my_folder")
         Shortcut 'my_folder' added for path '/root'
         """
         if filename is None:
             self._pn_object.sc.add(name, self.get())
         else:
-            self._pn_object.sc.add(name, self.join(filename))
+            valid_name = self._pn_converter.to_valid_name(filename)
+            if valid_name not in self.files:
+                ValueError(
+                    f"'{filename}' not found in '{self.get()}'." +
+                    " Try to reload the pn object by pn.reload() if the file exist in the file system."
+                    )        
+            self._pn_object.sc.add(name, self.files[valid_name])
 
     def get(self, filename: str = None) -> Path:
         """
@@ -287,8 +301,10 @@ class Folder:
         else:
             valid_name = self._pn_converter.to_valid_name(filename)
             if valid_name not in self.files:
-                print(f"'{filename}' not found in '{self.get()}'")
-                return None
+                ValueError(
+                    f"'{filename}' not found in '{self.get()}'." +
+                    " Try to reload the pn object by pn.reload() if the file exist in the file system."
+                    )
             return self.files[valid_name]
 
     def get_str(self, filename: str = None) -> str:

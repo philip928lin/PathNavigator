@@ -4,10 +4,10 @@ pathnavigator package
 Submodules
 ----------
 
-pathnavigator.pathnavigator module
-----------------------------------
+pathnavigator.att\_name\_convertor module
+-----------------------------------------
 
-.. automodule:: pathnavigator.pathnavigator
+.. automodule:: pathnavigator.att_name_convertor
    :members:
    :undoc-members:
    :show-inheritance:
@@ -20,18 +20,18 @@ pathnavigator.folder module
    :undoc-members:
    :show-inheritance:
 
-pathnavigator.shortcut module
------------------------------
+pathnavigator.pathnavigator module
+----------------------------------
 
-.. automodule:: pathnavigator.shortcut
+.. automodule:: pathnavigator.pathnavigator
    :members:
    :undoc-members:
    :show-inheritance:
 
-pathnavigator.att\_name\_convertor module
------------------------------------------
+pathnavigator.shortcut module
+-----------------------------
 
-.. automodule:: pathnavigator.att_name_convertor
+.. automodule:: pathnavigator.shortcut
    :members:
    :undoc-members:
    :show-inheritance:
