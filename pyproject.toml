@@ -1,6 +1,6 @@
 [project]
 name = "PathNavigator"
-version = "0.4.1"
+version = "0.4.2"
 authors = [
     {name = "Chung-Yi Lin", email = "philip928lin@gmail.com"}
 ]
