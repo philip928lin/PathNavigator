@@ -43,7 +43,7 @@ class PathNavigator(Folder):
             Whether to load nested directories and files from the filesystem. Default is True.
         """
         if root_dir is None:
-            self._pn_root = Path.cwd()
+            root_dir = Path.cwd()
             load_nested_dirs = False
 
         self._pn_root = Path(root_dir)
