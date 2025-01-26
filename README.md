@@ -141,3 +141,11 @@ pn.sc.load_json(filename)
 
 ## API reference
 [![Docs](https://github.com/philip928lin/PathNavigator/actions/workflows/docs.yml/badge.svg)](https://philip928lin.github.io/PathNavigator/)
+
+
+#### New features (Not yet release but available on repo)
+- Simplify usage
+```
+import pathnavigator
+pn = pathnavigator.creat()
+```
