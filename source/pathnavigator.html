@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pathnavigator package &mdash; PathNavigator v0.2.2 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -63,6 +63,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.files"><code class="docutils literal notranslate"><span class="pre">Folder.files</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.add_to_sys_path"><code class="docutils literal notranslate"><span class="pre">Folder.add_to_sys_path()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.chdir"><code class="docutils literal notranslate"><span class="pre">Folder.chdir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.exists"><code class="docutils literal notranslate"><span class="pre">Folder.exists()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">Folder.files</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.get"><code class="docutils literal notranslate"><span class="pre">Folder.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.get_str"><code class="docutils literal notranslate"><span class="pre">Folder.get_str()</span></code></a></li>
@@ -101,7 +102,10 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-pathnavigator">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pathnavigator">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pathnavigator.create"><code class="docutils literal notranslate"><span class="pre">create()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -276,6 +280,29 @@ Default is 1.</p></li>
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.folder.Folder.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.exists" title="Link to this definition"></a></dt>
+<dd><p>Check if a file or subfolder exists in the current folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the file or subfolder to check. Default is None.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the file or folder exists, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">folder</span> <span class="o">=</span> <span class="n">Folder</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">folder</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;filename_or_foldername&quot;</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id2">
 <span class="sig-name descname"><span class="pre">files</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">,</span> <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
@@ -426,7 +453,10 @@ Default is None. If the file does not exist, returns None.</p>
 <dd><p>Add a shortcut to this folder using the Shortcut manager.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the shortcut to add.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the shortcut to add.</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the file to add a shortcut for. Default is None.</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -455,7 +485,7 @@ Default is None. If the file does not exist, returns None.</p>
 <span id="pathnavigator-pathnavigator-module"></span><h2>pathnavigator.pathnavigator module<a class="headerlink" href="#module-pathnavigator.pathnavigator" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pathnavigator.pathnavigator.PathNavigator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pathnavigator.pathnavigator.</span></span><span class="sig-name descname"><span class="pre">PathNavigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_nested_dirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.pathnavigator.PathNavigator" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pathnavigator.pathnavigator.</span></span><span class="sig-name descname"><span class="pre">PathNavigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_nested_dirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_reload</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.pathnavigator.PathNavigator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pathnavigator.folder.Folder" title="pathnavigator.folder.Folder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Folder</span></code></a></p>
 <p>A class to manage the root folder and recursively load its nested structure (subfolders and files).</p>
 <p class="rubric">Examples</p>
@@ -700,6 +730,29 @@ Default is None. If the file does not exist, returns None.</p>
 </section>
 <section id="module-pathnavigator">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pathnavigator" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pathnavigator.create">
+<span class="sig-prename descclassname"><span class="pre">pathnavigator.</span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_nested_dirs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_reload</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.create" title="Link to this definition"></a></dt>
+<dd><p>Create a PathNavigator object with the given root directory and load nested directories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root_dir</strong> (<em>str</em>) – The root directory to manage. If it is not given, we use the current working
+directory and load_nested_dirs will be set to False.</p></li>
+<li><p><strong>load_nested_dirs</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to load nested directories and files from the filesystem. Default is True.</p></li>
+<li><p><strong>auto_reload</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to automatically reload the folder structure when using exists(),
+get(), get_str(), mkdir(), and set_sc(). Default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The PathNavigator object with the given root directory.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pathnavigator.pathnavigator.PathNavigator" title="pathnavigator.pathnavigator.PathNavigator">PathNavigator</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
