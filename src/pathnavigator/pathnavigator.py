@@ -30,7 +30,7 @@ class PathNavigator(Folder):
     >>> pn.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
     """
     
-    def __init__(self, root_dir: str = None, load_nested_dirs: bool = True):
+    def __init__(self, root_dir: str = None, load_nested_dirs: bool = True, auto_reload: bool = True):
         """
         Initialize the PathNavigator with the root directory and create a Shortcut manager.
 
@@ -41,12 +41,16 @@ class PathNavigator(Folder):
             directory and load_nested_dirs will be set to False.
         load_nested_dirs : bool, optional
             Whether to load nested directories and files from the filesystem. Default is True.
+        auto_reload : bool, optional
+            Whether to automatically reload the folder structure when using exists(), 
+            get(), get_str(), mkdir(), and set_sc(). Default is True.
         """
         if root_dir is None:
             root_dir = Path.cwd()
             load_nested_dirs = False
 
         self._pn_root = Path(root_dir)
+        self._auto_reload = auto_reload
         self.sc = Shortcut()  # Initialize Shortcut manager as an attribute
         super().__init__(name=self._pn_root.name, parent_path=self._pn_root.parent, _pn_object=self)
         if load_nested_dirs:

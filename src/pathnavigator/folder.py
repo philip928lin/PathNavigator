@@ -174,6 +174,8 @@ class Folder:
         else:
             print(f"'{name}' not found in '{self.get()}'")
 
+        if self._pn_object._auto_reload:
+            self._pn_object.reload()
         """
         clean_name_with_spaces = name.replace('_', ' ')
         clean_name_with_underscores = name.replace(' ', '_')
@@ -247,6 +249,8 @@ class Folder:
                 new_folder = Folder(part, parent_path=current_folder.get())
                 current_folder.subfolders[valid_name] = new_folder
             current_folder = current_folder.subfolders[valid_name]
+        if self._pn_object._auto_reload:
+            self._pn_object.reload()
         print(f"Created directory '{full_path}'")
     
     def exists(self, name: str) -> bool:
@@ -269,7 +273,8 @@ class Folder:
         >>> folder.exists("filename_or_foldername")
         False
         """
-        self._pn_object.reload() # Reload the pn object to update the pn file system
+        if self._pn_object._auto_reload:
+            self._pn_object.reload() # Reload the pn object to update the pn file system
         return os.path.exists(self.get() / name)
         
     def set_sc(self, name: str, filename: str = None):
@@ -293,8 +298,10 @@ class Folder:
             self._pn_object.sc.add(name, self.get())
         else:
             valid_name = self._pn_converter.to_valid_name(filename)
+            if valid_name not in self.files and self._pn_object._auto_reload:
+                self._pn_object.reload() # Reload the pn object to update the pn file system
             if valid_name not in self.files:
-                ValueError(
+                raise ValueError(
                     f"'{filename}' not found in '{self.get()}'." +
                     " Try to reload the pn object by pn.reload() if the file exist in the file system."
                     )        
@@ -325,8 +332,10 @@ class Folder:
             return Path(self.parent_path) / self.name
         else:
             valid_name = self._pn_converter.to_valid_name(filename)
+            if valid_name not in self.files and self._pn_object._auto_reload:
+                self._pn_object.reload() # Reload the pn object to update the pn file system
             if valid_name not in self.files:
-                ValueError(
+                raise ValueError(
                     f"'{filename}' not found in '{self.get()}'." +
                     " Try to reload the pn object by pn.reload() if the file exist in the file system."
                     )
@@ -357,8 +366,10 @@ class Folder:
             return str(Path(self.parent_path) / self.name)
         else:
             valid_name = self._pn_converter.to_valid_name(filename)
+            if valid_name not in self.files and self._pn_object._auto_reload:
+                self._pn_object.reload() # Reload the pn object to update the pn file system
             if valid_name not in self.files:
-                ValueError(
+                raise ValueError(
                     f"'{filename}' not found in '{self.get()}'." +
                     " Try to reload the pn object by pn.reload() if the file exist in the file system."
                     )
