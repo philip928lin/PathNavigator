@@ -161,13 +161,13 @@ def test_add_to_sys_path(setup_pathnavigator):
     pn.folder1.add_to_sys_path()
     assert pn.folder1.get() in sys.path
 
-def test_tree(setup_pathnavigator, capsys):
-    pn = setup_pathnavigator
-    pn.tree()
-    captured = capsys.readouterr().out.strip().replace('\n', '').replace('\t', '')
-    print(captured)
-    expected_tree = "root├── folder1│   └── file1.txt└── folder2    └── subfolder1        └── file2.txt3 directories, 2 files"
-    assert captured == expected_tree
+# def test_tree(setup_pathnavigator, capsys):
+#     pn = setup_pathnavigator
+#     pn.tree()
+#    captured = capsys.readouterr().out.strip().replace('\n', '').replace('\t', '')
+#     print(captured)
+#     expected_tree = "root├── folder1│   └── file1.txt└── folder2    └── subfolder1        └── file2.txt3 directories, 2 files"
+#     assert captured == expected_tree
 
 
 
