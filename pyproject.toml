@@ -4,10 +4,22 @@ version = "0.4.2"
 authors = [
     {name = "Chung-Yi Lin", email = "philip928lin@gmail.com"}
 ]
-license = { file = "LICENSE" }
+license = { text = "MIT" }
 description = "A Python library for efficient directory and file navigation"
-readme = { file = "README.md", content-type = "text/markdown" }  # Specify README with content type
+# readme = { file = "README.md", content-type = "text/markdown" }  # Specify README with content type
+readme = "README.md"
 dependencies = []
+keywords = [
+  "pathnavigator",
+  "PathNavigator",
+  "environment",
+  "path",
+  "project",
+  "manager",
+  "directory",
+  "file",
+]
+
 
 [project.optional-dependencies]
 dev = [
@@ -47,3 +59,6 @@ target-version = ["py310", "py311", "py312"]
 dependencies = [
     "pytest",
 ]
+
+# hatch build
+# twine upload dist/*
