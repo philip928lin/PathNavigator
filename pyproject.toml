@@ -21,6 +21,23 @@ lint = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+include = [
+    "src/**/*",
+]
+
+[tool.hatch.build.package]
+# Force hatch to treat 'src' as the root. 
+# It ensures your top-level 'pathnavigator' inside 'src' is discovered.
+source = "src"
+packages = [
+    {include = "pathnavigator"}
+]
+
+[tool.hatch.build.targets.wheel]
+sources = ["src"]
+
+
 # tools
 [tool.black]
 line-length = 88

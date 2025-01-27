@@ -269,7 +269,7 @@ class Folder:
         >>> folder.exists("filename_or_foldername")
         False
         """
-        self._pn_object.reload()
+        self._pn_object.reload() # Reload the pn object to update the pn file system
         return os.path.exists(self.get() / name)
         
     def set_sc(self, name: str, filename: str = None):
@@ -420,21 +420,25 @@ class Folder:
     def tree(self, level: int=-1, limit_to_directories: bool=False,
             length_limit: int=1000, level_length_limit: int=1000):
         """Given a directory Path object print a visual tree structure"""
-        space =  '    '
+        space = '    '
         branch = '│   '
-        tee =    '├── '
-        last =   '└── '
+        tee = '├── '
+        last = '└── '
 
         dir_path = self.get()
         files = 0
         directories = 0
+
         def inner(folder: Folder, prefix: str='', level=-1):
             nonlocal files, directories
-            if not level: 
-                return # 0, stop iterating
-            
-            pointers = [tee] * (len(folder.subfolders) - 1) + [last]
-            for i, (pointer, subfolder) in enumerate(zip(pointers, folder.subfolders.values())):
+            if not level:
+                return  # 0, stop iterating
+
+            subfolder_pointers = [tee] * (len(folder.subfolders) - 1) + [last]
+            if folder.files:
+                subfolder_pointers[-1] = tee
+
+            for i, (pointer, subfolder) in enumerate(zip(subfolder_pointers, folder.subfolders.values())):
                 if i == level_length_limit:
                     yield prefix + pointer + f"...limit reached (total: {len(folder.subfolders)} subfolders)"
                 elif i > level_length_limit:
@@ -442,12 +446,12 @@ class Folder:
                 else:
                     yield prefix + pointer + subfolder.get().name
                     directories += 1
-                    extension = branch if pointer == tee else space 
-                    yield from inner(subfolder, prefix=prefix+extension, level=level-1)
+                    extension = branch if pointer == tee else space
+                    yield from inner(subfolder, prefix=prefix + extension, level=level - 1)
 
-            if not limit_to_directories: 
-                pointers = [tee] * (len(folder.files) - 1) + [last]
-                for i, (pointer, filepath) in enumerate(zip(pointers, folder.files.values())):
+            if not limit_to_directories:
+                file_pointers = [tee] * (len(folder.files) - 1) + [last]
+                for i, (pointer, filepath) in enumerate(zip(file_pointers, folder.files.values())):
                     if i == level_length_limit:
                         yield prefix + pointer + "...limit reached (total: {len(folder.files)} files)"
                     elif i > level_length_limit:
@@ -455,6 +459,7 @@ class Folder:
                     else:
                         yield prefix + pointer + filepath.name
                         files += 1
+
         print(dir_path.name)
         iterator = inner(self, level=level)
         for line in islice(iterator, length_limit):
@@ -462,7 +467,6 @@ class Folder:
         if next(iterator, None):
             print(f'... length_limit, {length_limit}, reached, counted:')
         print(f'\n{directories} directories' + (f', {files} files' if files else ''))
-
 """
 from pathlib import Path
 from itertools import islice
