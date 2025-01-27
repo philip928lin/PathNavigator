@@ -249,6 +249,29 @@ class Folder:
             current_folder = current_folder.subfolders[valid_name]
         print(f"Created directory '{full_path}'")
     
+    def exists(self, name: str) -> bool:
+        """
+        Check if a file or subfolder exists in the current folder.
+
+        Parameters
+        ----------
+        name : str, optional
+            The name of the file or subfolder to check. Default is None.
+
+        Returns
+        -------
+        bool
+            True if the file or folder exists, False otherwise.
+
+        Examples
+        --------
+        >>> folder = Folder(name="root")
+        >>> folder.exists("filename_or_foldername")
+        False
+        """
+        self._pn_object.reload()
+        return os.path.exists(self.get() / name)
+        
     def set_sc(self, name: str, filename: str = None):
         """
         Add a shortcut to this folder using the Shortcut manager.
@@ -257,6 +280,8 @@ class Folder:
         ----------
         name : str
             The name of the shortcut to add.
+        filename : str, optional
+            The name of the file to add a shortcut for. Default is None.
 
         Examples
         --------

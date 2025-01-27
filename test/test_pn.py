@@ -45,46 +45,6 @@ def test_initialization(setup_pathnavigator):
     assert pn.name == "root"
     assert pn.parent_path == pn._pn_object.parent_path
 
-def test_mkdir(setup_pathnavigator):
-    pn = setup_pathnavigator
-    pn.mkdir('newfolder')
-
-    # Check if 'newfolder' is in the subfolders dictionary
-    assert 'newfolder' in pn.subfolders
-
-    # Check if the 'newfolder' actually exists in the filesystem
-    newfolder_path = os.path.join(pn.get(), 'newfolder')
-    assert os.path.isdir(newfolder_path)
-
-def test_add_to_sys_path(setup_pathnavigator):
-    pn = setup_pathnavigator
-    pn.folder1.add_to_sys_path()
-    assert pn.folder1.get() in sys.path
-
-def test_chdir(setup_pathnavigator):
-    pn = setup_pathnavigator
-    pn.folder2.subfolder1.chdir()
-    assert Path(os.getcwd()) == pn.folder2.subfolder1.get()
-
-def test_get(setup_pathnavigator):
-    pn = setup_pathnavigator
-    assert pn.folder1.get() == pn.get() / 'folder1'
-
-def test_get_file_path(setup_pathnavigator):
-    pn = setup_pathnavigator
-    file_path = pn.folder1.get("file1.txt")
-    # Check if the file path is correct
-    assert file_path == pn.folder1.get() / "file1.txt"
-
-    # Check if the file actually exists in the filesystem
-    assert os.path.isfile(file_path)
-
-def test_file_attribute(setup_pathnavigator):
-    pn = setup_pathnavigator
-    pn.mkdir('folder1')
-    file_path = pn.folder1.get("file1.txt")
-    assert pn.folder1._file1_txt == file_path
-
 def test_ls(setup_pathnavigator, capsys):
     pn = setup_pathnavigator
     # List contents of root directory
@@ -124,11 +84,29 @@ def test_remove(setup_pathnavigator):
     
     # Check if the 'newfolder' does not exist in the filesystem
     assert not os.path.isdir(newfolder_path)
-
+    
 def test_join(setup_pathnavigator):
     pn = setup_pathnavigator
     joined_path = pn.folder1.join("subfolder1", "fileX.txt")
     assert joined_path == pn.folder1.get() / "subfolder1" / "fileX.txt"
+
+def test_mkdir(setup_pathnavigator):
+    pn = setup_pathnavigator
+    pn.mkdir('newfolder')
+
+    # Check if 'newfolder' is in the subfolders dictionary
+    assert 'newfolder' in pn.subfolders
+
+    # Check if the 'newfolder' actually exists in the filesystem
+    newfolder_path = os.path.join(pn.get(), 'newfolder')
+    assert os.path.isdir(newfolder_path)
+
+def test_exists(setup_pathnavigator):
+    pn = setup_pathnavigator
+    assert pn.exists("folder1")
+    assert pn.folder1.exists('file1.txt')
+    assert not pn.folder1.exists('file3.txt')
+    assert not pn.exists('folder3')
 
 def test_set_sc(setup_pathnavigator):
     pn = setup_pathnavigator
@@ -149,3 +127,53 @@ def test_shortcut_manager(setup_pathnavigator):
     assert 'f' not in pn.sc.to_dict()
     pn.sc.load_json(json_file, overwrite=True)
     assert 'f1' in pn.sc.to_dict()
+    
+def test_get(setup_pathnavigator):
+    pn = setup_pathnavigator
+    assert pn.folder1.get() == pn.get() / 'folder1'
+    
+def test_get_str(setup_pathnavigator):
+    pn = setup_pathnavigator
+    assert pn.folder1.get_str() == str(pn.get() / 'folder1')
+
+def test_get_file_path(setup_pathnavigator):
+    pn = setup_pathnavigator
+    file_path = pn.folder1.get("file1.txt")
+    # Check if the file path is correct
+    assert file_path == pn.folder1.get() / "file1.txt"
+
+    # Check if the file actually exists in the filesystem
+    assert os.path.isfile(file_path)
+
+def test_file_attribute(setup_pathnavigator):
+    pn = setup_pathnavigator
+    pn.mkdir('folder1')
+    file_path = pn.folder1.get("file1.txt")
+    assert pn.folder1._file1_txt == file_path
+    
+def test_chdir(setup_pathnavigator):
+    pn = setup_pathnavigator
+    pn.folder2.subfolder1.chdir()
+    assert Path(os.getcwd()) == pn.folder2.subfolder1.get()
+
+def test_add_to_sys_path(setup_pathnavigator):
+    pn = setup_pathnavigator
+    pn.folder1.add_to_sys_path()
+    assert pn.folder1.get() in sys.path
+
+def test_tree(setup_pathnavigator, capsys):
+    pn = setup_pathnavigator
+    pn.tree()
+    captured = capsys.readouterr().out.strip().replace('\n', '').replace('\t', '')
+    print(captured)
+    expected_tree = "root├── folder1│   └── file1.txt└── folder2    └── subfolder1        └── file2.txt3 directories, 2 files"
+    assert captured == expected_tree
+
+
+
+
+
+
+
+
+
