@@ -21,9 +21,13 @@ pip install git+https://github.com/philip928lin/PathNavigator.git
 ## Getting Started
 
 ```python
+# Import pathnavigator and initialize a PathNavigator object
+## Method 1
 from pathnavigator import PathNavigator
-
 pn = PathNavigator("root_dir")
+# Method 2 
+import pathnavigator
+pn = pathnavigator.creat("root_dir")
 
 # Retrieve the full path of folder1
 pn.folder1.get()        # returns the full path to folder1 as a Path object
@@ -37,6 +41,10 @@ pn.folder1.set_sc('my_file', 'file.txt')  # set the shortcut for file.txt (acces
 
 # List directory contents
 pn.folder1.ls()         # prints the contents (subfolders and files) of folder1
+
+# Check the existence of a file or subfolder
+pn.folder1.exists("fileX.txt")
+pn.folder1.exists("subfolder")
 
 # Print the nested folder structure
 pn.tree()
@@ -78,8 +86,14 @@ pn.folder1.get() / "subfolder1/fileX.txt"
 
 ### Reloading folder structure
 ```python
-# Update the folder structure to fit the latest structure in the file system.
+# Update the folder structure to the current file system.
 pn.reload() 
+```
+
+### Check the existence of a file or subfolder
+```python
+pn.folder1.exists("fileX.txt")
+pn.folder1.exists("subfolder")
 ```
 
 ### System Path Management
