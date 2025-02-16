@@ -16,6 +16,12 @@ class AttributeNameConverter:
     """
     _pn_org_to_valid_name: dict = field(default_factory=dict)
     _pn_valid_name_to_org: dict = field(default_factory=dict)
+    _pn_invalid_name_list: list = field(
+        default_factory=lambda: [
+            "sc", "reload", "dir", "ls", "remove", "join", "get", "get_str",
+            "tree", "mkdir", "set_sc", "chdir", "add_to_sys_path", 
+            "name", "parent_path", "subfolders", "files"]
+        )
 
     def to_valid_name(self, name: str) -> str:
         """Convert the original name to a valid attribute name."""
@@ -39,12 +45,13 @@ class AttributeNameConverter:
             return self._pn_valid_name_to_org[name]
         else:
             return name
-        
+    
+    def update_invalid_name_list(self, invalid_name_list: list):
+        """Update the list of invalid names."""
+        self._pn_invalid_name_list = invalid_name_list
+    
     def _pn_is_valid_attribute_name(
-            self, name: str, 
-            invalid_list=["sc", "reload", "dir", "ls", "remove", "join", "get", "get_str",
-                          "tree", "mkdir", "set_sc", "chdir", "add_to_sys_path", 
-                          "name", "parent_path", "subfolders", "files"]
+            self, name: str
             ) -> bool:
         """
         Check if a given attribute name is valid.
@@ -53,14 +60,13 @@ class AttributeNameConverter:
         ----------
         name : str
             The attribute name to check.
-        invalid_list : list, optional
-            A list of invalid attribute names. Default is a list of reserved names.
         """
+        invalid_name_list = self._pn_invalid_name_list
         if name.startswith('_pn_'):
             raise ValueError(f"Strings starting with '_pn_' are reserved in PathNavigator. Please modify '{name}' to eligible naming.")
-        if name in invalid_list:
-            raise ValueError(f"Please avoid using reserved names and follow the naming conventions. Reserved names {invalid_list}")
-        return name.isidentifier() and not keyword.iskeyword(name) and not name in invalid_list
+        if name in invalid_name_list:
+            raise ValueError(f"Please avoid using reserved names and follow the naming conventions. Reserved names {invalid_name_list}")
+        return name.isidentifier() and not keyword.iskeyword(name) and not name in invalid_name_list
 
     def _pn_convert_to_valid_attribute_name(self, name: str) -> str:
         """
@@ -102,4 +108,3 @@ class AttributeNameConverter:
             The original name to check.
         """
         return name in self._pn_valid_name_to_org
-    

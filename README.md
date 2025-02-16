@@ -38,6 +38,8 @@ pn.folder1.get_str("file.txt")    # returns the full path to file.txt as a strin
 # Set shortcuts
 pn.folder1.set_sc('my_folder')  # set the shortcut for folder1 (accessed by pn.sc.my_folder or pn.sc.get("my_folder") or pn.sc.get_str)
 pn.folder1.set_sc('my_file', 'file.txt')  # set the shortcut for file.txt (accessed by pn.sc.my_file or pn.sc.get("my_file") or pn.sc.get_str("my_file"))
+pn.folder1.set_all_files_to_sc() # set all files in the current directory to shortcuts
+pn.sc.get("my_file") # get the shortcut
 
 # List directory contents
 pn.folder1.ls()         # prints the contents (subfolders and files) of folder1
@@ -118,10 +120,12 @@ pn.folder1.set_sc("f1")
 # Set a shortcut named "x" to the file "x.txt" in folder1.
 # Can be accessed by pn.sc.x or pn.sc.get("x") or pn.sc.get_str("x").
 pn.folder1.set_sc("x", "x.txt")
+pn.folder1.set_all_files_to_sc() # set all files in the current directory to shortcuts
 
 # Directly add shortcuts in pn.sc
 pn.sc.add('f', pn.folder1.get("file"))  
 pn.sc.add('f', r"new/path")  
+pn.sc.add_all_files(directory=pn.folder1.get())
 ```
 
 #### Retrieve shortcuts
