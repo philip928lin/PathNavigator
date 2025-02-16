@@ -51,6 +51,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.att_name_convertor.AttributeNameConverter.get"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.to_valid_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.att_name_convertor.AttributeNameConverter.update_invalid_name_list"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.update_invalid_name_list()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -73,6 +74,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Folder.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Folder.parent_path</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.remove"><code class="docutils literal notranslate"><span class="pre">Folder.remove()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.set_all_files_to_sc"><code class="docutils literal notranslate"><span class="pre">Folder.set_all_files_to_sc()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.set_sc"><code class="docutils literal notranslate"><span class="pre">Folder.set_sc()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">Folder.subfolders</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.tree"><code class="docutils literal notranslate"><span class="pre">Folder.tree()</span></code></a></li>
@@ -90,14 +92,17 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-pathnavigator.shortcut">pathnavigator.shortcut module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut"><code class="docutils literal notranslate"><span class="pre">Shortcut</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.add"><code class="docutils literal notranslate"><span class="pre">Shortcut.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.add_all_files"><code class="docutils literal notranslate"><span class="pre">Shortcut.add_all_files()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.get"><code class="docutils literal notranslate"><span class="pre">Shortcut.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.get_str"><code class="docutils literal notranslate"><span class="pre">Shortcut.get_str()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.load_dict"><code class="docutils literal notranslate"><span class="pre">Shortcut.load_dict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.load_json"><code class="docutils literal notranslate"><span class="pre">Shortcut.load_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.load_yaml"><code class="docutils literal notranslate"><span class="pre">Shortcut.load_yaml()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.ls"><code class="docutils literal notranslate"><span class="pre">Shortcut.ls()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.remove"><code class="docutils literal notranslate"><span class="pre">Shortcut.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.to_dict"><code class="docutils literal notranslate"><span class="pre">Shortcut.to_dict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.to_json"><code class="docutils literal notranslate"><span class="pre">Shortcut.to_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.to_yaml"><code class="docutils literal notranslate"><span class="pre">Shortcut.to_yaml()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -143,7 +148,7 @@
 <span id="pathnavigator-att-name-convertor-module"></span><h2>pathnavigator.att_name_convertor module<a class="headerlink" href="#module-pathnavigator.att_name_convertor" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pathnavigator.att_name_convertor.AttributeNameConverter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pathnavigator.att_name_convertor.</span></span><span class="sig-name descname"><span class="pre">AttributeNameConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_pn_org_to_valid_name=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_pn_valid_name_to_org=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.att_name_convertor.AttributeNameConverter" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pathnavigator.att_name_convertor.</span></span><span class="sig-name descname"><span class="pre">AttributeNameConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_pn_org_to_valid_name=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_pn_valid_name_to_org=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_pn_invalid_name_list=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.att_name_convertor.AttributeNameConverter" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class to convert original names to valid attribute names and store the mapping.</p>
 <dl class="py method">
@@ -181,6 +186,12 @@
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.att_name_convertor.AttributeNameConverter.update_invalid_name_list">
+<span class="sig-name descname"><span class="pre">update_invalid_name_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">invalid_name_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.att_name_convertor.AttributeNameConverter.update_invalid_name_list" title="Link to this definition"></a></dt>
+<dd><p>Update the list of invalid names.</p>
 </dd></dl>
 
 </dd></dl>
@@ -448,6 +459,20 @@ Default is None. If the file does not exist, returns None.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.folder.Folder.set_all_files_to_sc">
+<span class="sig-name descname"><span class="pre">set_all_files_to_sc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.set_all_files_to_sc" title="Link to this definition"></a></dt>
+<dd><p>Add all files in the current folder to the Shortcut manager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em>) – The directory containing the files to add as shortcuts.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to overwrite existing shortcuts. Default is False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder.set_sc">
 <span class="sig-name descname"><span class="pre">set_sc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.set_sc" title="Link to this definition"></a></dt>
 <dd><p>Add a shortcut to this folder using the Shortcut manager.</p>
@@ -539,7 +564,7 @@ Default is None. If the file does not exist, returns None.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.add">
 <span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.add" title="Link to this definition"></a></dt>
-<dd><p>Add a new shortcut as an attribute.</p>
+<dd><p>Add a new shortcut as an attribute. automatically converts the name to a valid attribute name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -554,6 +579,25 @@ Default is None. If the file does not exist, returns None.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;my_folder&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/folder&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">my_folder</span>
 <span class="go">&#39;/path/to/folder&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.add_all_files">
+<span class="sig-name descname"><span class="pre">add_all_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.add_all_files" title="Link to this definition"></a></dt>
+<dd><p>Add all files in a given directory as shortcuts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em>) – The directory containing the files to add as shortcuts.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to overwrite existing shortcuts. Default is False.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span> <span class="o">=</span> <span class="n">Shortcut</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">add_all_files_in_directory</span><span class="p">(</span><span class="s2">&quot;/path/to/directory&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -645,6 +689,25 @@ Default is None. If the file does not exist, returns None.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.load_yaml">
+<span class="sig-name descname"><span class="pre">load_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.load_yaml" title="Link to this definition"></a></dt>
+<dd><p>Load shortcuts from a YAML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file containing the shortcuts in YAML format.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to overwrite existing shortcuts. Default is False.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span> <span class="o">=</span> <span class="n">Shortcut</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">load_yaml</span><span class="p">(</span><span class="s2">&quot;shortcuts.yml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.ls">
 <span class="sig-name descname"><span class="pre">ls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.ls" title="Link to this definition"></a></dt>
 <dd><p>List all shortcuts and their paths.</p>
@@ -703,7 +766,7 @@ Default is None. If the file does not exist, returns None.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.to_json">
-<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.to_json" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shortcuts.json'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.to_json" title="Link to this definition"></a></dt>
 <dd><p>Return all shortcuts as a JSON string and save it to a file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -721,6 +784,30 @@ Default is None. If the file does not exist, returns None.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;my_folder&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/folder&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="s2">&quot;shortcuts.json&quot;</span><span class="p">)</span>
 <span class="go">&#39;{&quot;my_folder&quot;: &quot;/path/to/folder&quot;}&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.to_yaml">
+<span class="sig-name descname"><span class="pre">to_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'shortcuts.yml'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.to_yaml" title="Link to this definition"></a></dt>
+<dd><p>Return all shortcuts as a YAML string and save it to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The name of the file where the YAML string will be saved.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A YAML string representation of all shortcuts.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span> <span class="o">=</span> <span class="n">Shortcut</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;my_folder&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/folder&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">to_yaml</span><span class="p">(</span><span class="s2">&quot;shortcuts.yml&quot;</span><span class="p">)</span>
+<span class="go">my_folder: /path/to/folder</span>
 </pre></div>
 </div>
 </dd></dl>
