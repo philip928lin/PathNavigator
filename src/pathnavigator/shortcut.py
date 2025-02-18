@@ -38,7 +38,7 @@ class Shortcut:
     A class to manage shortcuts to specific paths and access them as attributes.
     """
     _pn_invalid_name_list = [
-    "add", "remove", "ls", "get", "get_str", "to_json", "to_dict", "load_dict", "load_json"
+    "add", "remove", "clear", "ls", "get", "get_str", "to_json", "to_yaml", "to_dict", "load_dict", "load_json", "load_yaml"
     ]
     
     _pn_converter: object = field(init=False)
@@ -231,6 +231,22 @@ class Shortcut:
         valid_name = self._pn_converter.get(name)
         self.__delattr__(valid_name)
 
+    def clear(self):
+        """
+        Remove all shortcuts.
+
+        Examples
+        --------
+        >>> shortcut = Shortcut()
+        >>> shortcut.add("my_folder", "/path/to/folder")
+        >>> shortcut.clear()
+        >>> hasattr(shortcut, "my_folder")
+        False
+        """
+        for key in list(self.__dict__.keys()):
+            if not key.startswith("_pn_"):
+                self.__delattr__(key)
+                
     def ls(self):
         """
         List all shortcuts and their paths.

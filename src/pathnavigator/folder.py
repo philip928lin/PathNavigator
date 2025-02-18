@@ -233,7 +233,9 @@ class Folder:
         Folder(name='new_subfolder', parent_path='/root', subfolders={}, files={})
         """
         full_path = self.join(*args) #os.path.join(self.get(), *args)
-        full_path.mkdir(parents=True, exist_ok=True)
+        if not full_path.exists():
+            full_path.mkdir(parents=True, exist_ok=True)
+            print(f"Created directory '{full_path}'")
         #os.makedirs(full_path, exist_ok=True)
 
         relative_path = full_path.relative_to(self.get())
@@ -251,7 +253,6 @@ class Folder:
             current_folder = current_folder.subfolders[valid_name]
         if self._pn_object._auto_reload:
             self._pn_object.reload()
-        print(f"Created directory '{full_path}'")
     
     def exists(self, name: str) -> bool:
         """
@@ -321,20 +322,20 @@ class Folder:
         
         self._pn_object.sc.add_all_files(directory=self.get(), overwrite=overwrite, prefix=prefix)
 
-    def get(self, filename: str = None) -> Path:
+    def get(self, fname: str = None) -> Path:
         """
-        Get the full path of a file in the current folder.
+        Get the full path of a file or a subfolder in the current folder.
 
         Parameters
         ----------
-        filename : str
-            The name of the file to get. If None, returns the full path of the folder. 
-            Default is None. If the file does not exist, returns None.
+        fname : str
+            The name of the file or the subfolder to get. If None, returns the full path
+            of the folder. Default is None.
 
         Returns
         -------
         Path
-            The full path to the file.
+            The full path to the file or the subfolder.
 
         Examples
         --------
@@ -342,33 +343,33 @@ class Folder:
         >>> folder.get("file1")
         '/home/user/root/file1'
         """
-        if filename is None:
+        if fname is None:
             return Path(self.parent_path) / self.name
         else:
-            valid_name = self._pn_converter.to_valid_name(filename)
-            if valid_name not in self.files and self._pn_object._auto_reload:
+            valid_name = self._pn_converter.to_valid_name(fname)
+            if valid_name not in self.files and valid_name not in self.subfolders and self._pn_object._auto_reload:
                 self._pn_object.reload() # Reload the pn object to update the pn file system
-            if valid_name not in self.files:
+            if valid_name not in self.files and valid_name not in self.subfolders:
                 raise ValueError(
-                    f"'{filename}' not found in '{self.get()}'." +
+                    f"'{fname}' not found in '{self.get()}'." +
                     " Try to reload the pn object by pn.reload() if the file exist in the file system."
                     )
-            return self.files[valid_name]
+            return Path(self.parent_path) / self.name / fname
 
-    def get_str(self, filename: str = None) -> str:
+    def get_str(self, fname: str = None) -> str:
         """
-        Get the full path str of a file in the current folder.
+        Get the full path of a file or a subfolder in the current folder.
 
         Parameters
         ----------
-        filename : str
-            The name of the file to get. If None, returns the full path of the folder. 
-            Default is None. If the file does not exist, returns None.
+        fname : str
+            The name of the file or the subfolder to get. If None, returns the full path
+            of the folder. Default is None.
 
         Returns
         -------
         str
-            The full path to the file.
+            The full path to the file or the subfolder.
 
         Examples
         --------
@@ -376,19 +377,42 @@ class Folder:
         >>> folder.get_str("file1")
         '/home/user/root/file1'
         """
-        if filename is None:
-            return str(Path(self.parent_path) / self.name)
-        else:
-            valid_name = self._pn_converter.to_valid_name(filename)
-            if valid_name not in self.files and self._pn_object._auto_reload:
-                self._pn_object.reload() # Reload the pn object to update the pn file system
-            if valid_name not in self.files:
-                raise ValueError(
-                    f"'{filename}' not found in '{self.get()}'." +
-                    " Try to reload the pn object by pn.reload() if the file exist in the file system."
-                    )
-            return str(self.files[valid_name])
-      
+        return str(self.get(fname))
+    
+    def listdirs(self, mode='name'):
+        """
+        List subfolders in the current folder.
+        
+        Parameters
+        ----------
+        mode : str, optional
+            The mode to use for listing subfolders. Options are 'name' (default), 'dir', and 'stem'.
+        """
+        if mode == 'name':
+            dirs = [item.name for item in self.get().iterdir() if item.is_dir()]
+        elif mode == 'dir':
+            dirs = [item for item in self.get().iterdir() if item.is_dir()]
+        elif mode == 'stem':
+            dirs = [item.stem for item in self.get().iterdir() if item.is_dir()]
+        return dirs
+    
+    def listfiles(self, mode='name'):
+        """
+        List files in the current folder.
+        
+        Parameters
+        ----------
+        mode : str, optional
+            The mode to use for listing files. Options are 'name' (default) and 'file'.
+        """
+        if mode == 'name':
+            files = [item.name for item in self.get().iterdir() if item.is_file()]
+        elif mode == 'dir':
+            files = [item for item in self.get().iterdir() if item.is_file()]
+        elif mode == 'stem':
+            files = [item.stem for item in self.get().iterdir() if item.is_file()]
+        return files
+    
     def chdir(self):
         """
         Set this directory as working directory.
