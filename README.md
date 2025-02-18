@@ -110,6 +110,14 @@ pn.forlder1.add_to_sys_path()
 pn.forlder1.forlder2.chdir()    
 ```
 
+### Listing folders or files
+```python
+# List all subfolders
+pn.forlder1.listdirs()
+# List all files
+pn.forlder1.listfiles()
+```
+
 ### Shortcuts Management
 #### Add shortcuts
 ```python
@@ -150,11 +158,17 @@ pn.sc.to_dict()
 # Output of shortcuts json file
 pn.sc.to_json(filename)  
 
+# Output of shortcuts yaml file
+pn.sc.to_yaml(filename)
+
 # Load shortcuts from a dictionary
 pn.sc.load_dict()  
 
 # Load shortcuts from a json file
 pn.sc.load_json(filename)  
+
+# Load shortcuts from a yaml file
+pn.sc.load_yaml(filename)  
 ```
 
 ## API reference
