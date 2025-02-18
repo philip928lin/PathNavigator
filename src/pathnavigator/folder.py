@@ -49,13 +49,17 @@ class Folder:
         A dictionary of subfolder names (keys) and Folder objects (values).
     files : dict
         A dictionary of file names (keys) and their paths (values).
+    _pn_object : object
+        The PathNavigator object that this folder belongs to.
+    _pn_converter : object
+        The AttributeNameConverter object for converting attribute names.
     """
     
-    name: str
-    parent_path: Path  # Track the parent folder path for constructing full paths
-    _pn_object: object = field(default=None)
+    name: str           # Folder name
+    parent_path: Path   # Track the parent folder path for constructing full paths
     subfolders: Dict[str, Any] = field(default_factory=dict)
     files: Dict[str, str] = field(default_factory=dict)
+    _pn_object: object = field(default=None)
     _pn_converter: object = field(default_factory=lambda: AttributeNameConverter())
 
     def __getattr__(self, item):
@@ -118,6 +122,7 @@ class Folder:
           [File] file1
         """
         print(f"Contents of '{self.get()}':")
+        print("(-> represent the attribute name used to access the subfolder or file.)")
         if self.subfolders:
             print("Subfolders:")
             for subfolder in self.subfolders:
@@ -261,7 +266,7 @@ class Folder:
         Parameters
         ----------
         name : str, optional
-            The name of the file or subfolder to check. Default is None.
+            The name of the file or subfolder to check.
 
         Returns
         -------
@@ -310,14 +315,14 @@ class Folder:
 
     def set_all_files_to_sc(self, overwrite: bool = False, prefix: str = ""):
         """
-        Add all files in the current folder to the Shortcut manager.
+        Add all files in the current folder to the shortcut manager.
 
         Parameters
         ----------
-        directory : str or Path
-            The directory containing the files to add as shortcuts.
         overwrite : bool, optional
             Whether to overwrite existing shortcuts. Default is False.
+        prefix : str, optional
+            The prefix to add to the shortcut names. Default is "".
         """
         
         self._pn_object.sc.add_all_files(directory=self.get(), overwrite=overwrite, prefix=prefix)
@@ -330,7 +335,7 @@ class Folder:
         ----------
         fname : str
             The name of the file or the subfolder to get. If None, returns the full path
-            of the folder. Default is None.
+            of the current folder. Default is None.
 
         Returns
         -------
@@ -351,7 +356,7 @@ class Folder:
                 self._pn_object.reload() # Reload the pn object to update the pn file system
             if valid_name not in self.files and valid_name not in self.subfolders:
                 raise ValueError(
-                    f"'{fname}' not found in '{self.get()}'." +
+                    f"'{fname}' not found in '{Path(self.parent_path) / self.name}'." +
                     " Try to reload the pn object by pn.reload() if the file exist in the file system."
                     )
             return Path(self.parent_path) / self.name / fname
@@ -386,14 +391,14 @@ class Folder:
         Parameters
         ----------
         mode : str, optional
-            The mode to use for listing subfolders. Options are 'name' (default), 'dir', and 'stem'.
+            The mode to use for listing subfolders. Options are 'name' (default) and 'dir'.
+            - 'name': List subfolder names.
+            - 'dir': List subfolder directories.
         """
         if mode == 'name':
             dirs = [item.name for item in self.get().iterdir() if item.is_dir()]
         elif mode == 'dir':
             dirs = [item for item in self.get().iterdir() if item.is_dir()]
-        elif mode == 'stem':
-            dirs = [item.stem for item in self.get().iterdir() if item.is_dir()]
         return dirs
     
     def listfiles(self, mode='name'):
@@ -403,7 +408,10 @@ class Folder:
         Parameters
         ----------
         mode : str, optional
-            The mode to use for listing files. Options are 'name' (default) and 'file'.
+            The mode to use for listing files. Options are 'name' (default), dir, and stem.
+            - 'name': List file names (with extensions).
+            - 'dir': List file directories.
+            - 'stem': List file stems.
         """
         if mode == 'name':
             files = [item.name for item in self.get().iterdir() if item.is_file()]
@@ -467,8 +475,21 @@ class Folder:
             print(f"{self.get()} is already in the system path.\n Current system paths:\n{sys.path}")
     
     def tree(self, level: int=-1, limit_to_directories: bool=False,
-            length_limit: int=1000, level_length_limit: int=1000):
-        """Given a directory Path object print a visual tree structure"""
+            length_limit: int=1000, level_length_limit: int=100):
+        """
+        Print a visual tree structure of the folder and its contents.
+        
+        Parameters
+        ----------
+        level : int, optional
+            The depth of the tree to print. Default is -1 (print all levels).
+        limit_to_directories : bool, optional
+            Whether to limit the tree to directories only. Default is False.
+        length_limit : int, optional
+            The maximum number of lines to print. Default is 1000.
+        level_length_limit : int, optional
+            The maximum number of lines to print per level. Default is 100.
+        """
         space = '    '
         branch = '│   '
         tee = '├── '

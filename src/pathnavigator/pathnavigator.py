@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from .folder import Folder
 from .shortcut import Shortcut
@@ -14,6 +13,7 @@ class PathNavigator(Folder):
     >>> pn.folder1.get()        # returns the full path to folder1 as a Path object.
     >>> pn.folder1.get_str()    # returns the full path to folder1 as a string.
     >>> pn.folder1.get("file.txt")        # returns the full path to file.txt as a Path object.
+    >>> pn.get("folder1")       # returns the full path to folder1 as a Path object.
     >>> pn.folder1.get_str("file.txt")    # returns the full path to file.txt as a string.
 
     >>> pn.folder1.set_sc('my_folder')  # set the shortcut to folder1 which can be accessed by pn.sc.my_folder or pn.sc.get("my_folder") or pn.sc.get_str("my_folder").
@@ -25,6 +25,10 @@ class PathNavigator(Folder):
     
     >>> pn.folder1.chdir()      # change the current directory to folder1.
     >>> pn.folder1.add_to_sys_path()    # add folder1 to the system path.
+    
+    >>> pn.exists('folder1')    # check if folder1 exists in the folder structure.
+    >>> pn.folder1.listdirs()   # returns a list of subfolders in folder1.
+    >>> pn.folder1.listfiles()  # returns a list of files in folder1.
 
     >>> pn.mkdir('folder1', 'folder2')  # make a subfolder under the root. In this case, 'root/folder1/folder2' will be created.
     >>> pn.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
@@ -89,20 +93,6 @@ class PathNavigator(Folder):
                 file_name = entry.name
                 valid_filename = current_folder._pn_converter.to_valid_name(file_name)
                 current_folder.files[valid_filename] = entry
-
-        """
-        for entry in os.scandir(current_path):
-            if entry.is_dir():
-                folder_name = entry.name
-                valid_folder_name = current_folder._pn_converter.to_valid_name(folder_name)
-                new_subfolder = Folder(folder_name, parent_path=current_path, _pn_object=self)
-                current_folder.subfolders[valid_folder_name] = new_subfolder
-                self._pn_load_nested_directories(entry.path, new_subfolder)
-            elif entry.is_file():
-                file_name = entry.name
-                valid_filename = current_folder._pn_converter.to_valid_name(file_name)
-                current_folder.files[valid_filename] = entry.path
-        """
     
     def reload(self):
         """

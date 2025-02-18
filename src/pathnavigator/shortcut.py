@@ -1,6 +1,5 @@
 import json
 import yaml
-import keyword
 from dataclasses import dataclass, field
 from pathlib import Path
 from .att_name_convertor import AttributeNameConverter
@@ -38,7 +37,8 @@ class Shortcut:
     A class to manage shortcuts to specific paths and access them as attributes.
     """
     _pn_invalid_name_list = [
-    "add", "remove", "clear", "ls", "get", "get_str", "to_json", "to_yaml", "to_dict", "load_dict", "load_json", "load_yaml"
+    "add", "remove", "clear", "ls", "get", "get_str", "to_json", "to_yaml", "to_dict",
+    "load_dict", "load_json", "load_yaml"
     ]
     
     _pn_converter: object = field(init=False)

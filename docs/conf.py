@@ -9,7 +9,7 @@
 project = 'PathNavigator'
 copyright = '2024, Chung-Yi Lin'
 author = 'Chung-Yi Lin'
-release = 'v0.2.2'
+release = 'v0.4.3'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

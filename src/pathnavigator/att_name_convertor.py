@@ -18,13 +18,21 @@ class AttributeNameConverter:
     _pn_valid_name_to_org: dict = field(default_factory=dict)
     _pn_invalid_name_list: list = field(
         default_factory=lambda: [
-            "sc", "reload", "dir", "ls", "remove", "join", "get", "get_str",
-            "tree", "mkdir", "set_sc", "chdir", "add_to_sys_path", 
+            "root_dir", "sc", "reload", "ls", "remove", "join", "mkdir", "exists", 
+            "set_sc", "set_all_files_to_sc", "get", "get_str",
+            "listdirs", "listfiles", "chdir", "add_to_sys_path", "tree"
             "name", "parent_path", "subfolders", "files"]
-        )
+        ) # Folder & PathNavigator methods and attributes
 
     def to_valid_name(self, name: str) -> str:
-        """Convert the original name to a valid attribute name."""
+        """
+        Convert the original name to a valid attribute name.
+        
+        Parameters
+        ----------
+        name : str
+            The original name to convert.
+        """
         if self._pn_is_valid_attribute_name(name) is False:
             valid_name = self._pn_convert_to_valid_attribute_name(name)
             #print(f"Convert '{name}' to a valid attribute name, '{valid_name}'.")
@@ -47,7 +55,14 @@ class AttributeNameConverter:
             return name
     
     def update_invalid_name_list(self, invalid_name_list: list):
-        """Update the list of invalid names."""
+        """
+        Update the list of invalid names.
+        
+        Parameters
+        ----------
+        invalid_name_list : list
+            The list of invalid names to update.
+        """
         self._pn_invalid_name_list = invalid_name_list
     
     def _pn_is_valid_attribute_name(
