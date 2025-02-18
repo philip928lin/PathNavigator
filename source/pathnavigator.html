@@ -69,6 +69,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.get"><code class="docutils literal notranslate"><span class="pre">Folder.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.get_str"><code class="docutils literal notranslate"><span class="pre">Folder.get_str()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.join"><code class="docutils literal notranslate"><span class="pre">Folder.join()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.listdirs"><code class="docutils literal notranslate"><span class="pre">Folder.listdirs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.listfiles"><code class="docutils literal notranslate"><span class="pre">Folder.listfiles()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.ls"><code class="docutils literal notranslate"><span class="pre">Folder.ls()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.mkdir"><code class="docutils literal notranslate"><span class="pre">Folder.mkdir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Folder.name</span></code></a></li>
@@ -93,6 +95,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut"><code class="docutils literal notranslate"><span class="pre">Shortcut</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.add"><code class="docutils literal notranslate"><span class="pre">Shortcut.add()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.add_all_files"><code class="docutils literal notranslate"><span class="pre">Shortcut.add_all_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.clear"><code class="docutils literal notranslate"><span class="pre">Shortcut.clear()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.get"><code class="docutils literal notranslate"><span class="pre">Shortcut.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.get_str"><code class="docutils literal notranslate"><span class="pre">Shortcut.get_str()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.load_dict"><code class="docutils literal notranslate"><span class="pre">Shortcut.load_dict()</span></code></a></li>
@@ -321,15 +324,15 @@ Default is 1.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder.get">
-<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.get" title="Link to this definition"></a></dt>
-<dd><p>Get the full path of a file in the current folder.</p>
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.get" title="Link to this definition"></a></dt>
+<dd><p>Get the full path of a file or a subfolder in the current folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The name of the file to get. If None, returns the full path of the folder.
-Default is None. If the file does not exist, returns None.</p>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – The name of the file or the subfolder to get. If None, returns the full path
+of the folder. Default is None.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The full path to the file.</p>
+<dd class="field-even"><p>The full path to the file or the subfolder.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Path</p>
@@ -345,15 +348,15 @@ Default is None. If the file does not exist, returns None.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder.get_str">
-<span class="sig-name descname"><span class="pre">get_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.get_str" title="Link to this definition"></a></dt>
-<dd><p>Get the full path str of a file in the current folder.</p>
+<span class="sig-name descname"><span class="pre">get_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.get_str" title="Link to this definition"></a></dt>
+<dd><p>Get the full path of a file or a subfolder in the current folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – The name of the file to get. If None, returns the full path of the folder.
-Default is None. If the file does not exist, returns None.</p>
+<dd class="field-odd"><p><strong>fname</strong> (<em>str</em>) – The name of the file or the subfolder to get. If None, returns the full path
+of the folder. Default is None.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The full path to the file.</p>
+<dd class="field-even"><p>The full path to the file or the subfolder.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
@@ -388,6 +391,28 @@ Default is None. If the file does not exist, returns None.</p>
 <span class="go">&#39;/home/user/root/subfolder/file.txt&#39;</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.folder.Folder.listdirs">
+<span class="sig-name descname"><span class="pre">listdirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.listdirs" title="Link to this definition"></a></dt>
+<dd><p>List subfolders in the current folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode to use for listing subfolders. Options are ‘name’ (default), ‘dir’, and ‘stem’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.folder.Folder.listfiles">
+<span class="sig-name descname"><span class="pre">listfiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.listfiles" title="Link to this definition"></a></dt>
+<dd><p>List files in the current folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode to use for listing files. Options are ‘name’ (default) and ‘file’.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -598,6 +623,20 @@ Default is None. If the file does not exist, returns None.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span> <span class="o">=</span> <span class="n">Shortcut</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">add_all_files_in_directory</span><span class="p">(</span><span class="s2">&quot;/path/to/directory&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.clear" title="Link to this definition"></a></dt>
+<dd><p>Remove all shortcuts.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span> <span class="o">=</span> <span class="n">Shortcut</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;my_folder&quot;</span><span class="p">,</span> <span class="s2">&quot;/path/to/folder&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">hasattr</span><span class="p">(</span><span class="n">shortcut</span><span class="p">,</span> <span class="s2">&quot;my_folder&quot;</span><span class="p">)</span>
+<span class="go">False</span>
 </pre></div>
 </div>
 </dd></dl>
