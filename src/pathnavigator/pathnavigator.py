@@ -1,3 +1,4 @@
+import math
 from pathlib import Path
 from .folder import Folder
 from .shortcut import Shortcut
@@ -34,33 +35,38 @@ class PathNavigator(Folder):
     >>> pn.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
     """
     
-    def __init__(self, root_dir: str = None, load_nested_dirs: bool = True, auto_reload: bool = True):
+    def __init__(self, root_dir: str = None, max_depth: int = math.inf, max_files: int = math.inf, max_folders: int = math.inf):
         """
-        Initialize the PathNavigator with the root directory and create a Shortcut manager.
-
+        Initialize the PathNavigator object with the given root directory and load nested directories.
+        
         Parameters
         ----------
         root_dir : str
             The root directory to manage. If it is not given, we use the current working
             directory and load_nested_dirs will be set to False.
-        load_nested_dirs : bool, optional
-            Whether to load nested directories and files from the filesystem. Default is True.
-        auto_reload : bool, optional
-            Whether to automatically reload the folder structure when using exists(), 
-            get(), get_str(), mkdir(), and set_sc(). Default is True.
+        max_depth : int
+            The maximum depth to load the nested directories. Default is math.inf.
+        max_files : int
+            The maximum number of files to load. Default is math.inf.
+        max_folders : int
+            The maximum number of subdirectories to load. Default is math.inf.
+            
+        Returns
+        -------
+        PathNavigator
+            The PathNavigator object with the given root directory.
         """
         if root_dir is None:
             root_dir = Path.cwd()
-            load_nested_dirs = False
 
         self._pn_root = Path(root_dir)
-        self._auto_reload = auto_reload
+        self._pn_max_depth = max_depth
+        self._pn_max_files = max_files
+        self._pn_max_folders = max_folders
         self.sc = Shortcut()  # Initialize Shortcut manager as an attribute
         super().__init__(name=self._pn_root.name, parent_path=self._pn_root.parent, _pn_object=self)
-        if load_nested_dirs:
-            self._pn_load_nested_directories(self._pn_root, self)
-        #if show_tree:
-        #    self.tree(limit_to_directories=True, level_length_limit=10)
+        
+        self.scan(max_depth=max_depth, max_files=max_files, max_folders=max_folders)
 
     def __str__(self):
         return str(self._pn_root)
@@ -70,40 +76,6 @@ class PathNavigator(Folder):
     
     def __call__(self):
         return self._pn_root
-    
-    def _pn_load_nested_directories(self, current_path: Path, current_folder: Folder):
-        """
-        Recursively load subfolders and files from the filesystem into the internal structure.
-
-        Parameters
-        ----------
-        current_path : Path
-            The current path to load.
-        current_folder : Folder
-            The Folder object representing the current directory.
-        """
-        for entry in current_path.iterdir():
-            if entry.is_dir():
-                folder_name = entry.name
-                valid_folder_name = current_folder._pn_converter.to_valid_name(folder_name)
-                new_subfolder = Folder(folder_name, parent_path=current_path, _pn_object=self)
-                current_folder.subfolders[valid_folder_name] = new_subfolder
-                self._pn_load_nested_directories(entry, new_subfolder)
-            elif entry.is_file():
-                file_name = entry.name
-                valid_filename = current_folder._pn_converter.to_valid_name(file_name)
-                current_folder.files[valid_filename] = entry
-    
-    def reload(self):
-        """
-        Reload the entire folder structure from the root directory.
-
-        Examples
-        --------
-        >>> pn = PathNavigator('/path/to/root')
-        >>> pn.reload()
-        """
-        self._pn_load_nested_directories(self._pn_root, self)
 
 
     

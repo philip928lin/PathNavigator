@@ -1,5 +1,6 @@
 import os
 import sys
+import math
 import shutil
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -61,6 +62,7 @@ class Folder:
     files: Dict[str, str] = field(default_factory=dict)
     _pn_object: object = field(default=None)
     _pn_converter: object = field(default_factory=lambda: AttributeNameConverter())
+    _pn_current_depth: int = field(default=0)
 
     def __getattr__(self, item):
         """
@@ -103,6 +105,71 @@ class Folder:
             return self.files[item]
         raise AttributeError(f"'{item}' not found in folder '{self.name}'")
 
+    def scan(self, max_depth: int = math.inf, max_files: int = math.inf, max_folders: int = math.inf,
+             _only_folders: bool = False, _only_files: bool = False,
+             _depth_count: int = 0, _clear: bool = True):
+        """
+        Recursively scan subfolders and files in the current folder.
+        
+        Parameters
+        ----------
+        max_depth : int, optional
+            The maximum depth to scan. Default is math.inf.
+        max_files : int, optional
+            The maximum number of files to scan. Default is math.inf.
+        max_folders : int, optional
+            The maximum number of subfolders to scan. Default is math.inf.
+        _only_folders : bool, optional
+            Whether to scan only subfolders. Default is False.
+        _only_files : bool, optional
+            Whether to scan only files. Default is False.
+        _depth_count : int, optional
+            The current depth count. Default is 0.
+        _clear : bool, optional
+            Whether to clear the subfolders and files before scanning. Default is True.
+        """
+        self._pn_current_depth = _depth_count
+        if _depth_count >= max_depth:
+            #print(f"Depth limit reached: {max_depth}")
+            return None
+        
+        if _clear:
+            # Clear the subfolders and files before scanning
+            self.subfolders.clear()
+            self.files.clear()
+        # Else, continue scanning from the current state
+        
+        _folder_count = 0
+        _file_count = 0
+        for entry in self.get().iterdir():
+            if entry.is_dir() and not _only_files:                    
+                if _folder_count < max_folders:
+                    folder_name = entry.name
+                    valid_folder_name = self._pn_converter.to_valid_name(folder_name)
+                    new_subfolder = Folder(folder_name, parent_path=self.get(), _pn_object=self._pn_object)
+                    self.subfolders[valid_folder_name] = new_subfolder
+                    # Recursively scan subfolders
+                    new_subfolder.scan(
+                        max_depth=max_depth, 
+                        max_files=max_files, 
+                        max_folders=max_folders, 
+                        _depth_count=_depth_count+1
+                        )
+                    _folder_count += 1
+                else:
+                    #print(f"Maximum number of folders reached: {max_folders}")
+                    pass
+            elif entry.is_file() and not _only_folders:
+                if _file_count < max_files:
+                    file_name = entry.name
+                    valid_filename = self._pn_converter.to_valid_name(file_name)
+                    self.files[valid_filename] = entry
+                    _file_count += 1
+                else:
+                    #print(f"Maximum number of files reached: {max_files}")
+                    pass
+            
+        
     def ls(self):
         """
         Print the contents of the folder, including subfolders and files.
@@ -164,41 +231,46 @@ class Folder:
         >>> folder.remove('file1')
         File 'file1' has been removed from '/root'
         """
+        _pn_object = self._pn_object
         valid_name = self._pn_converter.to_valid_name(name)
         org_name = self._pn_converter.get(valid_name)
+        
+        if valid_name not in self.subfolders and valid_name not in self.files:
+            self.scan(
+            max_depth=_pn_object._pn_max_depth-self._pn_current_depth, 
+            max_files=_pn_object._pn_max_files,
+            max_folders=_pn_object._pn_max_folders,
+            ) 
         if valid_name in self.subfolders:
             full_path = self.join(org_name)
             shutil.rmtree(full_path)
             del self.subfolders[valid_name]
+            self.scan(
+            max_depth=_pn_object._pn_max_depth-self._pn_current_depth, 
+            max_files=_pn_object._pn_max_files,
+            max_folders=_pn_object._pn_max_folders,
+            _only_files=False,
+            _only_folders=True
+            ) 
             print(f"Subfolder '{org_name}' has been removed from '{self.get()}'")
+            
         elif valid_name in self.files:
+            self.scan(
+            max_depth=_pn_object._pn_max_depth-self._pn_current_depth, 
+            max_files=_pn_object._pn_max_files,
+            max_folders=_pn_object._pn_max_folders,
+            _only_files=True,
+            _only_folders=False
+            ) 
             full_path = self.files[valid_name]
             os.remove(full_path)
             del self.files[valid_name]
             print(f"File '{org_name}' has been removed from '{self.get()}'")
         else:
             print(f"'{name}' not found in '{self.get()}'")
-
-        if self._pn_object._auto_reload:
-            self._pn_object.reload()
-        """
-        clean_name_with_spaces = name.replace('_', ' ')
-        clean_name_with_underscores = name.replace(' ', '_')
         
-        if clean_name_with_underscores in self.subfolders:
-            full_path = os.path.join(self.get(), self.subfolders[clean_name_with_underscores].name)
-            shutil.rmtree(full_path)
-            del self.subfolders[clean_name_with_underscores]
-            print(f"Subfolder '{clean_name_with_spaces}' has been removed from '{self.get()}'")
-        elif clean_name_with_underscores in self.files:
-            full_path = self.files[clean_name_with_underscores]
-            os.remove(full_path)
-            del self.files[clean_name_with_underscores]
-            print(f"File '{clean_name_with_spaces}' has been removed from '{self.get()}'")
-        else:
-            print(f"'{clean_name_with_spaces}' not found in '{self.get()}'")
-        """
-
+        # Rescan the folder structure after removing a file or subfolder
+        
     def join(self, *args) -> str:
         """
         Join the current folder path with additional path components.
@@ -241,25 +313,16 @@ class Folder:
         if not full_path.exists():
             full_path.mkdir(parents=True, exist_ok=True)
             print(f"Created directory '{full_path}'")
-        #os.makedirs(full_path, exist_ok=True)
 
-        relative_path = full_path.relative_to(self.get())
-        path_parts = relative_path.parts
-        #relative_path = os.path.relpath(full_path, self.get())
-        #path_parts = relative_path.split(os.sep)
-
-        current_folder = self
-        for part in path_parts:
-            #clean_part = part.replace(' ', '_')
-            valid_name = self._pn_converter.to_valid_name(part)
-            if valid_name not in current_folder.subfolders:
-                new_folder = Folder(part, parent_path=current_folder.get())
-                current_folder.subfolders[valid_name] = new_folder
-            current_folder = current_folder.subfolders[valid_name]
-        if self._pn_object._auto_reload:
-            self._pn_object.reload()
+        # Rescan the folder structure after creating a new subfolder
+        _pn_object = self._pn_object
+        self.scan(
+            max_depth=_pn_object._pn_max_depth-self._pn_current_depth, 
+            max_files=_pn_object._pn_max_files,
+            max_folders=_pn_object._pn_max_folders,
+            ) 
     
-    def exists(self, name: str) -> bool:
+    def exists(self, name: str, scan_before_checking=False) -> bool:
         """
         Check if a file or subfolder exists in the current folder.
 
@@ -279,8 +342,14 @@ class Folder:
         >>> folder.exists("filename_or_foldername")
         False
         """
-        if self._pn_object._auto_reload:
-            self._pn_object.reload() # Reload the pn object to update the pn file system
+        if scan_before_checking:
+            # Rescan the folder structure before checking if a file or subfolder exists
+            _pn_object = self._pn_object
+            self.scan(
+                max_depth=_pn_object._pn_max_depth-self._pn_current_depth, 
+                max_files=_pn_object._pn_max_files,
+                max_folders=_pn_object._pn_max_folders,
+                ) 
         return os.path.exists(self.get() / name)
         
     def set_sc(self, name: str, filename: str = None):
@@ -304,8 +373,15 @@ class Folder:
             self._pn_object.sc.add(name, self.get())
         else:
             valid_name = self._pn_converter.to_valid_name(filename)
-            if valid_name not in self.files and self._pn_object._auto_reload:
-                self._pn_object.reload() # Reload the pn object to update the pn file system
+            if valid_name not in self.files:
+                # Rescan the folder to confirm the existence of the file before raising an error
+                _pn_object = self._pn_object
+                self.scan(
+                    max_depth=_pn_object._pn_max_depth-self._pn_current_depth, 
+                    max_files=_pn_object._pn_max_files,
+                    max_folders=_pn_object._pn_max_folders,
+                    _only_files=True
+                    ) 
             if valid_name not in self.files:
                 raise ValueError(
                     f"'{filename}' not found in '{self.get()}'." +
@@ -327,13 +403,13 @@ class Folder:
         
         self._pn_object.sc.add_all_files(directory=self.get(), overwrite=overwrite, prefix=prefix)
 
-    def get(self, fname: str = None) -> Path:
+    def get(self, fname: str|Path = None) -> Path:
         """
         Get the full path of a file or a subfolder in the current folder.
 
         Parameters
         ----------
-        fname : str
+        fname : str or Path
             The name of the file or the subfolder to get. If None, returns the full path
             of the current folder. Default is None.
 
@@ -352,8 +428,14 @@ class Folder:
             return Path(self.parent_path) / self.name
         else:
             valid_name = self._pn_converter.to_valid_name(fname)
-            if valid_name not in self.files and valid_name not in self.subfolders and self._pn_object._auto_reload:
-                self._pn_object.reload() # Reload the pn object to update the pn file system
+            if valid_name not in self.files and valid_name not in self.subfolders:
+                # Rescan the folder to confirm the existence of the file before raising an error
+                _pn_object = self._pn_object
+                self.scan(
+                    max_depth=_pn_object._pn_max_depth-self._pn_current_depth, 
+                    max_files=_pn_object._pn_max_files,
+                    max_folders=_pn_object._pn_max_folders,
+                    ) 
             if valid_name not in self.files and valid_name not in self.subfolders:
                 raise ValueError(
                     f"'{fname}' not found in '{Path(self.parent_path) / self.name}'." +
@@ -482,7 +564,7 @@ class Folder:
         Parameters
         ----------
         level : int, optional
-            The depth of the tree to print. Default is -1 (print all levels).
+            The max_depth of the tree to print. Default is -1 (print all levels).
         limit_to_directories : bool, optional
             Whether to limit the tree to directories only. Default is False.
         length_limit : int, optional
