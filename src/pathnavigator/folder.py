@@ -133,7 +133,7 @@ class Folder:
             A regex pattern to include files or folders matching the pattern.
             Default is None (include all).
         exclude : str, optional
-            A regex pattern to exclude files or folders matching the pattern. 
+            A regex pattern to exclude files or folders matching the pattern.
             Default is None (exclude none).
         _only_folders : bool, optional
             Whether to scan only subfolders. Default is False.
@@ -157,19 +157,19 @@ class Folder:
 
         _folder_count = 0
         _file_count = 0
-        
+
         include_pattern = re.compile(include) if include else None
         exclude_pattern = re.compile(exclude) if exclude else None
-        
+
         for entry in self.get().iterdir():
             entry_name = entry.name
-            
+
             if exclude_pattern and exclude_pattern.search(entry_name):
                 continue  # Skip excluded files or folders
-            
+
             if include_pattern and not include_pattern.search(entry_name):
                 continue  # Skip non-matching entries if include is specified
-            
+
             if entry.is_dir() and not _only_files:
                 if _folder_count < max_folders:
                     valid_folder_name = self._pn_converter.to_valid_name(entry_name)
@@ -411,7 +411,7 @@ class Folder:
             if valid_name not in self.files:
                 raise ValueError(
                     f"'{filename}' not found in '{self.get()}'." +
-                    " Try to reload the pn object by pn.reload() if the file exist in the file system."
+                    " Try to re-scan the pn object by pn.scan() if the file exist in the file system."
                     )
             self._pn_object.sc.add(name, self.files[valid_name])
 
@@ -429,45 +429,102 @@ class Folder:
 
         self._pn_object.sc.add_all_files(directory=self.get(), overwrite=overwrite, prefix=prefix)
 
-    def get(self, fname: str|Path = None) -> Path:
+    # def get(self, fname: str|Path = None) -> Path:
+    #     """
+    #     Get the full path of a file or a subfolder in the current folder.
+
+    #     Parameters
+    #     ----------
+    #     fname : str or Path
+    #         The name of the file or the subfolder to get. If None, returns the full path
+    #         of the current folder. Default is None.
+
+    #     Returns
+    #     -------
+    #     Path
+    #         The full path to the file or the subfolder.
+
+    #     Examples
+    #     --------
+    #     >>> folder = Folder(name="root")
+    #     >>> folder.get("file1")
+    #     '/home/user/root/file1'
+    #     """
+    #     if fname is None:
+    #         return Path(self.parent_path) / self.name
+    #     else:
+    #         valid_name = self._pn_converter.to_valid_name(fname)
+    #         if valid_name not in self.files and valid_name not in self.subfolders:
+    #             # Rescan the folder to confirm the existence of the file before raising an error
+    #             _pn_object = self._pn_object
+    #             self.scan(
+    #                 max_depth=_pn_object._pn_max_depth-self._pn_current_depth,
+    #                 max_files=_pn_object._pn_max_files,
+    #                 max_folders=_pn_object._pn_max_folders,
+    #                 )
+    #         if valid_name not in self.files and valid_name not in self.subfolders:
+    #             raise ValueError(
+    #                 f"'{fname}' not found in '{Path(self.parent_path) / self.name}'." +
+    #                 " Try to re-scan the pn object by pn.scan() if the file exist in the file system."
+    #                 )
+    #         return Path(self.parent_path) / self.name / fname
+
+    def get(self, *args) -> Path:
         """
         Get the full path of a file or a subfolder in the current folder.
-
+        
         Parameters
         ----------
-        fname : str or Path
+        *args : str
             The name of the file or the subfolder to get. If None, returns the full path
             of the current folder. Default is None.
-
+            
         Returns
         -------
         Path
             The full path to the file or the subfolder.
-
-        Examples
-        --------
-        >>> folder = Folder(name="root")
-        >>> folder.get("file1")
-        '/home/user/root/file1'
         """
-        if fname is None:
+        # If no arguments are provided, return the path of the current folder
+        if not args:
             return Path(self.parent_path) / self.name
-        else:
-            valid_name = self._pn_converter.to_valid_name(fname)
-            if valid_name not in self.files and valid_name not in self.subfolders:
-                # Rescan the folder to confirm the existence of the file before raising an error
-                _pn_object = self._pn_object
-                self.scan(
-                    max_depth=_pn_object._pn_max_depth-self._pn_current_depth,
-                    max_files=_pn_object._pn_max_files,
-                    max_folders=_pn_object._pn_max_folders,
-                    )
-            if valid_name not in self.files and valid_name not in self.subfolders:
-                raise ValueError(
-                    f"'{fname}' not found in '{Path(self.parent_path) / self.name}'." +
-                    " Try to reload the pn object by pn.reload() if the file exist in the file system."
-                    )
-            return Path(self.parent_path) / self.name / fname
+
+
+        # Otherwise, process the parts in args
+        path = Path(*args)
+        current_obj = self
+        for i, part in enumerate(path.parts):
+            valid_name = self._pn_converter.to_valid_name(part)
+
+            if i == len(path.parts) - 1:
+                if valid_name not in current_obj.files and valid_name not in current_obj.subfolders:
+                    # Rescan the folder to confirm the existence of the file before raising an error
+                    _pn_object = current_obj._pn_object
+                    current_obj.scan(
+                        max_depth=_pn_object._pn_max_depth-self._pn_current_depth,
+                        max_files=_pn_object._pn_max_files,
+                        max_folders=_pn_object._pn_max_folders,
+                        )
+                if valid_name not in current_obj.files and valid_name not in current_obj.subfolders:
+                    raise ValueError(
+                        f"'{path}' not found in '{Path(self.parent_path) / self.name}'." +
+                        " Try to re-scan the pn object by pn.scan() if the file exist in the file system."
+                        )
+                return Path(current_obj.parent_path) / current_obj.name / part
+            else:
+                if valid_name not in current_obj.subfolders:
+                    # Rescan the folder to confirm the existence of the file before raising an error
+                    _pn_object = current_obj._pn_object
+                    current_obj.scan(
+                        max_depth=_pn_object._pn_max_depth-self._pn_current_depth,
+                        max_files=_pn_object._pn_max_files,
+                        max_folders=_pn_object._pn_max_folders,
+                        )
+                if valid_name not in current_obj.subfolders:
+                    raise ValueError(
+                        f"'{part}' not found in '{Path(current_obj.parent_path) / current_obj.name}'." +
+                        " Try to re-scan the pn object by pn.scan() if the file exist in the file system."
+                        )
+                current_obj = current_obj.subfolders[valid_name]
 
     def get_str(self, fname: str = None) -> str:
         """
