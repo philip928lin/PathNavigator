@@ -71,8 +71,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.get"><code class="docutils literal notranslate"><span class="pre">Folder.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.get_str"><code class="docutils literal notranslate"><span class="pre">Folder.get_str()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.join"><code class="docutils literal notranslate"><span class="pre">Folder.join()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.listdirs"><code class="docutils literal notranslate"><span class="pre">Folder.listdirs()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.listfiles"><code class="docutils literal notranslate"><span class="pre">Folder.listfiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.list"><code class="docutils literal notranslate"><span class="pre">Folder.list()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.ls"><code class="docutils literal notranslate"><span class="pre">Folder.ls()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.mkdir"><code class="docutils literal notranslate"><span class="pre">Folder.mkdir()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">Folder.name</span></code></a></li>
@@ -424,28 +423,27 @@ of the folder. Default is None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pathnavigator.folder.Folder.listdirs">
-<span class="sig-name descname"><span class="pre">listdirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.listdirs" title="Link to this definition"></a></dt>
-<dd><p>List subfolders in the current folder.</p>
+<dt class="sig sig-object py" id="pathnavigator.folder.Folder.list">
+<span class="sig-name descname"><span class="pre">list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.list" title="Link to this definition"></a></dt>
+<dd><p>List subfolders or files in the current folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode to use for listing subfolders. Options are ‘name’ (default) and ‘dir’.
-- ‘name’: List subfolder names.
-- ‘dir’: List subfolder directories.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode to use for listing items. Options are ‘name’ (default), ‘dir’, and ‘stem’.
+- ‘name’: List item names (with extensions for files).
+- ‘dir’: List full item paths.
+- ‘stem’: List file stems (filenames without extensions).</p></li>
+<li><p><strong>type</strong> (<em>str</em><em>, </em><em>optional</em>) – The type of items to list. Options are:
+- ‘dir’: List only directories.
+- ‘file’: List only files.
+- None (default): List both files and directories.</p></li>
+</ul>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pathnavigator.folder.Folder.listfiles">
-<span class="sig-name descname"><span class="pre">listfiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.listfiles" title="Link to this definition"></a></dt>
-<dd><p>List files in the current folder.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode to use for listing files. Options are ‘name’ (default), dir, and stem.
-- ‘name’: List file names (with extensions).
-- ‘dir’: List file directories.
-- ‘stem’: List file stems.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of directories or files (or both) based on the specified filters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -520,7 +518,7 @@ of the folder. Default is None.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder.scan">
-<span class="sig-name descname"><span class="pre">scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_only_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_only_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_depth_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_clear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.scan" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_only_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_only_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_depth_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_clear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.scan" title="Link to this definition"></a></dt>
 <dd><p>Recursively scan subfolders and files in the current folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -528,6 +526,10 @@ of the folder. Default is None.</p>
 <li><p><strong>max_depth</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum depth to scan. Default is math.inf.</p></li>
 <li><p><strong>max_files</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of files to scan. Default is math.inf.</p></li>
 <li><p><strong>max_folders</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of subfolders to scan. Default is math.inf.</p></li>
+<li><p><strong>include</strong> (<em>str</em><em>, </em><em>optional</em>) – A regex pattern to include files or folders matching the pattern.
+Default is None (include all).</p></li>
+<li><p><strong>exclude</strong> (<em>str</em><em>, </em><em>optional</em>) – A regex pattern to exclude files or folders matching the pattern.
+Default is None (exclude none).</p></li>
 <li><p><strong>_only_folders</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only subfolders. Default is False.</p></li>
 <li><p><strong>_only_files</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only files. Default is False.</p></li>
 <li><p><strong>_depth_count</strong> (<em>int</em><em>, </em><em>optional</em>) – The current depth count. Default is 0.</p></li>
