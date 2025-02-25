@@ -161,6 +161,32 @@ def test_add_to_sys_path(setup_pathnavigator):
     pn.folder1.add_to_sys_path()
     assert pn.folder1.get() in sys.path
 
+def test_list(setup_pathnavigator):
+    pn = setup_pathnavigator
+    subfolders = pn.list(type='dir')
+    assert 'folder1' in subfolders
+    assert 'file1' not in subfolders
+
+    files = pn.folder1.list(type='file')
+    assert 'file1.txt' in files
+    assert 'file2.txt' not in files
+
+def test_scan(setup_pathnavigator):
+    pn = setup_pathnavigator
+    pn.scan(max_depth=1)
+    assert len(pn.subfolders) == 2
+    assert len(pn.files) == 0
+    
+    pn.scan(max_depth=2)
+    assert len(pn.folder2.subfolders) == 1
+    assert len(pn.folder2.files) == 0
+    
+def test_exists(setup_pathnavigator):
+    pn = setup_pathnavigator
+    assert pn.exists('folder1')
+    assert pn.folder1.exists('file1.txt')
+    assert not pn.folder1.exists('file3.txt')
+    assert not pn.exists('folder3')
 # def test_tree(setup_pathnavigator, capsys):
 #     pn = setup_pathnavigator
 #     pn.tree()
