@@ -163,7 +163,7 @@ def test_add_to_sys_path(setup_pathnavigator):
 
 def test_list(setup_pathnavigator):
     pn = setup_pathnavigator
-    subfolders = pn.list(type='dir')
+    subfolders = pn.list(type='folder')
     assert 'folder1' in subfolders
     assert 'file1' not in subfolders
 
