@@ -18,9 +18,9 @@ from .att_name_convertor import AttributeNameConverter
         Recursively scans subfolders and files in the current folder.
     ls()
         Prints the contents (subfolders and files) of the folder.
-    get(filename=None)
+    get()
         Get the full path of a file in the current folder.
-    get_str(filename=None)
+    get_str()
         Get the full path str of a file in the current folder.
     join(*args)
         Joins the current folder path with additional path components.
@@ -429,46 +429,6 @@ class Folder:
 
         self._pn_object.sc.add_all_files(directory=self.get(), overwrite=overwrite, prefix=prefix)
 
-    # def get(self, fname: str|Path = None) -> Path:
-    #     """
-    #     Get the full path of a file or a subfolder in the current folder.
-
-    #     Parameters
-    #     ----------
-    #     fname : str or Path
-    #         The name of the file or the subfolder to get. If None, returns the full path
-    #         of the current folder. Default is None.
-
-    #     Returns
-    #     -------
-    #     Path
-    #         The full path to the file or the subfolder.
-
-    #     Examples
-    #     --------
-    #     >>> folder = Folder(name="root")
-    #     >>> folder.get("file1")
-    #     '/home/user/root/file1'
-    #     """
-    #     if fname is None:
-    #         return Path(self.parent_path) / self.name
-    #     else:
-    #         valid_name = self._pn_converter.to_valid_name(fname)
-    #         if valid_name not in self.files and valid_name not in self.subfolders:
-    #             # Rescan the folder to confirm the existence of the file before raising an error
-    #             _pn_object = self._pn_object
-    #             self.scan(
-    #                 max_depth=_pn_object._pn_max_depth-self._pn_current_depth,
-    #                 max_files=_pn_object._pn_max_files,
-    #                 max_folders=_pn_object._pn_max_folders,
-    #                 )
-    #         if valid_name not in self.files and valid_name not in self.subfolders:
-    #             raise ValueError(
-    #                 f"'{fname}' not found in '{Path(self.parent_path) / self.name}'." +
-    #                 " Try to re-scan the pn object by pn.scan() if the file exist in the file system."
-    #                 )
-    #         return Path(self.parent_path) / self.name / fname
-
     def get(self, *args) -> Path:
         """
         Get the full path of a file or a subfolder in the current folder.
@@ -549,44 +509,6 @@ class Folder:
         """
         return str(self.get(*args))
 
-    # def listdirs(self, mode='name'):
-    #     """
-    #     List subfolders in the current folder.
-
-    #     Parameters
-    #     ----------
-    #     mode : str, optional
-    #         The mode to use for listing subfolders. Options are 'name' (default) and 'dir'.
-    #         - 'name': List subfolder names.
-    #         - 'dir': List subfolder directories.
-    #     """
-    #     mode_map = {
-    #         'name': lambda item: item.name,
-    #         'dir': lambda item: item
-    #     }
-
-    #     return [mode_map[mode](item) for item in self.get().iterdir() if item.is_dir()]
-
-    # def listfiles(self, mode='name'):
-    #     """
-    #     List files in the current folder.
-
-    #     Parameters
-    #     ----------
-    #     mode : str, optional
-    #         The mode to use for listing files. Options are 'name' (default), dir, and stem.
-    #         - 'name': List file names (with extensions).
-    #         - 'dir': List file directories.
-    #         - 'stem': List file stems.
-    #     """
-    #     mode_map = {
-    #         'name': lambda item: item.name,
-    #         'dir': lambda item: item,
-    #         'stem': lambda item: item.stem
-    #     }
-
-    #     return [mode_map[mode](item) for item in self.get().iterdir() if item.is_file()]
-
     def list(self, mode='name', type=None):
         """
         List subfolders or files in the current folder.
@@ -600,7 +522,7 @@ class Folder:
             - 'stem': List file stems (filenames without extensions).
         type : str, optional
             The type of items to list. Options are:
-            - 'dir': List only directories.
+            - 'folder': List only folders.
             - 'file': List only files.
             - None (default): List both files and directories.
 
@@ -617,7 +539,7 @@ class Folder:
 
         items = self.get().iterdir()  # Get all items in the folder
 
-        if type == 'dir':
+        if type == 'folder':
             items = (item for item in items if item.is_dir())  # Filter only directories
         elif type == 'file':
             items = (item for item in items if item.is_file())  # Filter only files
