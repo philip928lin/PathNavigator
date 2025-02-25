@@ -526,7 +526,7 @@ class Folder:
                         )
                 current_obj = current_obj.subfolders[valid_name]
 
-    def get_str(self, fname: str = None) -> str:
+    def get_str(self, *args) -> str:
         """
         Get the full path of a file or a subfolder in the current folder.
 
@@ -547,7 +547,7 @@ class Folder:
         >>> folder.get_str("file1")
         '/home/user/root/file1'
         """
-        return str(self.get(fname))
+        return str(self.get(*args))
 
     # def listdirs(self, mode='name'):
     #     """
