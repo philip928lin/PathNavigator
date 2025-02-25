@@ -112,10 +112,12 @@ pn.forlder1.forlder2.chdir()
 
 ### Listing folders or files
 ```python
+# List all directories
+pn.forlder1.list()
 # List all subfolders
-pn.forlder1.listdirs()
+pn.forlder1.list(type="folder")
 # List all files
-pn.forlder1.listfiles()
+pn.forlder1.list(type="file")
 ```
 
 ### Shortcuts Management
