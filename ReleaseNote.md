@@ -1,4 +1,7 @@
-# V0.5.1
+# v0.5.2
+- Add `display` arg to `PathNavigator` to avoid massive output when running in parallel.
+
+# v0.5.1
 - Replaced `load_nested_dirs()` in the `PathNavigator` class with `scan()` in the `Folder` class.
 - Added include and exclude regex patterns to the `scan()` method in the `Folder` class.
 - Consolidated `listdirs()` and `listfiles()` into a single `list()` method in the `Folder` class.
