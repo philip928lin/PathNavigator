@@ -35,7 +35,7 @@ class PathNavigator(Folder):
     >>> pn.remove('folder1')    # removes a file or subfolder from the folder and deletes it from the filesystem.
     """
     
-    def __init__(self, root_dir: str = None, max_depth: int = math.inf, max_files: int = math.inf, max_folders: int = math.inf):
+    def __init__(self, root_dir: str = None, max_depth: int = math.inf, max_files: int = math.inf, max_folders: int = math.inf, display: bool = False):
         """
         Initialize the PathNavigator object with the given root directory and load nested directories.
         
@@ -50,6 +50,8 @@ class PathNavigator(Folder):
             The maximum number of files to load. Default is math.inf.
         max_folders : int
             The maximum number of subdirectories to load. Default is math.inf.
+        display : bool
+            Whether to display action complete info like changing directory. Default is False.
             
         Returns
         -------
@@ -63,6 +65,7 @@ class PathNavigator(Folder):
         self._pn_max_depth = max_depth
         self._pn_max_files = max_files
         self._pn_max_folders = max_folders
+        self._pn_display = display
         self.sc = Shortcut()  # Initialize Shortcut manager as an attribute
         super().__init__(name=self._pn_root.name, parent_path=self._pn_root.parent, _pn_object=self)
         

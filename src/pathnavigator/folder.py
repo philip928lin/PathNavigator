@@ -278,7 +278,8 @@ class Folder:
             _only_files=False,
             _only_folders=True
             )
-            print(f"Subfolder '{org_name}' has been removed from '{self.get()}'")
+            if self._pn_object._pn_display:
+                print(f"Subfolder '{org_name}' has been removed from '{self.get()}'")
 
         elif valid_name in self.files:
             self.scan(
@@ -291,9 +292,11 @@ class Folder:
             full_path = self.files[valid_name]
             os.remove(full_path)
             del self.files[valid_name]
-            print(f"File '{org_name}' has been removed from '{self.get()}'")
+            if self._pn_object._pn_display:
+                print(f"File '{org_name}' has been removed from '{self.get()}'")
         else:
-            print(f"'{name}' not found in '{self.get()}'")
+            if self._pn_object._pn_display:
+                print(f"'{name}' not found in '{self.get()}'")
 
         # Rescan the folder structure after removing a file or subfolder
 
@@ -338,7 +341,8 @@ class Folder:
         full_path = self.join(*args) #os.path.join(self.get(), *args)
         if not full_path.exists():
             full_path.mkdir(parents=True, exist_ok=True)
-            print(f"Created directory '{full_path}'")
+            if self._pn_object._pn_display:
+                print(f"Created directory '{full_path}'")
 
         # Rescan the folder structure after creating a new subfolder
         _pn_object = self._pn_object
@@ -555,7 +559,8 @@ class Folder:
         >>> folder.chdir()
         """
         os.chdir(self.get())
-        print(f"Changed working directory to '{self.get()}'")
+        if self._pn_object._pn_display:
+            print(f"Current working directory: '{os.getcwd()}'")
 
     def add_to_sys_path(self, method='insert', index=1):
         """
@@ -590,14 +595,13 @@ class Folder:
         if self.get() not in sys.path:
             if method == 'insert':
                 sys.path.insert(index, self.get())
-                print(f"Inserted {self.get()} at index {index} in system path.")
             elif method == 'append':
                 sys.path.append(self.get())
-                print(f"Appended {self.get()} to system path.")
             else:
-                print(f"Invalid method: {method}. Use 'insert' or 'append'.")
-        else:
-            print(f"{self.get()} is already in the system path.\n Current system paths:\n{sys.path}")
+                raise ValueError(f"Invalid method: {method}. Use 'insert' or 'append'.")
+        if self._pn_object._pn_display:
+            print(f"Current system paths:\n{sys.path}")
+
 
     def tree(self, level: int=-1, limit_to_directories: bool=False,
             length_limit: int=1000, level_length_limit: int=100):
