@@ -68,7 +68,7 @@ class Shortcut:
         if name in self.__dict__ and not overwrite:
             raise AttributeError(f"Cannot add shortcut '{name}' as it conflicts with an existing attribute.")
         super().__setattr__(name, Path(value))
-        print(f"Shortcut '{name}' added for path '{value}'")
+        #print(f"Shortcut '{name}' added for path '{value}'")
 
     def __getattr__(self, name: str) -> str:
         """
