@@ -1,3 +1,6 @@
+# v0.5.3
+- Generalize `add_all_files` to `add_all`
+
 # v0.5.2
 - Add `display` arg to `PathNavigator` to avoid massive output when running in parallel.
 

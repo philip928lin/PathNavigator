@@ -419,19 +419,29 @@ class Folder:
                     )
             self._pn_object.sc.add(name, self.files[valid_name])
 
-    def set_all_files_to_sc(self, overwrite: bool = False, prefix: str = ""):
+    def set_all_to_sc(self, mode: str = 'all', overwrite: bool = False, 
+                      prefix: str = "", include: str = None, exclude: str = None):
         """
         Add all files in the current folder to the shortcut manager.
 
         Parameters
         ----------
+        mode : str, optional
+            The mode to use when adding shortcuts. Default is 'all'.
+            - 'all': Add all files in the directory.
+            - 'files': Add only files in the directory.
+            - 'folders': Add only folders in the directory.
         overwrite : bool, optional
             Whether to overwrite existing shortcuts. Default is False.
         prefix : str, optional
             The prefix to add to the shortcut names. Default is "".
+        include : str, optional
+            A regular expression pattern to include only files or folders that match the pattern. Default is None.
+        exclude : str, optional
+            A regular expression pattern to exclude files or folders that match the pattern. Default is None.
         """
-
-        self._pn_object.sc.add_all_files(directory=self.get(), overwrite=overwrite, prefix=prefix)
+        self._pn_object.sc.add_all(directory=self.get(), mode=mode, overwrite=overwrite,
+                                   prefix=prefix, include=include, exclude=exclude)
 
     def get(self, *args) -> Path:
         """
