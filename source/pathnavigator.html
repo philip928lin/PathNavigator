@@ -78,7 +78,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">Folder.parent_path</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.remove"><code class="docutils literal notranslate"><span class="pre">Folder.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.scan"><code class="docutils literal notranslate"><span class="pre">Folder.scan()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.set_all_files_to_sc"><code class="docutils literal notranslate"><span class="pre">Folder.set_all_files_to_sc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.set_all_to_sc"><code class="docutils literal notranslate"><span class="pre">Folder.set_all_to_sc()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.set_sc"><code class="docutils literal notranslate"><span class="pre">Folder.set_sc()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">Folder.subfolders</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.folder.Folder.tree"><code class="docutils literal notranslate"><span class="pre">Folder.tree()</span></code></a></li>
@@ -93,7 +93,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-pathnavigator.shortcut">pathnavigator.shortcut module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut"><code class="docutils literal notranslate"><span class="pre">Shortcut</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.add"><code class="docutils literal notranslate"><span class="pre">Shortcut.add()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.add_all_files"><code class="docutils literal notranslate"><span class="pre">Shortcut.add_all_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.add_all"><code class="docutils literal notranslate"><span class="pre">Shortcut.add_all()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.clear"><code class="docutils literal notranslate"><span class="pre">Shortcut.clear()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.get"><code class="docutils literal notranslate"><span class="pre">Shortcut.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.shortcut.Shortcut.get_str"><code class="docutils literal notranslate"><span class="pre">Shortcut.get_str()</span></code></a></li>
@@ -534,14 +534,20 @@ Default is None (exclude none).</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pathnavigator.folder.Folder.set_all_files_to_sc">
-<span class="sig-name descname"><span class="pre">set_all_files_to_sc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.set_all_files_to_sc" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pathnavigator.folder.Folder.set_all_to_sc">
+<span class="sig-name descname"><span class="pre">set_all_to_sc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.set_all_to_sc" title="Link to this definition"></a></dt>
 <dd><p>Add all files in the current folder to the shortcut manager.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode to use when adding shortcuts. Default is ‘all’.
+- ‘all’: Add all files in the directory.
+- ‘files’: Add only files in the directory.
+- ‘folders’: Add only folders in the directory.</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to overwrite existing shortcuts. Default is False.</p></li>
 <li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – The prefix to add to the shortcut names. Default is “”.</p></li>
+<li><p><strong>include</strong> (<em>str</em><em>, </em><em>optional</em>) – A regular expression pattern to include only files or folders that match the pattern. Default is None.</p></li>
+<li><p><strong>exclude</strong> (<em>str</em><em>, </em><em>optional</em>) – A regular expression pattern to exclude files or folders that match the pattern. Default is None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -664,20 +670,27 @@ Default is None (exclude none).</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.add_all_files">
-<span class="sig-name descname"><span class="pre">add_all_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.add_all_files" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.add_all">
+<span class="sig-name descname"><span class="pre">add_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.add_all" title="Link to this definition"></a></dt>
 <dd><p>Add all files in a given directory as shortcuts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em>) – The directory containing the files to add as shortcuts.</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode to use when adding shortcuts. Default is ‘all’.
+- ‘all’: Add all files in the directory.
+- ‘files’: Add only files in the directory.
+- ‘folders’: Add only folders in the directory.</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to overwrite existing shortcuts. Default is False.</p></li>
+<li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – The prefix to add to the shortcut names. Default is “”.</p></li>
+<li><p><strong>include</strong> (<em>str</em><em>, </em><em>optional</em>) – A regular expression pattern to include only files or folders that match the pattern. Default is None.</p></li>
+<li><p><strong>exclude</strong> (<em>str</em><em>, </em><em>optional</em>) – A regular expression pattern to exclude files or folders that match the pattern. Default is None.</p></li>
 </ul>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span> <span class="o">=</span> <span class="n">Shortcut</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">add_all_files_in_directory</span><span class="p">(</span><span class="s2">&quot;/path/to/directory&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">shortcut</span><span class="o">.</span><span class="n">add_all</span><span class="p">(</span><span class="s2">&quot;/path/to/directory&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
