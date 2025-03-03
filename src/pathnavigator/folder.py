@@ -219,7 +219,7 @@ class Folder:
         if self.subfolders:
             print("Subfolders:")
             for subfolder in self.subfolders:
-                org_name = self._pn_converter.get(subfolder)
+                org_name = self._pn_converter.get_org(subfolder)
                 if self._pn_converter._pn_is_valid_attribute_name(org_name) is False:
                     print(f"  [Dir] {org_name}\n         -> {subfolder}")
                 else:
@@ -230,7 +230,7 @@ class Folder:
         if self.files:
             print("Files:")
             for file in self.files:
-                org_name = self._pn_converter.get(file)
+                org_name = self._pn_converter.get_org(file)
                 if self._pn_converter._pn_is_valid_attribute_name(org_name) is False:
                     print(f"  [File] {org_name}\n         -> {file}")
                 else:
@@ -259,7 +259,7 @@ class Folder:
         """
         _pn_object = self._pn_object
         valid_name = self._pn_converter.to_valid_name(name)
-        org_name = self._pn_converter.get(valid_name)
+        org_name = self._pn_converter.get_org(valid_name)
 
         if valid_name not in self.subfolders and valid_name not in self.files:
             self.scan(

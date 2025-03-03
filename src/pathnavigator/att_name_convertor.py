@@ -40,7 +40,7 @@ class AttributeNameConverter:
         else:
             return name
 
-    def get(self, name: str) -> str:
+    def get_org(self, name: str) -> str:
         """
         Get the valid attribute name for the given original name.
         
@@ -49,8 +49,22 @@ class AttributeNameConverter:
         name : str
             The original name to get the valid attribute name for.
         """
-        if self._pn_needs_name_mapping(name):
+        if name in self._pn_valid_name_to_org:
             return self._pn_valid_name_to_org[name]
+        else:
+            return name
+    
+    def get_valid(self, name: str) -> str:
+        """
+        Get the valid attribute name for the given original name.
+        
+        Parameters
+        ----------
+        name : str
+            The original name to get the valid attribute name for.
+        """
+        if name in self._pn_org_to_valid_name:
+            return self._pn_org_to_valid_name[name]
         else:
             return name
     
@@ -112,14 +126,3 @@ class AttributeNameConverter:
     def _pn_get_name_mapping(self):
         """Return the dictionary that maps ineligible names to eligible names."""
         return self._pn_org_to_valid_name
-
-    def _pn_needs_name_mapping(self, name: str) -> bool:
-        """
-        Check if the original name needs to use the name mapping.
-        
-        Parameters
-        ----------
-        name : str
-            The original name to check.
-        """
-        return name in self._pn_valid_name_to_org

@@ -68,7 +68,7 @@ class Shortcut:
         if name in self.__dict__ and not overwrite:
             raise AttributeError(f"Cannot add shortcut '{name}' as it conflicts with an existing attribute.")
         super().__setattr__(name, Path(value))
-        #print(f"Shortcut '{name}' added for path '{value}'")
+        print(f"Shortcut '{name}' added for path '{value}'")
 
     def __getattr__(self, name: str) -> str:
         """
@@ -134,10 +134,7 @@ class Shortcut:
         """
         
         valid_name = self._pn_converter.to_valid_name(name)
-        if valid_name in self.__dict__ and not overwrite:
-            raise AttributeError(f"Cannot add shortcut '{name}' as it conflicts with an existing attribute.")
-        else:
-            self.__setattr__(name, path, overwrite=overwrite)
+        self.__setattr__(valid_name, path, overwrite=overwrite)
 
     def add_all(self, directory: str|Path, mode: str = 'all', overwrite: bool = False, 
                 prefix: str = "", include: str = None, exclude: str = None):
@@ -224,7 +221,7 @@ class Shortcut:
         >>> shortcut.get("my_folder")
         '/path/to/folder'
         """
-        valid_name = self._pn_converter.get(name)
+        valid_name = self._pn_converter.get_valid(name)
         return self.__getattr__(valid_name)
     
     def get_str(self, name: str) -> str:
@@ -248,8 +245,7 @@ class Shortcut:
         >>> shortcut.get("my_folder")
         '/path/to/folder'
         """
-        valid_name = self._pn_converter.get(name)
-        return str(self.__getattr__(valid_name))
+        return str(self.get(name))
     
     def remove(self, name: str):
         """
@@ -268,7 +264,7 @@ class Shortcut:
         >>> hasattr(shortcut, "my_folder")
         False
         """
-        valid_name = self._pn_converter.get(name)
+        valid_name = self._pn_converter.get_valid(name)
         self.__delattr__(valid_name)
 
     def clear(self):
@@ -299,7 +295,7 @@ class Shortcut:
         Shortcuts:
         my_folder -> /path/to/folder
         """
-        attributes = {self._pn_converter.get(key): value for key, value in self.__dict__.items() if not key.startswith("_pn_")}
+        attributes = {self._pn_converter.get_org(key): value for key, value in self.__dict__.items() if not key.startswith("_pn_")}
         if not attributes:
             print("No shortcuts available.")
         else:
@@ -330,9 +326,9 @@ class Shortcut:
         """
         _pn_converter = self._pn_converter
         if to_str:
-            return {_pn_converter.get(k): str(v) for k, v in self.__dict__.items() if not k.startswith("_pn_")}
+            return {_pn_converter.get_org(k): str(v) for k, v in self.__dict__.items() if not k.startswith("_pn_")}
         else:
-            return {_pn_converter.get(k): v for k, v in self.__dict__.items() if not k.startswith("_pn_")}
+            return {_pn_converter.get_org(k): v for k, v in self.__dict__.items() if not k.startswith("_pn_")}
         
     def to_json(self, filename: str = "shortcuts.json") -> str:
         """
