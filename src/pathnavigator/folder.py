@@ -9,6 +9,8 @@ from typing import Dict, Any
 from itertools import islice
 from .att_name_convertor import AttributeNameConverter
 
+__all__ = ['Folder']
+
 """
     Methods
     -------

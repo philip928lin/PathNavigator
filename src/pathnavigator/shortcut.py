@@ -5,6 +5,8 @@ from pathlib import Path
 import re
 from .att_name_convertor import AttributeNameConverter
 
+__all__ = ['Shortcut']
+
 """
     Methods
     -------

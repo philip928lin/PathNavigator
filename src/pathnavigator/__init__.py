@@ -1,5 +1,7 @@
+import os
+import platform
 import math
-from .pathnavigator import PathNavigator
+from .pathnavigator import *
 
 # A factory function for common use cases. This reduces the cognitive 
 # load for new users who may not be familiar with your class.
@@ -26,3 +28,10 @@ def create(root_dir: str = None, max_depth: int = math.inf, max_files: int = mat
         The PathNavigator object with the given root directory.
     """
     return PathNavigator(root_dir=root_dir, max_depth=max_depth, max_files=max_files, max_folders=max_folders)
+
+# Other info 
+user = os.getlogin()
+os_name = platform.system()
+#'Windows' for Windows
+#'Linux' for Linux
+#'Darwin' for macOS

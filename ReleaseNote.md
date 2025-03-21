@@ -1,3 +1,7 @@
+# v0.5.4
+- Add `user = os.getlogin()` to the package
+- Add `os_name = platform.system()` to detect the operating system
+
 # v0.5.3
 - Generalize `add_all_files` to `add_all`
 - Debug `shortcut.get()` and  `att_name_convertor.py`

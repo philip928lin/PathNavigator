@@ -2,6 +2,8 @@ import re
 import keyword
 from dataclasses import dataclass, field
 
+__all__ = ["AttributeNameConverter"]
+
 @dataclass
 class AttributeNameConverter:
     """

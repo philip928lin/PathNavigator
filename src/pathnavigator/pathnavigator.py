@@ -1,7 +1,10 @@
+#import os
 import math
 from pathlib import Path
 from .folder import Folder
 from .shortcut import Shortcut
+
+__all__ = ['PathNavigator']
 
 class PathNavigator(Folder):
     """
@@ -66,6 +69,7 @@ class PathNavigator(Folder):
         self._pn_max_files = max_files
         self._pn_max_folders = max_folders
         self._pn_display = display
+        #self._pn_user = os.getlogin()
         self.sc = Shortcut()  # Initialize Shortcut manager as an attribute
         super().__init__(name=self._pn_root.name, parent_path=self._pn_root.parent, _pn_object=self)
         
@@ -79,7 +83,5 @@ class PathNavigator(Folder):
     
     def __call__(self):
         return self._pn_root
-
-
     
     
