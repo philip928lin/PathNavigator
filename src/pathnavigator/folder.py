@@ -128,9 +128,9 @@ class Folder:
         max_depth : int, optional
             The maximum depth to scan. Default is math.inf.
         max_files : int, optional
-            The maximum number of files to scan. Default is math.inf.
+            The maximum number of files at each level to scan. Default is math.inf.
         max_folders : int, optional
-            The maximum number of subfolders to scan. Default is math.inf.
+            The maximum number of subfolders at each level to scan. Default is math.inf.
         include : str, optional
             A regex pattern to include files or folders matching the pattern.
             Default is None (include all).
@@ -182,6 +182,8 @@ class Folder:
                         max_depth=max_depth,
                         max_files=max_files,
                         max_folders=max_folders,
+                        include=include,
+                        exclude=exclude,
                         _depth_count=_depth_count+1
                         )
                     _folder_count += 1

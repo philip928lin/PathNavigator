@@ -6,7 +6,15 @@ from .pathnavigator import *
 # A factory function for common use cases. This reduces the cognitive 
 # load for new users who may not be familiar with your class.
 
-def create(root_dir: str = None, max_depth: int = math.inf, max_files: int = math.inf, max_folders: int = math.inf) -> PathNavigator:
+def create(
+    root_dir: str = None, 
+    max_depth: int = math.inf, 
+    max_files: int = math.inf, 
+    max_folders: int = math.inf, 
+    include: str = None,
+    exclude: str = None,
+    display: bool = False
+    ) -> PathNavigator:
     """
     Create a PathNavigator object with the given root directory and load nested directories.
     
@@ -21,13 +29,29 @@ def create(root_dir: str = None, max_depth: int = math.inf, max_files: int = mat
         The maximum number of files to load. Default is math.inf.
     max_folders : int
         The maximum number of subdirectories to load. Default is math.inf.
+    include : str
+        The re pattern to include files and folders. Default is None.
+        E.g., r"^(gis|data)$" will only include folders named 'gis' and 'data'.
+    exclude : str  
+        The re pattern to exclude files and folders. Default is None.
+        E.g., r"^(gis|data)$" will exclude folders named 'gis' and 'data'.
+    display : bool
+        Whether to display action complete info like changing directory. Default is False.
         
     Returns
     -------
     PathNavigator
         The PathNavigator object with the given root directory.
     """
-    return PathNavigator(root_dir=root_dir, max_depth=max_depth, max_files=max_files, max_folders=max_folders)
+    return PathNavigator(
+        root_dir=root_dir, 
+        max_depth=max_depth, 
+        max_files=max_files, 
+        max_folders=max_folders, 
+        include=include, 
+        exclude=exclude, 
+        display=display
+        )
 
 # Other info 
 user = os.getlogin()
