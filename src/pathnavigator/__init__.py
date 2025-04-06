@@ -1,4 +1,4 @@
-import os
+import getpass
 import platform
 import math
 from .pathnavigator import *
@@ -54,7 +54,7 @@ def create(
         )
 
 # Other info 
-user = os.getlogin()
+user = getpass.getuser()
 os_name = platform.system()
 #'Windows' for Windows
 #'Linux' for Linux
