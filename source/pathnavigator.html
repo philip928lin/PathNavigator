@@ -51,6 +51,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.att_name_convertor.AttributeNameConverter.get"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.get()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.att_name_convertor.AttributeNameConverter.get_org"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.get_org()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.att_name_convertor.AttributeNameConverter.get_valid"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.get_valid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pathnavigator.att_name_convertor.AttributeNameConverter.remove"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.remove()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.to_valid_name()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pathnavigator.att_name_convertor.AttributeNameConverter.update_invalid_name_list"><code class="docutils literal notranslate"><span class="pre">AttributeNameConverter.update_invalid_name_list()</span></code></a></li>
 </ul>
@@ -152,7 +153,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pathnavigator.att_name_convertor.AttributeNameConverter">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pathnavigator.att_name_convertor.</span></span><span class="sig-name descname"><span class="pre">AttributeNameConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_pn_org_to_valid_name=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_pn_valid_name_to_org=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_pn_invalid_name_list=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.att_name_convertor.AttributeNameConverter" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
 <p>A class to convert original names to valid attribute names and store the mapping.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.att_name_convertor.AttributeNameConverter.to_valid_name">
@@ -195,6 +196,17 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pathnavigator.att_name_convertor.AttributeNameConverter.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.att_name_convertor.AttributeNameConverter.remove" title="Link to this definition"></a></dt>
+<dd><p>Remove the mapping for the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The original name to remove from the mapping.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="id0">
 <span class="sig-name descname"><span class="pre">to_valid_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
 <dd><p>Convert the original name to a valid attribute name.</p>
@@ -227,7 +239,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pathnavigator.folder.</span></span><span class="sig-name descname"><span class="pre">Folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subfolders=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_pn_object=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_pn_converter=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_pn_current_depth=0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
 <p>A class to represent a folder in the filesystem and manage subfolders and files.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder.name">
@@ -340,7 +352,7 @@ Default is 1.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder.exists">
-<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_before_checking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.exists" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.exists" title="Link to this definition"></a></dt>
 <dd><p>Check if a file or subfolder exists in the current folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -460,8 +472,8 @@ of the folder. Default is None.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder.ls">
 <span class="sig-name descname"><span class="pre">ls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.ls" title="Link to this definition"></a></dt>
-<dd><p>Print the contents of the folder, including subfolders and files.</p>
-<p>Prints subfolders first, followed by files.</p>
+<dd><p>Print the contents of the folder, including subfolders and files in the pn object.
+Users should run <cite>scan()</cite> if the folder structure has changed.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">folder</span> <span class="o">=</span> <span class="n">Folder</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;root&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">folder</span><span class="o">.</span><span class="n">subfolders</span><span class="p">[</span><span class="s1">&#39;sub1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Folder</span><span class="p">(</span><span class="s2">&quot;sub1&quot;</span><span class="p">)</span>
@@ -527,22 +539,22 @@ of the folder. Default is None.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder.scan">
-<span class="sig-name descname"><span class="pre">scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_only_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_only_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_depth_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_clear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.scan" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_depth_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.scan" title="Link to this definition"></a></dt>
 <dd><p>Recursively scan subfolders and files in the current folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>max_depth</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum depth to scan. Default is math.inf.</p></li>
+<li><p><strong>max_depth</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum depth to scan. Default is 1.</p></li>
+<li><p><strong>only_include</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of  patterns to include only files or folders that match the patterns.
+No <cite>**</cite> wildcard is allowed, only <cite>*</cite> is allowed.</p></li>
+<li><p><strong>only_exclude</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of patterns to exclude files or folders that match the patterns.
+No <cite>**</cite> wildcard is allowed, only <cite>*</cite> is allowed.</p></li>
+<li><p><strong>only_folders</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only subfolders. Default is False.</p></li>
+<li><p><strong>only_files</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only files. Default is False.</p></li>
 <li><p><strong>max_files</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of files at each level to scan. Default is math.inf.</p></li>
 <li><p><strong>max_folders</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of subfolders at each level to scan. Default is math.inf.</p></li>
-<li><p><strong>include</strong> (<em>str</em><em>, </em><em>optional</em>) – A regex pattern to include files or folders matching the pattern.
-Default is None (include all).</p></li>
-<li><p><strong>exclude</strong> (<em>str</em><em>, </em><em>optional</em>) – A regex pattern to exclude files or folders matching the pattern.
-Default is None (exclude none).</p></li>
-<li><p><strong>_only_folders</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only subfolders. Default is False.</p></li>
-<li><p><strong>_only_files</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only files. Default is False.</p></li>
 <li><p><strong>_depth_count</strong> (<em>int</em><em>, </em><em>optional</em>) – The current depth count. Default is 0.</p></li>
-<li><p><strong>_clear</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to clear the subfolders and files before scanning. Default is True.</p></li>
+<li><p><strong>clear</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to clear the subfolders and files before scanning. Default is True.</p></li>
 </ul>
 </dd>
 </dl>
@@ -550,19 +562,19 @@ Default is None (exclude none).</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.folder.Folder.set_all_to_sc">
-<span class="sig-name descname"><span class="pre">set_all_to_sc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.set_all_to_sc" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_all_to_sc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.folder.Folder.set_all_to_sc" title="Link to this definition"></a></dt>
 <dd><p>Add all files in the current folder to the shortcut manager.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode to use when adding shortcuts. Default is ‘all’.
-- ‘all’: Add all files in the directory.
-- ‘files’: Add only files in the directory.
-- ‘folders’: Add only folders in the directory.</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to overwrite existing shortcuts. Default is False.</p></li>
 <li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – The prefix to add to the shortcut names. Default is “”.</p></li>
-<li><p><strong>include</strong> (<em>str</em><em>, </em><em>optional</em>) – A regular expression pattern to include only files or folders that match the pattern. Default is None.</p></li>
-<li><p><strong>exclude</strong> (<em>str</em><em>, </em><em>optional</em>) – A regular expression pattern to exclude files or folders that match the pattern. Default is None.</p></li>
+<li><p><strong>only_include</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of  patterns to include only files or folders that match the patterns.
+No <cite>**</cite> wildcard is allowed, only <cite>*</cite> is allowed.</p></li>
+<li><p><strong>only_exclude</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of patterns to exclude files or folders that match the patterns.
+No <cite>**</cite> wildcard is allowed, only <cite>*</cite> is allowed.</p></li>
+<li><p><strong>only_folders</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only subfolders. Default is False.</p></li>
+<li><p><strong>only_files</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only files. Default is False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -616,7 +628,7 @@ Default is None (exclude none).</p></li>
 <span id="pathnavigator-pathnavigator-module"></span><h2>pathnavigator.pathnavigator module<a class="headerlink" href="#module-pathnavigator.pathnavigator" title="Link to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pathnavigator.pathnavigator.PathNavigator">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pathnavigator.pathnavigator.</span></span><span class="sig-name descname"><span class="pre">PathNavigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.pathnavigator.PathNavigator" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pathnavigator.pathnavigator.</span></span><span class="sig-name descname"><span class="pre">PathNavigator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.pathnavigator.PathNavigator" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pathnavigator.folder.Folder" title="pathnavigator.folder.Folder"><code class="xref py py-class docutils literal notranslate"><span class="pre">Folder</span></code></a></p>
 <p>A class to manage the root folder and recursively load its nested structure (subfolders and files).</p>
 <p class="rubric">Examples</p>
@@ -660,7 +672,7 @@ Default is None (exclude none).</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pathnavigator.shortcut.</span></span><span class="sig-name descname"><span class="pre">Shortcut</span></span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Base</span></code></p>
 <p>A class to manage shortcuts to specific paths and access them as attributes.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.add">
@@ -686,20 +698,20 @@ Default is None (exclude none).</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pathnavigator.shortcut.Shortcut.add_all">
-<span class="sig-name descname"><span class="pre">add_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.add_all" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.shortcut.Shortcut.add_all" title="Link to this definition"></a></dt>
 <dd><p>Add all files in a given directory as shortcuts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>directory</strong> (<em>str</em><em> or </em><em>Path</em>) – The directory containing the files to add as shortcuts.</p></li>
-<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – The mode to use when adding shortcuts. Default is ‘all’.
-- ‘all’: Add all files in the directory.
-- ‘files’: Add only files in the directory.
-- ‘folders’: Add only folders in the directory.</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to overwrite existing shortcuts. Default is False.</p></li>
 <li><p><strong>prefix</strong> (<em>str</em><em>, </em><em>optional</em>) – The prefix to add to the shortcut names. Default is “”.</p></li>
-<li><p><strong>include</strong> (<em>str</em><em>, </em><em>optional</em>) – A regular expression pattern to include only files or folders that match the pattern. Default is None.</p></li>
-<li><p><strong>exclude</strong> (<em>str</em><em>, </em><em>optional</em>) – A regular expression pattern to exclude files or folders that match the pattern. Default is None.</p></li>
+<li><p><strong>only_include</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of  patterns to include only files or folders that match the patterns.
+No <cite>**</cite> wildcard is allowed, only <cite>*</cite> is allowed.</p></li>
+<li><p><strong>only_exclude</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of patterns to exclude files or folders that match the patterns.
+No <cite>**</cite> wildcard is allowed, only <cite>*</cite> is allowed.</p></li>
+<li><p><strong>only_folders</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only subfolders. Default is False.</p></li>
+<li><p><strong>only_files</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only files. Default is False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -941,20 +953,23 @@ Default is None (exclude none).</p></li>
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pathnavigator" title="Link to this heading"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pathnavigator.create">
-<span class="sig-prename descclassname"><span class="pre">pathnavigator.</span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.create" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pathnavigator.</span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_include</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_files</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_folders</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pathnavigator.create" title="Link to this definition"></a></dt>
 <dd><p>Create a PathNavigator object with the given root directory and load nested directories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>root_dir</strong> (<em>str</em>) – The root directory to manage. If it is not given, we use the current working
 directory and load_nested_dirs will be set to False.</p></li>
-<li><p><strong>max_depth</strong> (<em>int</em>) – The maximum depth to load the nested directories. Default is math.inf.</p></li>
-<li><p><strong>max_files</strong> (<em>int</em>) – The maximum number of files to load. Default is math.inf.</p></li>
-<li><p><strong>max_folders</strong> (<em>int</em>) – The maximum number of subdirectories to load. Default is math.inf.</p></li>
-<li><p><strong>include</strong> (<em>str</em>) – The re pattern to include files and folders. Default is None.
-E.g., r”^(gis|data)$” will only include folders named ‘gis’ and ‘data’.</p></li>
-<li><p><strong>exclude</strong> (<em>str</em>) – The re pattern to exclude files and folders. Default is None.
-E.g., r”^(gis|data)$” will exclude folders named ‘gis’ and ‘data’.</p></li>
+<li><p><strong>max_depth</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum depth to scan. Default is math.inf.</p></li>
+<li><p><strong>only_include</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of  patterns to include only files or folders that match the patterns.
+No <cite>**</cite> wildcard is allowed, only <cite>*</cite> is allowed.</p></li>
+<li><p><strong>only_exclude</strong> (<em>list</em><em>, </em><em>optional</em>) – A list of patterns to exclude files or folders that match the patterns.
+No <cite>**</cite> wildcard is allowed, only <cite>*</cite> is allowed.</p></li>
+<li><p><strong>only_folders</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only subfolders. Default is True.
+File will be dynamically added when related methods are called, e.g., <cite>get()</cite>.</p></li>
+<li><p><strong>only_files</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to scan only files. Default is False.</p></li>
+<li><p><strong>max_files</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of files at each level to scan. Default is math.inf.</p></li>
+<li><p><strong>max_folders</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of subfolders at each level to scan. Default is math.inf.</p></li>
 <li><p><strong>display</strong> (<em>bool</em>) – Whether to display action complete info like changing directory. Default is False.</p></li>
 </ul>
 </dd>
