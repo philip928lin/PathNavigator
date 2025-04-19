@@ -42,10 +42,9 @@ class PathNavigator(Folder):
         self, 
         root_dir: str = None, 
         max_depth: int = math.inf, 
-        max_files: int = math.inf, 
-        max_folders: int = math.inf, 
-        include: str = None,
-        exclude: str = None,
+        only_include: list = [], only_exclude: list = [],
+        only_folders: bool = True, only_files: bool = False,
+        max_files: int = math.inf, max_folders: int = math.inf,
         display: bool = False):
         """
         Initialize the PathNavigator object with the given root directory and load nested directories.
@@ -55,18 +54,23 @@ class PathNavigator(Folder):
         root_dir : str
             The root directory to manage. If it is not given, we use the current working
             directory and load_nested_dirs will be set to False.
-        max_depth : int
-            The maximum depth to load the nested directories. Default is math.inf.
-        max_files : int
-            The maximum number of files to load. Default is math.inf.
-        max_folders : int
-            The maximum number of subdirectories to load. Default is math.inf.
-        include : str
-            The re pattern to include files and folders. Default is None.
-            E.g., r"^(gis|data)$" will only include folders named 'gis' and 'data'.
-        exclude : str  
-            The re pattern to exclude files and folders. Default is None.
-            E.g., r"^(gis|data)$" will exclude folders named 'gis' and 'data'.
+        max_depth : int, optional
+            The maximum depth to scan. Default is math.inf.
+        only_include : list, optional
+            A list of  patterns to include only files or folders that match the patterns.
+            No `**` wildcard is allowed, only `*` is allowed.
+        only_exclude : list, optional
+            A list of patterns to exclude files or folders that match the patterns.
+            No `**` wildcard is allowed, only `*` is allowed.
+        only_folders : bool, optional
+            Whether to scan only subfolders. Default is True.
+            File will be dynamically added when related methods are called, e.g., `get()`.
+        only_files : bool, optional
+            Whether to scan only files. Default is False.
+        max_files : int, optional
+            The maximum number of files at each level to scan. Default is math.inf.
+        max_folders : int, optional
+            The maximum number of subfolders at each level to scan. Default is math.inf.
         display : bool
             Whether to display action complete info like changing directory. Default is False.
             
@@ -87,8 +91,13 @@ class PathNavigator(Folder):
         self.sc = Shortcut()  # Initialize Shortcut manager as an attribute
         super().__init__(name=self._pn_root.name, parent_path=self._pn_root.parent, _pn_object=self)
         
-        self.scan(max_depth=max_depth, max_files=max_files, max_folders=max_folders,
-                  include=include, exclude=exclude)
+        self.scan(
+             max_depth=max_depth, 
+             only_include=only_include, only_exclude=only_exclude,
+             only_folders=only_folders, only_files=only_files,
+             clear=True,
+             max_files=max_files, max_folders=max_folders,
+             _depth_count=0)
 
     def __str__(self):
         return str(self._pn_root)

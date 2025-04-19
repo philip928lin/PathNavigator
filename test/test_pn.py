@@ -187,13 +187,7 @@ def test_exists(setup_pathnavigator):
     assert pn.folder1.exists('file1.txt')
     assert not pn.folder1.exists('file3.txt')
     assert not pn.exists('folder3')
-# def test_tree(setup_pathnavigator, capsys):
-#     pn = setup_pathnavigator
-#     pn.tree()
-#    captured = capsys.readouterr().out.strip().replace('\n', '').replace('\t', '')
-#     print(captured)
-#     expected_tree = "root├── folder1│   └── file1.txt└── folder2    └── subfolder1        └── file2.txt3 directories, 2 files"
-#     assert captured == expected_tree
+
 
 
 

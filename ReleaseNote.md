@@ -1,3 +1,9 @@
+# v0.6.1
+- Change the default pathnavigator initialization
+- Update `scan()` structure to make it more efficient
+- Add help
+- Update convertor
+
 # v0.5.4
 - Add `user = os.getlogin()` to the package
 - Add `os_name = platform.system()` to detect the operating system

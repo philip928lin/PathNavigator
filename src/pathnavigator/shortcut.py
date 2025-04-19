@@ -2,8 +2,9 @@ import json
 import yaml
 from dataclasses import dataclass, field
 from pathlib import Path
-import re
+from itertools import chain
 from .att_name_convertor import AttributeNameConverter
+from .utils import Base
 
 __all__ = ['Shortcut']
 
@@ -35,7 +36,7 @@ __all__ = ['Shortcut']
 """
 
 @dataclass
-class Shortcut:
+class Shortcut(Base):
     """
     A class to manage shortcuts to specific paths and access them as attributes.
     """
@@ -138,8 +139,9 @@ class Shortcut:
         valid_name = self._pn_converter.to_valid_name(name)
         self.__setattr__(valid_name, path, overwrite=overwrite)
 
-    def add_all(self, directory: str|Path, mode: str = 'all', overwrite: bool = False, 
-                prefix: str = "", include: str = None, exclude: str = None):
+    def add_all(self, directory: str|Path, overwrite: bool = False, prefix: str = "", 
+                only_include: list = [], only_exclude: list = [],
+                only_folders: bool = False, only_files: bool = False):
             """
             Add all files in a given directory as shortcuts.
 
@@ -147,60 +149,44 @@ class Shortcut:
             ----------
             directory : str or Path
                 The directory containing the files to add as shortcuts.
-            mode : str, optional
-                The mode to use when adding shortcuts. Default is 'all'.
-                - 'all': Add all files in the directory.
-                - 'files': Add only files in the directory.
-                - 'folders': Add only folders in the directory.
             overwrite : bool, optional
                 Whether to overwrite existing shortcuts. Default is False.
             prefix : str, optional
                 The prefix to add to the shortcut names. Default is "".
-            include : str, optional
-                A regular expression pattern to include only files or folders that match the pattern. Default is None.
-            exclude : str, optional
-                A regular expression pattern to exclude files or folders that match the pattern. Default is None.
-
+            only_include : list, optional
+                A list of  patterns to include only files or folders that match the patterns.
+                No `**` wildcard is allowed, only `*` is allowed.
+            only_exclude : list, optional
+                A list of patterns to exclude files or folders that match the patterns.
+                No `**` wildcard is allowed, only `*` is allowed.
+            only_folders : bool, optional
+                Whether to scan only subfolders. Default is False.
+            only_files : bool, optional
+                Whether to scan only files. Default is False.
             Examples
             --------
             >>> shortcut = Shortcut()
             >>> shortcut.add_all("/path/to/directory")
             """
-            dir_path = Path(directory)
-            if not dir_path.is_dir():
+            p = Path(directory).absolute()
+            if not p.is_dir():
                 raise NotADirectoryError(f"{directory} is not a valid directory")
-            
-            include_pattern = re.compile(include) if include else None
-            exclude_pattern = re.compile(exclude) if exclude else None
-            
-            def skip(entry):
+        
+            if only_include != []:
+                generator = chain.from_iterable(p.glob(pattern) for pattern in only_include)
+            elif only_exclude != []:
+                generator = chain.from_iterable(p.glob(pattern) for pattern in only_exclude)
+            else:
+                generator = p.iterdir()
+
+            for entry in generator:
                 entry_name = entry.name
-
-                if exclude_pattern and exclude_pattern.search(entry_name):
-                    return True  # Skip excluded files or folders
-
-                if include_pattern and not include_pattern.search(entry_name):
-                    return True  # Skip non-matching entries if include is specified
-            
-                return False
-            
-            if mode == 'all':
-                for file_path in dir_path.iterdir():
-                    if skip(file_path): continue
-                    shortcut_name = prefix + file_path.name
-                    self.add(shortcut_name, str(file_path), overwrite=overwrite)
-            elif mode == 'files':
-                for file_path in dir_path.iterdir():
-                    if skip(file_path): continue
-                    if file_path.is_file():
-                        shortcut_name = prefix + file_path.name
-                        self.add(shortcut_name, str(file_path), overwrite=overwrite)
-            elif mode == 'folders':
-                for file_path in dir_path.iterdir():
-                    if skip(file_path): continue
-                    if file_path.is_dir():
-                        shortcut_name = prefix + file_path.name
-                        self.add(shortcut_name, str(file_path), overwrite=overwrite)
+                if entry.is_dir() and not only_files:
+                    shortcut_name = prefix + entry_name
+                    self.add(shortcut_name, str(entry), overwrite=overwrite)
+                elif entry.is_file() and not only_folders:
+                    shortcut_name = prefix + entry_name
+                    self.add(shortcut_name, str(entry), overwrite=overwrite)
 
     def get(self, name: str) -> str:
         """
@@ -267,6 +253,7 @@ class Shortcut:
         False
         """
         valid_name = self._pn_converter.get_valid(name)
+        self._pn_converter.rmove(name)  # Remove from the converter's mapping
         self.__delattr__(valid_name)
 
     def clear(self):

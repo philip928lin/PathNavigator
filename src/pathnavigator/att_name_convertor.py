@@ -1,11 +1,12 @@
 import re
 import keyword
 from dataclasses import dataclass, field
+from .utils import Base
 
 __all__ = ["AttributeNameConverter"]
 
 @dataclass
-class AttributeNameConverter:
+class AttributeNameConverter(Base):
     """
     A class to convert original names to valid attribute names and store the mapping.
 
@@ -128,3 +129,18 @@ class AttributeNameConverter:
     def _pn_get_name_mapping(self):
         """Return the dictionary that maps ineligible names to eligible names."""
         return self._pn_org_to_valid_name
+    
+    def remove(self, name: str):
+        """
+        Remove the mapping for the given name.
+        
+        Parameters
+        ----------
+        name : str
+            The original name to remove from the mapping.
+        """
+        if name in self._pn_org_to_valid_name:
+            valid_name = self._pn_org_to_valid_name.pop(name)
+            self._pn_valid_name_to_org.pop(valid_name, None)
+        else:
+            pass
