@@ -253,7 +253,7 @@ class Shortcut(Base):
         False
         """
         valid_name = self._pn_converter.get_valid(name)
-        self._pn_converter.rmove(name)  # Remove from the converter's mapping
+        self._pn_converter.remove(name)  # Remove from the converter's mapping
         self.__delattr__(valid_name)
 
     def clear(self):

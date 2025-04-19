@@ -14,6 +14,7 @@ def create(
     only_include: list = [], only_exclude: list = [],
     only_folders: bool = True, only_files: bool = False,
     max_files: int = math.inf, max_folders: int = math.inf,
+    recursive_include_and_exclude: bool = False,
     display: bool = False
     ) -> PathNavigator:
     """
@@ -41,6 +42,8 @@ def create(
         The maximum number of files at each level to scan. Default is math.inf.
     max_folders : int, optional
         The maximum number of subfolders at each level to scan. Default is math.inf.
+    recursive_include_and_exclude : bool, optional
+            Whether to apply the include and exclude patterns recursively. Default is True.
     display : bool
         Whether to display action complete info like changing directory. Default is False.
         
@@ -55,6 +58,7 @@ def create(
         only_include=only_include, only_exclude=only_exclude,
         only_folders=only_folders, only_files=only_files,
         max_files=max_files, max_folders=max_folders,
+        recursive_include_and_exclude=recursive_include_and_exclude,
         display=display
         )
 

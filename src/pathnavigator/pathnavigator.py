@@ -45,6 +45,7 @@ class PathNavigator(Folder):
         only_include: list = [], only_exclude: list = [],
         only_folders: bool = True, only_files: bool = False,
         max_files: int = math.inf, max_folders: int = math.inf,
+        recursive_include_and_exclude: bool = False,
         display: bool = False):
         """
         Initialize the PathNavigator object with the given root directory and load nested directories.
@@ -71,6 +72,8 @@ class PathNavigator(Folder):
             The maximum number of files at each level to scan. Default is math.inf.
         max_folders : int, optional
             The maximum number of subfolders at each level to scan. Default is math.inf.
+        recursive_include_and_exclude : bool, optional
+            Whether to apply the include and exclude patterns recursively. Default is True.
         display : bool
             Whether to display action complete info like changing directory. Default is False.
             
@@ -97,6 +100,7 @@ class PathNavigator(Folder):
              only_folders=only_folders, only_files=only_files,
              clear=True,
              max_files=max_files, max_folders=max_folders,
+             recursive_include_and_exclude=recursive_include_and_exclude,
              _depth_count=0)
 
     def __str__(self):

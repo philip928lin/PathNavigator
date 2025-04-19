@@ -122,7 +122,9 @@ class Folder(Base):
              only_include: list = [], only_exclude: list = [],
              only_folders: bool = False, only_files: bool = False,
              clear: bool = True,
-             max_files: int = math.inf, max_folders: int = math.inf, _depth_count: int = 0):
+             max_files: int = math.inf, max_folders: int = math.inf,
+             recursive_include_and_exclude: bool = True,
+             _depth_count: int = 0):
         """
         Recursively scan subfolders and files in the current folder.
 
@@ -140,14 +142,16 @@ class Folder(Base):
             Whether to scan only subfolders. Default is False.
         only_files : bool, optional
             Whether to scan only files. Default is False.
+        clear : bool, optional
+            Whether to clear the subfolders and files before scanning. Default is True.
         max_files : int, optional
             The maximum number of files at each level to scan. Default is math.inf.
         max_folders : int, optional
             The maximum number of subfolders at each level to scan. Default is math.inf.
+        recursive_include_and_exclude : bool, optional
+            Whether to apply the include and exclude patterns recursively. Default is True.
         _depth_count : int, optional
             The current depth count. Default is 0.
-        clear : bool, optional
-            Whether to clear the subfolders and files before scanning. Default is True.
         """
         self._pn_current_depth = _depth_count
         if _depth_count >= max_depth:
@@ -171,6 +175,10 @@ class Folder(Base):
         else:
             generator = p.iterdir()
 
+        if recursive_include_and_exclude is False:
+            only_include = []
+            only_exclude = []
+            
         for entry in generator:
             entry_name = entry.name
             if entry.is_dir() and not only_files:
