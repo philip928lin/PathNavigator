@@ -1,6 +1,7 @@
 import getpass
 import platform
 import math
+from pathlib import Path
 from .pathnavigator import *
 from .folder import *
 from .shortcut import *

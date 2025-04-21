@@ -13,12 +13,18 @@ __all__ = ['Shortcut']
     -------
     add(name, path, overwrite=False)
         Adds a new shortcut as an attribute. 
+    add_all(directory, overwrite=False, prefix="",
+                only_include=[], only_exclude=[],
+                only_folders=False, only_files=False)
+        Adds all files in a given directory as shortcuts.
     get(name)
         Retrieves the path of a shortcut.
     get_str(name)
         Retrieves the path of a shortcut as a string.
     remove(name)
         Removes an existing shortcut by name and deletes the attribute.
+    clear()
+        Removes all shortcuts.
     ls()
         Lists all shortcuts (attributes).
     to_dict()
@@ -41,7 +47,8 @@ class Shortcut(Base):
     A class to manage shortcuts to specific paths and access them as attributes.
     """
     _pn_invalid_name_list = [
-    "add", "remove", "clear", "ls", "get", "get_str", "to_json", "to_yaml", "to_dict",
+    "add", "add_all", "get", "get_str", "remove", "clear", "ls",
+    "to_json", "to_yaml", "to_dict",
     "load_dict", "load_json", "load_yaml"
     ]
     

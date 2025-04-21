@@ -6,7 +6,7 @@
 PathNavigator documentation
 ===========================
 
-``PathNavigator`` is a Python package designed to navigate directories and files efficiently. 
+``PathNavigator`` is a Python package designed to navigate directories and files for a project. 
 It provides tools to interact with the filesystem, allowing users to create, delete, and 
 navigate folders and files, while also maintaining an internal representation of the 
 directory structure. Customized shortcuts can be added. The paths are stored as ``Path`` 
