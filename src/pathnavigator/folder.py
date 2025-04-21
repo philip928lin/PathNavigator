@@ -171,7 +171,7 @@ class Folder(Base):
         if only_include != []:
             generator = chain.from_iterable(p.glob(pattern) for pattern in only_include)
         elif only_exclude != []:
-            generator = chain.from_iterable(p.glob(pattern) for pattern in only_exclude)
+            generator = (entry for entry in p.iterdir() if not any(entry.match(pattern) for pattern in only_exclude))
         else:
             generator = p.iterdir()
 
