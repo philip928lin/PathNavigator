@@ -49,7 +49,9 @@ class PathNavigator(Folder):
         display: bool = False):
         """
         Initialize the PathNavigator object with the given root directory and load nested directories.
-        
+        Default to scan the tree of directories. Files will be dynamically added when 
+        related methods are called, e.g., `get()`. This will avoid long initial loading time.
+    
         Parameters
         ----------
         root_dir : str

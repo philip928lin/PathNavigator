@@ -4,7 +4,7 @@
 
 # PathNavigator
 
-`PathNavigator` is a Python package designed to navigate directories and files efficiently. It provides tools to interact with the filesystem, allowing users to create, delete, and navigate folders and files, while also maintaining an internal representation of the directory structure. Customized shortcuts can be added. The paths are stored as `Path` objects from [`pathlib`](https://docs.python.org/3/library/pathlib.html), which adapt automatically across platforms. 
+`PathNavigator` is a Python package designed to navigate directories and files. It provides tools to interact with the filesystem, allowing users to create, delete, and navigate folders and files, while also maintaining an internal representation of the directory structure. Customized shortcuts can be added. The paths are stored as `Path` objects from [`pathlib`](https://docs.python.org/3/library/pathlib.html), which adapt automatically across platforms. 
 
 
 ## Installation
@@ -21,42 +21,43 @@ pip install git+https://github.com/philip928lin/PathNavigator.git
 ## Getting Started
 
 ```python
-# Import pathnavigator and initialize a PathNavigator object
-## Method 1
-from pathnavigator import PathNavigator
-pn = PathNavigator("root_dir")
-# Method 2 
 import pathnavigator
-pn = pathnavigator.creat("root_dir")
 
-# Retrieve the full path of folder1
-pn.folder1.get()        # returns the full path to folder1 as a Path object
-pn.folder1.get_str()    # returns the full path to folder1 as a string. Same as str(pn.folder1.get()).
-pn.folder1.get("file.txt")        # returns the full path to file.txt as a Path object
-pn.folder1.get_str("file.txt")    # returns the full path to file.txt as a string. Same as str(pn.folder1.get("file.txt")).
+# Initialize PathNavigator
+pn = pathnavigator.create("root_dir")
 
-# Set shortcuts
-pn.folder1.set_sc('my_folder')  # set the shortcut for folder1 (accessed by pn.sc.my_folder or pn.sc.get("my_folder") or pn.sc.get_str)
-pn.folder1.set_sc('my_file', 'file.txt')  # set the shortcut for file.txt (accessed by pn.sc.my_file or pn.sc.get("my_file") or pn.sc.get_str("my_file"))
-pn.folder1.set_all_files_to_sc() # set all files in the current directory to shortcuts
-pn.sc.get("my_file") # get the shortcut
+# Retrieve paths
+pn.folder1.get()        # Full path as a Path object
+pn.folder1.get_str()    # Full path as a string
+pn.folder1.get("file.txt")  # Path to a file
 
-# List directory contents
-pn.folder1.ls()         # prints the contents (subfolders and files) of folder1
+# Manage shortcuts
+pn.folder1.set_sc("my_folder")  # Shortcut for folder1
+pn.folder1.set_sc("my_file", "file.txt")  # Shortcut for file.txt
+pn.sc.get("my_file")  # Retrieve shortcut
 
-# Check the existence of a file or subfolder
-pn.folder1.exists("fileX.txt")
-pn.folder1.exists("subfolder")
+# Directory operations
+pn.folder1.mkdir("subfolder")  # Create subfolder
+pn.folder1.remove("subfolder")  # Delete subfolder
+pn.folder1.exists("file.txt")  # Check existence
 
-# Print the nested folder structure
-pn.tree()
+# List contents
+pn.folder1.list(type="folder")  # List subfolders
+pn.folder1.list(type="file")    # List files
 
-# Directory management
-pn.mkdir('folder1', 'folder2')  # create a subfolder structure
-pn.remove('folder1')    # remove a file or subfolder and delete it
+# Visualize structure
+pn.tree()  # Print directory tree that has been scanned by pathnavigator
 ```
 
 ## Features
+- Path Retrieval: Access full paths as Path objects or strings.
+- Directory Management: Create, delete, and check existence of files/folders.
+- Shortcuts: Add, retrieve, and manage shortcuts for quick access. Save or load existed shortcut configuration.
+- Customized Folder Scan and List: Scan or list files or subfolders with filtering options.
+- Tree Visualization: Print a visual representation of the directory structure.
+- Built-in User and OS Info: Automatically detect username and operation system.
+- System Path Management: Add directories to sys.path.
+- Change Directory: Set a folder as the working directory.
 
 ### Directory and File Operations
 ```python
@@ -65,7 +66,7 @@ pn.folder1.get()        # Return a Path object
 pn.folder1.get_str()    # Return a string
 
 # Return the full path to file1.
-pn.folder1.get("file.csv")      # Return a Path object
+pn.get("folder1/file.csv")      # Return a Path object
 pn.folder1.get_str("file.csv")  # Return a string
 
 # Rrints the contents (subfolders and files) of folder1.
@@ -73,7 +74,7 @@ pn.folder1.ls()
 
 # Make the nested directories.
 # Directory root/folder1/subfolder1/subsubfolder2 will be created
-pn.folder1.mkdir("subfolder1", "subsubfolder2")
+pn.folder1.mkdir("subfolder1/subsubfolder2")
 
 # Removes a file or a folder and deletes it from the filesystem including all nested items.
 # The following code will delete the directory of root/folder1/folder2
@@ -84,12 +85,6 @@ pn.folder1.join("subfolder1", "fileX.txt")
 
 # Or, you can utilize Path feature to join the paths.
 pn.folder1.get() / "subfolder1/fileX.txt"
-```
-
-### Reloading folder structure
-```python
-# Update the folder structure to the current file system.
-pn.reload() 
 ```
 
 ### Check the existence of a file or subfolder
