@@ -1,12 +1,11 @@
 import os
 import sys
-import math
 import shutil
-from itertools import chain
+from itertools import tee, islice
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Dict, Any
-from itertools import islice
+import fnmatch
 from .att_name_convertor import AttributeNameConverter
 from .utils import Base
 
@@ -17,7 +16,10 @@ __all__ = ['Folder']
     -------
     __getattr__(item)
         Allows access to subfolders and files as attributes. Replaces '_' with spaces.
-    scan(max_depth=math.inf, max_files=math.inf, max_folders=math.inf, include=None, exclude=None, _only_folders=False, _only_files=False, _depth_count=0, _clear=True)
+    scan(max_depth=1, only_include=None, only_exclude=None,
+        only_folders=False, only_files=False, clear=True,
+        max_files=sys.maxsize, max_folders=sys.maxsize,
+        recursive_include_and_exclude=True, include_hidden=False, _depth_count=0)
         Recursively scans subfolders and files in the current folder.
     ls()
         Prints the contents (subfolders and files) of the folder.
@@ -116,14 +118,34 @@ class Folder(Base):
         if item in self.files:
             return self.files[item]
         raise AttributeError(f"'{item}' not found in folder '{self.name}'")
+    
+    def _split_entries_lazy(self, p: Path, include_hidden=False, only_include=[], only_exclude=[]):
+        def filtered_entries():
+            with os.scandir(p) as entries:
+                for entry in entries:
+                    name = entry.name
+                    if not include_hidden and name.startswith('.'):
+                        continue
+                    if only_include and not any(fnmatch.fnmatch(name, pat) for pat in only_include):
+                        continue
+                    if only_exclude and any(fnmatch.fnmatch(name, pat) for pat in only_exclude):
+                        continue
+                    yield entry
 
+        entries1, entries2 = tee(filtered_entries())
+
+        folders = (Path(e.path) for e in entries1 if e.is_dir(follow_symlinks=False))
+        files = (Path(e.path) for e in entries2 if e.is_file(follow_symlinks=False))
+
+        return folders, files
 
     def scan(self, max_depth: int = 1, 
-             only_include: list = [], only_exclude: list = [],
+             only_include: list = None, only_exclude: list = None,
              only_folders: bool = False, only_files: bool = False,
              clear: bool = True,
-             max_files: int = math.inf, max_folders: int = math.inf,
+             max_files: int = sys.maxsize, max_folders: int = sys.maxsize,
              recursive_include_and_exclude: bool = True,
+             include_hidden: bool = False,
              _depth_count: int = 0):
         """
         Recursively scan subfolders and files in the current folder.
@@ -145,11 +167,13 @@ class Folder(Base):
         clear : bool, optional
             Whether to clear the subfolders and files before scanning. Default is True.
         max_files : int, optional
-            The maximum number of files at each level to scan. Default is math.inf.
+            The maximum number of files at each level to scan. Default is sys.maxsize.
         max_folders : int, optional
-            The maximum number of subfolders at each level to scan. Default is math.inf.
+            The maximum number of subfolders at each level to scan. Default is sys.maxsize.
         recursive_include_and_exclude : bool, optional
             Whether to apply the include and exclude patterns recursively. Default is True.
+        include_hidden : bool, optional
+            Whether to include hidden files and folders in the scan. Default is False.
         _depth_count : int, optional
             The current depth count. Default is 0.
         """
@@ -164,54 +188,44 @@ class Folder(Base):
             self.files.clear()
         # Else, continue scanning from the current state
 
-        _folder_count = 0
-        _file_count = 0
         p = self.get()
+        folders, files = self._split_entries_lazy(
+            p,
+            include_hidden=include_hidden,
+            only_include=only_include,
+            only_exclude=only_exclude
+        )
         
-        if only_include != []:
-            generator = chain.from_iterable(p.glob(pattern) for pattern in only_include)
-        elif only_exclude != []:
-            generator = (entry for entry in p.iterdir() if not any(entry.match(pattern) for pattern in only_exclude))
-        else:
-            generator = p.iterdir()
-
         if recursive_include_and_exclude is False:
-            only_include = []
-            only_exclude = []
+            only_include = None
+            only_exclude = None
+        
+        if not only_files:
+            for entry in islice(folders, max_folders):
+                entry_name = entry.name
+                valid_folder_name = self._pn_converter.to_valid_name(entry_name)
+                new_subfolder = Folder(entry_name, parent_path=p, _pn_object=self._pn_object)
+                self.subfolders[valid_folder_name] = new_subfolder
+                # Recursively scan subfolders (if max_depth > 1)
+                new_subfolder.scan(
+                    max_depth=max_depth,
+                    only_include=only_include,
+                    only_exclude=only_exclude,
+                    only_folders=only_folders,
+                    only_files=only_files,
+                    clear=clear,
+                    max_files=max_files,
+                    max_folders=max_folders,
+                    include_hidden=include_hidden,
+                    _depth_count=_depth_count + 1
+                    )
             
-        for entry in generator:
-            entry_name = entry.name
-            if entry.is_dir() and not only_files:
-                if _folder_count < max_folders:
-                    valid_folder_name = self._pn_converter.to_valid_name(entry_name)
-                    new_subfolder = Folder(entry_name, parent_path=p, _pn_object=self._pn_object)
-                    self.subfolders[valid_folder_name] = new_subfolder
-                    # Recursively scan subfolders (if max_depth > 1)
-                    new_subfolder.scan(
-                        max_depth=max_depth,
-                        only_include=only_include,
-                        only_exclude=only_exclude,
-                        only_folders=only_folders,
-                        only_files=only_files,
-                        clear=clear,
-                        max_files=max_files,
-                        max_folders=max_folders,
-                        _depth_count=_depth_count+1
-                        )
-                    _folder_count += 1
-                else:
-                    #print(f"Maximum number of folders reached: {max_folders}")
-                    continue
-                
-            elif entry.is_file() and not only_folders:
-                if _file_count < max_files:
-                    valid_filename = self._pn_converter.to_valid_name(entry_name)
-                    self.files[valid_filename] = entry
-                    _file_count += 1
-                else:
-                    #print(f"Maximum number of files reached: {max_files}")
-                    continue
-
+        if not only_folders:
+            for entry in islice(files, max_files):
+                entry_name = entry.name
+                valid_filename = self._pn_converter.to_valid_name(entry_name)
+                self.files[valid_filename] = entry
+        
     def ls(self):
         """
         Print the contents of the folder, including subfolders and files in the pn object.

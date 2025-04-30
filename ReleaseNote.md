@@ -1,3 +1,7 @@
+# v0.6.2
+- Ignore hidden folder e.g., `.git`
+- Significantly improve scan speed
+
 # v0.6.1
 - Change the default pathnavigator initialization
 - Update `scan()` structure to make it more efficient

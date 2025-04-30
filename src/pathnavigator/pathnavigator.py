@@ -1,5 +1,4 @@
-#import os
-import math
+import sys
 from pathlib import Path
 from .folder import Folder
 from .shortcut import Shortcut
@@ -41,11 +40,12 @@ class PathNavigator(Folder):
     def __init__(
         self, 
         root_dir: str = None, 
-        max_depth: int = math.inf, 
-        only_include: list = [], only_exclude: list = [],
+        max_depth: int = sys.maxsize, 
+        only_include: list = None, only_exclude: list = None,
         only_folders: bool = True, only_files: bool = False,
-        max_files: int = math.inf, max_folders: int = math.inf,
+        max_files: int = sys.maxsize, max_folders: int = sys.maxsize,
         recursive_include_and_exclude: bool = False,
+        include_hidden: bool = False,
         display: bool = False):
         """
         Initialize the PathNavigator object with the given root directory and load nested directories.
@@ -58,7 +58,7 @@ class PathNavigator(Folder):
             The root directory to manage. If it is not given, we use the current working
             directory and load_nested_dirs will be set to False.
         max_depth : int, optional
-            The maximum depth to scan. Default is math.inf.
+            The maximum depth to scan. Default is sys.maxsize.
         only_include : list, optional
             A list of  patterns to include only files or folders that match the patterns.
             No `**` wildcard is allowed, only `*` is allowed.
@@ -71,11 +71,13 @@ class PathNavigator(Folder):
         only_files : bool, optional
             Whether to scan only files. Default is False.
         max_files : int, optional
-            The maximum number of files at each level to scan. Default is math.inf.
+            The maximum number of files at each level to scan. Default is sys.maxsize.
         max_folders : int, optional
-            The maximum number of subfolders at each level to scan. Default is math.inf.
+            The maximum number of subfolders at each level to scan. Default is sys.maxsize.
         recursive_include_and_exclude : bool, optional
             Whether to apply the include and exclude patterns recursively. Default is True.
+        include_hidden : bool, optional
+            Whether to include hidden files and folders. Default is False.
         display : bool
             Whether to display action complete info like changing directory. Default is False.
             
@@ -103,6 +105,7 @@ class PathNavigator(Folder):
              clear=True,
              max_files=max_files, max_folders=max_folders,
              recursive_include_and_exclude=recursive_include_and_exclude,
+             include_hidden=include_hidden,
              _depth_count=0)
 
     def __str__(self):
