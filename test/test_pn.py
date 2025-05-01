@@ -54,17 +54,17 @@ def test_ls(setup_pathnavigator, capsys):
     assert 'folder2' in captured.out
     
     # List contents of folder1 (weired. Does not work but the np.folder1.subfolder1.ls() works)
-    pn.folder1.ls()
+    pn.folder1.ls(scan_before_checking=True)
     captured = capsys.readouterr()
     #assert 'file1.txt' in captured.out
     
     # List contents of folder2
-    pn.folder2.ls()
+    pn.folder2.ls(scan_before_checking=True)
     captured = capsys.readouterr()
     assert 'subfolder1' in captured.out
     
     # List contents of subfolder1 (weired. Does not work but the np.folder1.subfolder1.ls() works)
-    pn.folder2.subfolder1.ls() 
+    pn.folder2.subfolder1.ls(scan_before_checking=True) 
     captured = capsys.readouterr()
     #assert 'file2.txt' in captured.out
 

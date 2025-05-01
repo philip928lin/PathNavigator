@@ -236,11 +236,16 @@ class Folder(Base):
                 valid_filename = self._pn_converter.to_valid_name(entry_name)
                 self.files[valid_filename] = entry
         
-    def ls(self):
+    def ls(self, scan_before_checking: bool = False):
         """
         Print the contents of the folder, including subfolders and files in the pn object.
         Users should run `scan()` if the folder structure has changed.
 
+        Parameters
+        ----------
+        scan_before_checking : bool, optional
+            Whether to scan the folder before listing its contents. Default is False.
+        
         Examples
         --------
         >>> folder = Folder(name="root")
@@ -253,6 +258,9 @@ class Folder(Base):
         Files:
           [File] file1
         """
+        if scan_before_checking:
+            print("Scanning the folder before listing its contents...")
+            self.scan(max_depth=1, clear=False)
         print(f"Contents of '{self.get()}':")
         print("(-> represent the attribute name used to access the subfolder or file.)")
         if self.subfolders:
