@@ -1,3 +1,6 @@
+# v0.6.3
+- Allow dynamic scan when get attribute
+
 # v0.6.2
 - Ignore hidden folder e.g., `.git`
 - Significantly improve scan speed

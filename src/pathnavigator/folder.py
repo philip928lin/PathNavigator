@@ -115,9 +115,19 @@ class Folder(Base):
 
         if item in self.subfolders:
             return self.subfolders[item]
-        if item in self.files:
+        elif item in self.files:
             return self.files[item]
-        raise AttributeError(f"'{item}' not found in folder '{self.name}'")
+        else:
+            try:
+                self.scan(max_depth=1, only_include=[item], clear=False)
+                if item in self.subfolders:
+                    return self.subfolders[item]
+                elif item in self.files:
+                    return self.files[item]
+            except Exception as e:
+                print(e)
+        raise AttributeError(f"'{item}' not found in the attributes of '{self.name}' folder. "
+                f"Please try to access '{item}' through the `get()` method if '{item}' exists in '{self.name}' folder in the file system.")
     
     def _split_entries_lazy(self, p: Path, include_hidden=False, only_include=[], only_exclude=[]):
         def filtered_entries():
