@@ -10,7 +10,7 @@ from .shortcut import *
 
 def create(
     root_dir: str = None, 
-    max_depth: int = sys.maxsize, 
+    max_depth: int = 1, 
     only_include: list = None, only_exclude: list = None,
     only_folders: bool = True, only_files: bool = False,
     max_files: int = sys.maxsize, max_folders: int = sys.maxsize,
@@ -29,7 +29,8 @@ def create(
         The root directory to manage. If it is not given, we use the current working
         directory and load_nested_dirs will be set to False.
     max_depth : int, optional
-        The maximum depth to scan. Default is sys.maxsize.
+        The maximum depth to scan. Default is 1 (only scan current folder). 
+        The internal tree will grow automatically as folders or files are accessed.
     only_include : list, optional
         A list of  patterns to include only files or folders that match the patterns.
         No `**` wildcard is allowed, only `*` is allowed.
