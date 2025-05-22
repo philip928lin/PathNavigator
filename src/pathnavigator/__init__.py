@@ -1,3 +1,4 @@
+import os
 import sys
 import getpass
 import platform
@@ -75,3 +76,5 @@ os_name = platform.system()
 #'Windows' for Windows
 #'Linux' for Linux
 #'Darwin' for macOS
+
+expanduser = os.path.expanduser # Easy access to the expanduser function
